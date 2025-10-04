@@ -1,0 +1,54 @@
+<div class="classroom-container" data-controller="owl">
+  <div class="blackboard" data-owl-target="blackboard">
+    <button class="chalk-text-button" data-action="click->owl#enterForest">
+      <span class="typing-text" data-owl-target="typingText"></span>
+    </button>
+  </div>
+</div>
+<!-- リアルタイム時計エリア -->
+<div data-controller="clock">
+  <div id="current-time" class="clock-display" data-clock-target="display"></div>
+</div>
+
+<!-- BGMコントロール -->
+<div class="bgm-controls" data-controller="bgm">
+  <button data-bgm-target="toggleButton"
+          data-action="click->bgm#toggle"
+          class="bgm-btn">
+    森のBGM
+  </button>
+  <input type="range"
+        data-bgm-target="volumeSlider"
+        data-action="input->bgm#adjustVolume"
+        min="0" max="1" step="0.1" value="0.3"
+        class="volume-slider">
+</div>
+
+<!-- プロフィール一覧エリア -->
+<div class="owls-container" data-controller="owl" style="display: none;">
+  <% @owls.each_with_index do |owl, index| %>
+    <div class="owl-card"
+        data-owl-target="owlCard"
+        data-owl-index="<%= index %>"
+        data-action="mouseenter->owl#hoverOwl mouseleave->owl#leaveOwl">
+      <h2><%= owl.name %></h2>
+      <p><strong>種類:</strong> <%= owl.species %></p>
+      <p><strong>年齢:</strong> <%= owl.age %>歳</p>
+      <p><strong>住んでいる場所:</strong> <%= owl.habitat %></p>
+      <div>
+        <strong>📝 自己紹介:</strong>
+        <p style="margin: 4px 0;">プログラミング学習の新しい味方😄</p>
+        <p style="margin: 4px 0;">知っていると便利な情報やアドバイスをくれるよ✨</p>
+        <p style="margin: 4px 0 0 0;">みんなの学習を楽しくサポートします!!</p>
+      </div>
+
+      <!-- ★ 音付きタイプライター効果対応のメッセージエリア -->
+      <div class="owl-message" data-owl-target="owlMessage" data-owl-index="<%= index %>">
+        <div class="message-line" data-message="こんにちは！           僕は梟🦉の<%= owl.name %>"></div>
+        <div class="message-line" data-message="みんなの学習をサポートするのが仕事だホウ〜☆彡"></div>
+      </div>
+
+      <%= link_to "詳しく見る", owl_path(owl), class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>

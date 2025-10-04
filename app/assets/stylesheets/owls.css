@@ -1,0 +1,242 @@
+/* === indexページ用スタイル === */
+.owls-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.owl-card {
+  border: 2px solid #a7877041;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #70c54351;
+}
+
+.owl-message {
+  background-color: #91ff0075;
+  padding: 15px;
+  border-radius: 5px;
+  margin: 10px 0;
+
+  width: 450px;
+  height: 90px;
+  box-sizing: border-box;
+}
+
+.blackboard {
+  position: absolute;
+  top: 32%;
+  left: 50%;
+  transform: translateX(-40%);
+  border-radius: 15px;
+  padding: 45px;
+  z-index: 10;
+}
+
+.chalk-text-button {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #fcb900;
+  cursor: pointer;
+  padding: 15px 30px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+
+  /* タイピング中は無効化 */
+  pointer-events: none;
+  opacity: 0.7;
+
+  &:hover {
+    color: #00e1ff;
+    background-color: rgba(31, 175, 26, 0.003);
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+/* タイピング完了後のスタイル */
+.chalk-text-button.typing-complete {
+  pointer-events: auto;
+  opacity: 1;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+/* 光る効果 */
+@keyframes glow {
+  from {
+    text-shadow: 0 0 5px #e0e056c7, 0 0 10px #dce152bd;
+  }
+}
+
+/* タイピング中のカーソル効果 */
+.typing-text::after {
+  content: '|';
+  animation: blink 1s infinite;
+  color: #ffaa00;
+}
+
+/* タイピング完了後はカーソルを非表示 */
+.typing-complete .typing-text::after {
+  display: none;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* === showページ用スタイル === */
+
+/* ページ全体の背景 */
+body.owl-show-page {
+  background-image: url('tisikinomori_fuyu.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* レイアウト */
+.owl-profile {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.profile-card {
+  border: 3px solid #b5dbff8b;
+  border-radius: 15px;
+  padding: 30px;
+  background-color: rgba(245, 245, 220, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.owl-messages {
+  margin: 30px 0;
+}
+
+.action-buttons {
+  text-align: center;
+  margin-top: 30px;
+}
+
+/* テキストスタイル */
+body.owl-show-page h1 {
+  color: #00f2ff;
+  font-size: 2.2em;
+  font-weight: bold;
+  text-align: center;
+  text-shadow:
+    -1px -1px 0 rgba(0, 0, 0, 0.9),
+    1px -1px 0 rgba(0, 0, 0, 0.9),
+    -1px  1px 0 rgba(0, 0, 0, 0.9),
+    1px  1px 0 rgba(0, 0, 0, 0.9);
+}
+
+body.owl-show-page .profile-details {
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #b5dbff8b;
+  border-radius: 10px;
+  color: #000000;
+  font-size: 1.1em;
+  text-shadow:
+    -1px -1px 0 rgba(255, 255, 255, 0.8),
+    1px -1px 0 rgba(255, 255, 255, 0.8),
+    -1px  1px 0 rgba(255, 255, 255, 0.8),
+    1px  1px 0 rgba(255, 255, 255, 0.8);
+}
+
+body.owl-show-page .message-box {
+  background-color: #b5dbff8b;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 10px 0;
+  line-height: 1.6;
+  color: #000000;
+  font-size: 1.2em;
+  text-shadow:
+    -1px -1px 0 rgba(255, 255, 255, 0.8),
+    1px -1px 0 rgba(255, 255, 255, 0.8),
+    -1px  1px 0 rgba(255, 255, 255, 0.8),
+    1px  1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* === 共通ボタンスタイル === */
+.btn {
+  display: inline-block;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+/* indexページ用ボタン */
+.owls-container .btn {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+}
+
+.owls-container .btn:hover {
+  background-color: #45a049;
+}
+
+.owls-container .btn-primary {
+  background-color: #ff9900b4;
+}
+
+.owls-container .btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* showページ用ボタン */
+.owl-profile .btn {
+  padding: 12px 24px;
+  font-weight: bold;
+}
+
+.owl-profile .btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.owl-profile .btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+/* リアルタイム時計 */
+.clock-display {
+  background: linear-gradient(135deg, #66ea7c18 0%, #4ba26525 100%);
+  color: rgb(217, 255, 0);
+  padding: 8px 12px; /* サイズをコンパクトに */
+  border-radius: 6px;  /* 角丸も少し小さく */
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;     /* フォントサイズを小さく */
+  font-weight: bold;
+  text-align: left;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.205); /* 影も控えめに */
+  margin: 10px 0;      /* マージンも小さく */
+  display: inline-block; /* 横幅を内容に合わせる */
+  position: fixed;     /* 固定位置に配置 */
+  top: 900px;          /* 上から20px */
+  left: 85px;         /* 左から20px */
+  z-index: 1000;      /* 他の要素より前面に */
+}
+
+/* スマホ対応？ */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
