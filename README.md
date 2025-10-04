@@ -1,24 +1,39 @@
-# README
+# 🦉 フクちゃん掲示板
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+**RUNTEQ学習者向け掲示板**
 
-Things you may want to cover:
+梟🦉のフクちゃんと一緒に、プログラミング学習の悩みや困りごとを解決する掲示板アプリです。
 
-* Ruby version
+## 🦉 主な機能
+### 現在実装済み
+- **基本的なアドバイス表示**: フクちゃんからのアドバイス（1つ）
+- **エラー対応例**: 大量エラー発生時のアドバイス
 
-* System dependencies
+### なぜ「フクちゃん掲示板」を作ったのか（まだ1つしかアドバイスボタンありません）
+- 📚 **学習初期の困りごと解決**: 「こんなアドバイスがあれば良かった」を実現できればいいな
+- 🤝 **後輩支援**: これから学習を始める人たちへの実践的サポートになれば
+- 💬 **コミュニティ形成**: 受講生同士の情報共有・交流促進
+- 🦉 **目指している学習環境**: フクちゃんと一緒に楽しく学習
 
-* Configuration
 
-* Database creation
+### 今後の予定
+- カテゴリ別アドバイス
+- 検索機能
+- ユーザー投稿機能
 
-* Database initialization
+【現在の状況】
+メイン機能は全て動作していますが、
+タイピングアニメーション部分で軽微なエラーが発生中。
+アプリの使用には支障ありません！
 
-* How to run the test suite
+【今後の改善予定】
+・typingText要素の修正
+・エラーハンドリングの改善
 
-* Services (job queues, cache servers, search engines, etc.)
+まずは動くものを共有します！
+ぜひさわってみてください 🎮
 
-* Deployment instructions
 
-* ...
+## 💡 **実装済みフクちゃんのアドバイス例**
+
+### 大量エラー発生時
