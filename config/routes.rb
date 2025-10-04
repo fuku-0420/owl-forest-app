@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   # RESTfulなルーティング
-  resources :owls, only: [:index, :show]
+  resources :owls, only: [ :index, :show ]
 
   get "up" => "rails/health#show", as: :rails_health_check
 
