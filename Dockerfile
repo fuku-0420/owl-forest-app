@@ -1,25 +1,30 @@
-FROM ruby:3.2.3
+FROM ruby:3.3.5-alpine
 
 WORKDIR /app
 
-# システムの依存関係をインストール
-RUN apt-get update -qq && apt-get install -y \
+# 必要なパッケージをインストール
+RUN apk add --no-cache \
+    build-base \
+    postgresql-dev \
     nodejs \
-    postgresql-client \
-    && rm -rf /var/lib/apt/lists/*
+    yarn \
+    git
 
-# Gemfileをコピーして依存関係をインストール
-COPY Gemfile* ./
-RUN bundle install
+# Gemfileをコピーしてbundle install
+COPY Gemfile Gemfile.lock ./
+RUN bundle install --without development test
 
 # アプリケーションコードをコピー
 COPY . .
 
-# アセットのプリコンパイル
-RUN RAILS_ENV=production bundle exec rails assets:precompile
+# Node.jsの依存関係をインストール
+RUN yarn install
+
+# アセットのプリコンパイル（修正版）
+RUN SECRET_KEY_BASE_DUMMY=1 RAILS_ENV=production bundle exec rails assets:precompile
 
 # ポートを公開
 EXPOSE $PORT
 
-# DB準備とサーバー起動
+# アプリケーション起動
 CMD bundle exec rails db:prepare && bundle exec rails server -h 0.0.0.0 -p $PORT
