@@ -1,35 +1,51 @@
-if ENV['FORCE_MIGRATION'] == 'true' && Rails.env.production?
-  Rails.application.configure do
-    config.after_initialize do
-      Rails.logger.info "🌟 FORCE_MIGRATION initializer loaded"
+if ENV['FORCE_MIGRATION'] == 'true' && ENV['RAILS_ENV'] == 'production'
+  puts "🔄 Puma starting - Running Rails 8 migration..."
 
-      # 少し待機してからマイグレーション実行
-      Thread.new do
-        sleep 2 # 2秒待機
+  begin
+    # 現在のディレクトリを確認
+    puts "📁 Current directory: #{Dir.pwd}"
+    puts "📁 Rails root: #{defined?(Rails) ? Rails.root : 'Rails not loaded'}"
 
-        begin
-          Rails.logger.info "🔄 Starting forced migration from initializer..."
+    # マイグレーション実行（複数の方法を試行）
+    migration_success = false
 
-          # データベース接続確認
-          ActiveRecord::Base.connection.execute('SELECT 1')
-          Rails.logger.info "✅ Database connection confirmed"
+    # Method 1: bundle exec rails db:migrate
+    puts "🔧 Method 1: bundle exec rails db:migrate"
+    if system("bundle exec rails db:migrate RAILS_ENV=production")
+      puts "✅ Method 1 succeeded!"
+      migration_success = true
+    else
+      puts "❌ Method 1 failed, trying Method 2..."
 
-          # マイグレーション実行
-          ActiveRecord::Base.connection.migration_context.migrate
-          Rails.logger.info "✅ Forced migration completed!"
+      # Method 2: bin/rails db:migrate
+      puts "🔧 Method 2: bin/rails db:migrate"
+      if system("bin/rails db:migrate RAILS_ENV=production")
+        puts "✅ Method 2 succeeded!"
+        migration_success = true
+      else
+        puts "❌ Method 2 failed, trying Method 3..."
 
-          # テーブル確認
-          if ActiveRecord::Base.connection.table_exists?('owls')
-            Rails.logger.info "✅ owls table exists!"
-          else
-            Rails.logger.error "❌ owls table still not found"
-          end
-
-        rescue => e
-          Rails.logger.error "❌ Forced migration error: #{e.message}"
-          Rails.logger.error e.backtrace.join("\n")
+        # Method 3: rake db:migrate
+        puts "🔧 Method 3: rake db:migrate"
+        if system("rake db:migrate RAILS_ENV=production")
+          puts "✅ Method 3 succeeded!"
+          migration_success = true
         end
       end
     end
+
+    if migration_success
+      puts "🎉 Migration completed successfully!"
+
+      # テーブル存在確認
+      if system("bundle exec rails runner 'puts ActiveRecord::Base.connection.table_exists?(\"owls\") ? \"owls table exists\" : \"owls table missing\"' RAILS_ENV=production")
+        puts "📊 Table existence check completed"
+      end
+    else
+      puts "❌ All migration methods failed"
+    end
+
+  rescue => e
+    puts "❌ Migration error: #{e.message}"
   end
 end
