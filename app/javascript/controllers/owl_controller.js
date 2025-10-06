@@ -507,13 +507,12 @@ export default class extends Controller {
 
     if (messageLines.length >= 2) {
       messageLines[0].textContent = 'こんにちは！僕は梟🦉のフクちゃん'
-      messageLines[1].textContent = 'みんなの学習をサポートするのが仕事だホウ〜☆彡'
+      messageLines[1].textContent = 'たくさんの人を笑顔にするのが仕事だホウ〜☆彡'
 
       // ★ 元のパスと完全に一致させる
       fukuchanImg.src = '/fukuchan.png'
     }
   }
-
 
   showOwlProfile() {
     const owlsContainer = document.querySelector('.owls-container')
