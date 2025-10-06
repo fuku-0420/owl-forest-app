@@ -5,6 +5,7 @@
     </button>
   </div>
 </div>
+
 <!-- リアルタイム時計エリア -->
 <div data-controller="clock">
   <div id="current-time" class="clock-display" data-clock-target="display"></div>
@@ -25,7 +26,7 @@
 </div>
 
 <!-- プロフィール一覧エリア -->
-<div class="owls-container" data-controller="owl" style="display: none;">
+<div class="owls-container" style="display: none;">
   <% @owls.each_with_index do |owl, index| %>
     <div class="owl-card"
         data-owl-target="owlCard"
@@ -42,10 +43,13 @@
         <p style="margin: 4px 0 0 0;">みんなの学習を楽しくサポートします!!</p>
       </div>
 
-      <!-- ★ 音付きタイプライター効果対応のメッセージエリア -->
       <div class="owl-message" data-owl-target="owlMessage" data-owl-index="<%= index %>">
-        <div class="message-line" data-message="こんにちは！           僕は梟🦉の<%= owl.name %>"></div>
-        <div class="message-line" data-message="みんなの学習をサポートするのが仕事だホウ〜☆彡"></div>
+        <div class="message-line"
+            data-owl-target="typingText"
+            data-message="<%= "こんにちは！僕は梟🦉の#{owl.name}" %>"></div>
+        <div class="message-line"
+            data-owl-target="typingText"
+            data-message="たくさんの人を笑顔にするのが仕事だホウ〜☆彡"></div>
       </div>
 
       <%= link_to "詳しく見る", owl_path(owl), class: "btn btn-primary" %>
