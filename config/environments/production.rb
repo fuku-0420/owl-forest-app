@@ -5,15 +5,7 @@ Rails.application.configure do
   config.eager_load = true
   config.consider_all_requests_local = false
   config.action_controller.perform_caching = true
-
-  # ✅ アセット配信設定を追加
-  config.public_file_server.enabled = true
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
-
-  # ✅ アセット設定を追加
-  config.assets.compile = false
-  config.assets.digest = true
-
   config.active_storage.service = :local
   config.assume_ssl = true
   config.force_ssl = true
