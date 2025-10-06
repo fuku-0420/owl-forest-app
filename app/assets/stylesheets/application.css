@@ -204,3 +204,238 @@
   70% { box-shadow: 0 0 0 10px rgba(75, 162, 101, 0); }
   100% { box-shadow: 0 0 0 0 rgba(75, 162, 101, 0); }
 }
+
+/* MacBook Pro (1440px-1919px) */
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .classroom-container {
+    height: 85vh;
+    width: 85vw;
+  }
+
+  .owls-container {
+    top: 15px;
+    right: 15px;
+  }
+
+  .owl-card {
+    max-width: 400px;
+  }
+
+  .fukuchan-image {
+    top: 80px;
+    right: 580px;
+    width: 110px;
+    height: 110px;
+  }
+
+  .clock-display {
+    top: 800px;
+    left: 70px;
+    font-size: 15px;
+  }
+
+  .bgm-controls {
+    bottom: 35px;
+    left: 70px;
+  }
+}
+
+/* iPad横向き (1024px-1439px) */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .classroom-container {
+    height: 80vh;
+    width: 80vw;
+  }
+
+  .owls-container {
+    top: 10px;
+    right: 10px;
+  }
+
+  .owl-card {
+    max-width: 350px;
+  }
+
+  .fukuchan-image {
+    top: 70px;
+    right: 420px;
+    width: 100px;
+    height: 100px;
+  }
+
+  /* 時計を右上に移動（横向きタブレット用） */
+  .clock-display {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    left: auto;
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+
+  .bgm-controls {
+    bottom: 30px;
+    left: 60px;
+    padding: 8px;
+    gap: 10px;
+  }
+
+  .volume-slider {
+    width: 70px;
+  }
+}
+
+/* 大型スマホ横向き (768px-1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .classroom-container {
+    height: 75vh;
+    width: 75vw;
+  }
+
+  .owls-container {
+    top: 8px;
+    right: 8px;
+  }
+
+  .owl-card {
+    max-width: 300px;
+  }
+
+  .fukuchan-image {
+    top: 60px;
+    right: 320px;
+    width: 90px;
+    height: 90px;
+  }
+
+  .clock-display {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    left: auto;
+    font-size: 13px;
+    padding: 5px 8px;
+  }
+
+  .bgm-controls {
+    bottom: 25px;
+    left: 50px;
+    padding: 6px;
+    gap: 8px;
+  }
+
+  .bgm-btn {
+    padding: 6px 10px;
+    font-size: 0.9rem;
+  }
+
+  .volume-slider {
+    width: 60px;
+  }
+}
+
+/* 小型スマホ横向き (480px-767px) */
+@media (min-width: 480px) and (max-width: 767px) {
+  .classroom-container {
+    height: 70vh;
+    width: 70vw;
+  }
+
+  .owls-container {
+    top: 5px;
+    right: 5px;
+  }
+
+  .owl-card {
+    max-width: 250px;
+  }
+
+  .fukuchan-image {
+    top: 50px;
+    right: 220px;
+    width: 80px;
+    height: 80px;
+  }
+
+  .clock-display {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    left: auto;
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+
+  .bgm-controls {
+    bottom: 20px;
+    left: 40px;
+    padding: 5px;
+    gap: 6px;
+    flex-direction: column; /* 縦並びに変更 */
+  }
+
+  .bgm-btn {
+    padding: 5px 8px;
+    font-size: 0.8rem;
+  }
+
+  .volume-slider {
+    width: 50px;
+  }
+}
+
+/* 縦向きは最小限対応 (479px以下) */
+@media (max-width: 479px) {
+  .classroom-container {
+    height: 60vh;
+    width: 95vw;
+  }
+
+  .owls-container {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin: 10px;
+  }
+
+  .owl-card {
+    max-width: 200px;
+  }
+
+  .fukuchan-image {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: 70px;
+    height: 70px;
+    margin: 10px auto;
+    display: block;
+  }
+
+  .clock-display {
+    position: fixed;
+    top: 5px;
+    right: 5px;
+    font-size: 11px;
+    padding: 3px 5px;
+  }
+
+  .bgm-controls {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    margin: 10px auto;
+    padding: 4px;
+    gap: 5px;
+    flex-direction: column;
+  }
+
+  .bgm-btn {
+    padding: 4px 6px;
+    font-size: 0.7rem;
+  }
+
+  .volume-slider {
+    width: 40px;
+  }
+}

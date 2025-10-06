@@ -240,7 +240,7 @@ export default class extends Controller {
   }
 
   showConsultationRoom() {
-    console.log("掲示板表示開始！") // 動作確認用
+    console.log("掲示板表示開始！")
 
     const blackboard = this.blackboardTarget
 
@@ -249,38 +249,40 @@ export default class extends Controller {
     if (welcomeMessage) {
       welcomeMessage.remove()
     }
-    // 🆕 スキップボタンも削除
+
     const skipButton = blackboard.querySelector('.story-skip-button')
     if (skipButton) {
       skipButton.remove()
     }
 
-    // タイトル作成
     const title = document.createElement('h2')
     title.textContent = '🦉 フクちゃんお悩み掲示板 🦉'
     title.style.color = '#fcc900ff'
     title.style.textAlign = 'center'
-    title.style.fontSize = '28px'
-    title.style.marginTop = '-150px'
+    title.style.fontSize = 'clamp(20px, 4vw, 28px)'
+    title.style.marginTop = 'clamp(-150px, -25vh, -250px)'
+    title.style.position = 'relative'
+    title.style.left = '3px'
 
+    // ★ レスポンシブ対応のボタン作成
     const button = document.createElement('button')
     button.textContent = '☢エラー大量発生☢'
     button.style.backgroundColor = '#00ffe183'
     button.style.color = '#e23030ff'
     button.style.position = 'absolute'
     button.style.left = '49%'
-    button.style.transform = 'translateX(-50%)'
-    button.style.top = '350px'
-    button.style.padding = '15px 30px'
+    button.style.transform = 'translateX(-50%)'      // ★ 中央配置の確実な実装
+    button.style.top = 'clamp(250px, 40vh, 350px)'  // ★ 画面の高さに応じて調整
+    button.style.padding = 'clamp(10px, 2vw, 15px) clamp(20px, 4vw, 30px)'  // ★ レスポンシブパディング
     button.style.border = 'none'
-    button.style.borderRadius = '50px'        // 完全な泡型
+    button.style.borderRadius = '50px'
     button.style.boxShadow = '0 8px 20px rgba(53, 189, 199, 0.81)'
     button.style.cursor = 'pointer'
-    button.style.fontSize = '20px'
+    button.style.fontSize = 'clamp(16px, 3vw, 20px)'  // ★ レスポンシブフォントサイズ
     button.style.fontWeight = 'bold'
     button.style.transition = 'all 0.3s ease'
 
-    // ホバー効果
+    // ホバー効果（変更なし）
     button.addEventListener('mouseenter', () => {
       button.style.transform = 'translateX(-50%) scale(1.1)'
       button.style.backgroundColor = '#00f2ffff'
@@ -479,7 +481,6 @@ export default class extends Controller {
     setTimeout(() => {
       img.classList.add('fukuchan-visible')
 
-      // ★ さらに少し待ってからクリック有効化（最初の1回だけ）
       setTimeout(() => {
         canClick = true
       }, 7500)  // 7.5秒後にクリック可能
