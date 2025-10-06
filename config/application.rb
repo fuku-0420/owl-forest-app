@@ -13,13 +13,13 @@ module FukurouApp
     config.autoload_lib(ignore: %w[assets tasks])
 
     # 🌟 強制マイグレーション実行機能を追加
-    if ENV['FORCE_MIGRATION'] == 'true' && Rails.env.production?
+    if ENV["FORCE_MIGRATION"] == "true" && Rails.env.production?
       config.after_initialize do
         begin
           Rails.logger.info "🔄 FORCE_MIGRATION enabled - Starting migration..."
 
           # データベース接続確認
-          ActiveRecord::Base.connection.execute('SELECT 1')
+          ActiveRecord::Base.connection.execute("SELECT 1")
           Rails.logger.info "✅ Database connection established"
 
           # マイグレーション実行
@@ -27,7 +27,7 @@ module FukurouApp
           Rails.logger.info "✅ Migration completed successfully!"
 
           # テーブル存在確認
-          if ActiveRecord::Base.connection.table_exists?('owls')
+          if ActiveRecord::Base.connection.table_exists?("owls")
             Rails.logger.info "✅ owls table created successfully!"
           else
             Rails.logger.warn "⚠️ owls table not found after migration"
