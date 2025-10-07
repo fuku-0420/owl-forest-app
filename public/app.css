@@ -40,22 +40,16 @@
 
 /* フクちゃんプロフィール配置 */
 .owls-container {
-  position: fixed;
-  /* relative から fixed に変更 */
-  top: 20px;
-  /* 上から20px */
-  right: 20px;
-  /* 右から20px */
-  min-height: 100;
-  z-index: 1000;
-  /* 他の要素より前面に */
+  position: fixed;      /* 画面に固定 */
+  top: 20px;           /* 上から20px */
+  right: 20px;         /* 右から20px */
+  min-height: 100;     /* 最小高さのみ指定 */
+  z-index: 1000;       /* 最前面表示 */
 }
 
-/* フクちゃんカード調整 */
 .owl-card {
-  max-width: 450px;
-  text-align: center;
-  animation: gentle-float 3s ease-in-out infinite;
+  max-width: 450px;    /* 最大幅で制限 */
+  /* height: auto;     自動調整 */
 }
 
 /* ふわふわアニメーション */
