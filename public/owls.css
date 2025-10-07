@@ -1,8 +1,14 @@
-/* === indexページ用スタイル === */
+/* フクちゃんプロフィール配置 */
 .owls-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+  position: fixed;
+  /* relative から fixed に変更 */
+  top: 20px;
+  /* 上から20px */
+  right: 20px;
+  /* 右から20px */
+  min-height: 100px;
+  z-index: 1000;
+  /* 他の要素より前面に */
 }
 
 .owl-card {
@@ -11,6 +17,9 @@
   padding: 20px;
   margin-bottom: 20px;
   background-color: #70c54351;
+  max-width: 450px;
+  text-align: center;
+  animation: gentle-float 3s ease-in-out infinite;
 }
 
 .owl-message {

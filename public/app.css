@@ -38,20 +38,6 @@
   filter: brightness(1.0) sepia(0.3) saturate(1.2); /* 秋らしい色調 */
 }
 
-/* フクちゃんプロフィール配置 */
-.owls-container {
-  position: fixed;      /* 画面に固定 */
-  top: 20px;           /* 上から20px */
-  right: 20px;         /* 右から20px */
-  min-height: 100;     /* 最小高さのみ指定 */
-  z-index: 1000;       /* 最前面表示 */
-}
-
-.owl-card {
-  max-width: 450px;    /* 最大幅で制限 */
-  /* height: auto;     自動調整 */
-}
-
 /* ふわふわアニメーション */
 @keyframes gentle-float {
 
