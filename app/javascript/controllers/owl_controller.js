@@ -453,7 +453,7 @@ export default class extends Controller {
     this.addFukuchanImage()
     setTimeout(() => {
       this.showOwlProfile()
-    }, 1000)
+    }, 2000)
   }
 
   addFukuchanImage() {
