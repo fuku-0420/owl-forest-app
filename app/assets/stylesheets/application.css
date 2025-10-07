@@ -31,7 +31,7 @@
   bottom: 0;
   width: 100vw;
   height: 100vh;
-  background-image: url('/images/tisikinomori.png');
+  background-image: url("tisikinomori.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -42,7 +42,7 @@
 
 /* 秋の背景画像 */
 .classroom-container.autumn::before {
-  background-image: url('/images/tisikinomori_aki.png');
+  background-image: url("tisikinomori_aki.png");
   filter: brightness(1.0) sepia(0.3) saturate(1.2); /* 秋らしい色調 */
 }
 
