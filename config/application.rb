@@ -12,6 +12,8 @@ module FukurouApp
 
     config.autoload_lib(ignore: %w[assets tasks])
 
+    config.assets.paths << Rails.root.join("app/assets/builds")
+
     # 🌟 Rails 8対応の安全なマイグレーション実行
     if ENV["FORCE_MIGRATION"] == "true" && Rails.env.production?
       config.after_initialize do
