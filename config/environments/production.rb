@@ -6,6 +6,15 @@ Rails.application.configure do
   config.consider_all_requests_local = false
   config.action_controller.perform_caching = true
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
+  # 静的ファイルを常に配信できるようにする（Renderでは推奨）
+  config.public_file_server.enabled = true
+
+  # アセットがビルドされていなくても一時的にRails側で補完する
+  config.assets.compile = true
+
+  # assetsのパスを明示的にbuildsフォルダにも通す（Propshaft対策）
+  config.assets.paths << Rails.root.join('app', 'assets', 'builds')
+  config.assets.digest = true
   config.active_storage.service = :local
   config.assume_ssl = true
   config.force_ssl = true

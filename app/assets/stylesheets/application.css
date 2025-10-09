@@ -1,0 +1,194 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+/* 教室背景コンテナ */
+.classroom-container {
+  height: 90vh;
+  width: 90vw;
+  /* 画面幅いっぱい */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  /* マージンをリセット */
+  padding: 0;
+  /* パディングをリセット */
+}
+
+/* 背景画像専用（明るく調整） */
+.classroom-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("tisikinomori.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(1.1);
+  z-index: -1;
+  transition: all 0.5s ease; /* 切り替えアニメーション */
+}
+
+/* 秋の背景画像 */
+.classroom-container.autumn::before {
+  background-image: url("tisikinomori_aki.png");
+  filter: brightness(1.0) sepia(0.3) saturate(1.2); /* 秋らしい色調 */
+}
+
+/* ふわふわアニメーション */
+@keyframes gentle-float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.consultation-room-container {
+  margin-top: 30px;
+  padding: 20px;
+  border: 2px solid #8B4513;
+  border-radius: 10px;
+  background-color: #F5F5DC;
+}
+
+.btn-consultation {
+  background-color: #8B4513;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+}
+
+.consultation-content {
+  margin-top: 20px;
+}
+
+/* フクちゃんの基本スタイル */
+.fukuchan-image {
+  position: absolute;
+  top: 92px;
+  right: 650px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  z-index: 10000;
+  cursor: pointer;
+  object-fit: cover;
+
+  /* もやもや登場 */
+  opacity: 0;
+  filter: blur(20px);
+  transform: scale(1.2);
+  transition: all 1s ease;
+}
+
+.fukuchan-visible {
+  opacity: 1;
+  filter: blur(0px);
+  transform: scale(1);
+}
+
+.bgm-controls {
+  position: fixed;
+  bottom: 40px;
+  left: 80px;
+  z-index: 1000;
+  background: #4ba26525;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+
+  /* もやもや登場 */
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.bgm-btn {
+  background: #4ba26525;
+  color: rgb(217, 255, 0);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+
+  /* ボタンがふわっと光る効果 */
+  &:hover {
+    color: rgb(170, 255, 0);
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(129, 162, 75, 0.3);
+  }
+
+  /* クリック時の効果 */
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.volume-slider {
+  width: 80px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  outline: none;
+  appearance: none;
+  transition: all 0.2s ease;
+
+  /* スライダー全体のホバー効果 */
+  &:hover {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(208, 255, 0, 0.8) !important;
+    cursor: pointer;
+    border: none !important;
+    box-shadow: none !important;
+    transition: all 0.2s ease;
+  }
+
+  /* つまみが大きくなって光る */
+  &:hover::-webkit-slider-thumb {
+    width: 12px;
+    height: 12px;
+    background: rgb(217, 255, 0) !important;
+    box-shadow: 0 0 8px rgba(217, 255, 0, 0.5) !important;
+  }
+}
+
+/* 音楽再生中のパルス効果 */
+.bgm-controls.playing {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(75, 162, 101, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(75, 162, 101, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(75, 162, 101, 0); }
+}
