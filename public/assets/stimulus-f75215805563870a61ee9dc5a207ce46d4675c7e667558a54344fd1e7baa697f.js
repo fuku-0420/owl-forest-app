@@ -1,6 +1,6 @@
-//= link ./stimulus-autoloader.js
-//= link ./stimulus-importmap-autoloader.js
-//= link ./stimulus-loading.js
+
+
+
 
 /*
 Stimulus 3.2.2

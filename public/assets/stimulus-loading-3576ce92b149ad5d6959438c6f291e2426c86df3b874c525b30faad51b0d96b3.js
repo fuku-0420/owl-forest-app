@@ -84,4 +84,4 @@ function registerController(name, module, application) {
 
 function canRegisterController(name, application){
   return !application.router.modulesByIdentifier.has(name)
-}
+};

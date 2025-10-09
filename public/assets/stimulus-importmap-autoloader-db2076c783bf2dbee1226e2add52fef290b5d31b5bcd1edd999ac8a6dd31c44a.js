@@ -24,4 +24,4 @@ function registerControllerFromPath(path, under, application) {
     .catch(error => console.error(`Failed to register controller: ${name} (${path})`, error))
 }
 
-console.warn("stimulus-importmap-autoload.js has been deprecated in favor of stimulus-loading.js")
+console.warn("stimulus-importmap-autoload.js has been deprecated in favor of stimulus-loading.js");

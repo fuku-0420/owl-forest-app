@@ -1,0 +1,432 @@
+/* フクちゃんプロフィール配置 */
+.owls-container {
+  position: fixed;
+  /* relative から fixed に変更 */
+  top: 20px;
+  /* 上から20px */
+  right: 20px;
+  /* 右から20px */
+  min-height: 100px;
+  z-index: 1000;
+  /* 他の要素より前面に */
+}
+
+.owl-card {
+  border: 2px solid #a7877041;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #70c54351;
+  max-width: 450px;
+  text-align: center;
+  animation: gentle-float 3s ease-in-out infinite;
+}
+
+.owl-message {
+  background-color: #91ff0075;
+  padding: 15px;
+  border-radius: 5px;
+  margin: 10px 0;
+
+  width: 450px;
+  height: 90px;
+  box-sizing: border-box;
+}
+
+.blackboard {
+  position: absolute;
+  top: 32%;
+  left: 50%;
+  transform: translateX(-40%);
+  border-radius: 15px;
+  padding: 45px;
+  z-index: 10;
+}
+
+.chalk-text-button {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #fcb900;
+  cursor: pointer;
+  padding: 15px 30px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+
+  /* タイピング中は無効化 */
+  pointer-events: none;
+  opacity: 0.7;
+
+  &:hover {
+    color: #00e1ff;
+    background-color: rgba(31, 175, 26, 0.003);
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+/* タイピング完了後のスタイル */
+.chalk-text-button.typing-complete {
+  pointer-events: auto;
+  opacity: 1;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+/* 光る効果 */
+@keyframes glow {
+  from {
+    text-shadow: 0 0 5px #e0e056c7, 0 0 10px #dce152bd;
+  }
+}
+
+/* タイピング中のカーソル効果 */
+.typing-text::after {
+  content: '|';
+  animation: blink 1s infinite;
+  color: #ffaa00;
+}
+
+/* タイピング完了後はカーソルを非表示 */
+.typing-complete .typing-text::after {
+  display: none;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* === showページ用スタイル === */
+
+/* ページ全体の背景 */
+body.owl-show-page {
+  background-image: url(/assets/tisikinomori_fuyu-b93ad5917727a7e0ad0c1c57fcb60bac3840f3b56ea3a627216eaef6c98af99f.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* レイアウト */
+.owl-profile {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.profile-card {
+  border: 3px solid #b5dbff8b;
+  border-radius: 15px;
+  padding: 30px;
+  background-color: rgba(245, 245, 220, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.owl-messages {
+  margin: 30px 0;
+}
+
+.action-buttons {
+  text-align: center;
+  margin-top: 30px;
+}
+
+/* テキストスタイル */
+body.owl-show-page h1 {
+  color: #00f2ff;
+  font-size: 2.2em;
+  font-weight: bold;
+  text-align: center;
+  text-shadow:
+    -1px -1px 0 rgba(0, 0, 0, 0.9),
+    1px -1px 0 rgba(0, 0, 0, 0.9),
+    -1px  1px 0 rgba(0, 0, 0, 0.9),
+    1px  1px 0 rgba(0, 0, 0, 0.9);
+}
+
+body.owl-show-page .profile-details {
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #b5dbff8b;
+  border-radius: 10px;
+  color: #000000;
+  font-size: 1.1em;
+  text-shadow:
+    -1px -1px 0 rgba(255, 255, 255, 0.8),
+    1px -1px 0 rgba(255, 255, 255, 0.8),
+    -1px  1px 0 rgba(255, 255, 255, 0.8),
+    1px  1px 0 rgba(255, 255, 255, 0.8);
+}
+
+body.owl-show-page .message-box {
+  background-color: #b5dbff8b;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 10px 0;
+  line-height: 1.6;
+  color: #000000;
+  font-size: 1.2em;
+  text-shadow:
+    -1px -1px 0 rgba(255, 255, 255, 0.8),
+    1px -1px 0 rgba(255, 255, 255, 0.8),
+    -1px  1px 0 rgba(255, 255, 255, 0.8),
+    1px  1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* === 共通ボタンスタイル === */
+.btn {
+  display: inline-block;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+/* indexページ用ボタン */
+.owls-container .btn {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+}
+
+.owls-container .btn:hover {
+  background-color: #45a049;
+}
+
+.owls-container .btn-primary {
+  background-color: #ff9900b4;
+}
+
+.owls-container .btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* showページ用ボタン */
+.owl-profile .btn {
+  padding: 12px 24px;
+  font-weight: bold;
+}
+
+.owl-profile .btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.owl-profile .btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+/* リアルタイム時計 */
+.clock-display {
+  background: linear-gradient(135deg, #66ea7c18 0%, #4ba26525 100%);
+  color: rgb(217, 255, 0);
+  padding: 8px 12px; /* サイズをコンパクトに */
+  border-radius: 6px;  /* 角丸も少し小さく */
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;     /* フォントサイズを小さく */
+  font-weight: bold;
+  text-align: left;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.205); /* 影も控えめに */
+  margin: 10px 0;      /* マージンも小さく */
+  display: inline-block; /* 横幅を内容に合わせる */
+  position: fixed;     /* 固定位置に配置 */
+  top: 900px;          /* 上から20px */
+  left: 85px;         /* 左から20px */
+  z-index: 1000;      /* 他の要素より前面に */
+}
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+
+
+ */
+
+/* 教室背景コンテナ */
+.classroom-container {
+  height: 90vh;
+  width: 90vw;
+  /* 画面幅いっぱい */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  /* マージンをリセット */
+  padding: 0;
+  /* パディングをリセット */
+}
+
+/* 背景画像専用（明るく調整） */
+.classroom-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url(/assets/tisikinomori-e5be645ed0e2fe526967589dcc46ae5e70a24ad33dff7f85edb4e806efb9ac28.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(1.1);
+  z-index: -1;
+  transition: all 0.5s ease; /* 切り替えアニメーション */
+}
+
+/* 秋の背景画像 */
+.classroom-container.autumn::before {
+  background-image: url(/assets/tisikinomori_aki-6df6ae279e57310e1aed83102714f5c6888829cbd5811bc8e46572a568ce116d.png);
+  filter: brightness(1.0) sepia(0.3) saturate(1.2); /* 秋らしい色調 */
+}
+
+/* ふわふわアニメーション */
+@keyframes gentle-float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.consultation-room-container {
+  margin-top: 30px;
+  padding: 20px;
+  border: 2px solid #8B4513;
+  border-radius: 10px;
+  background-color: #F5F5DC;
+}
+
+.btn-consultation {
+  background-color: #8B4513;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+}
+
+.consultation-content {
+  margin-top: 20px;
+}
+
+/* フクちゃんの基本スタイル */
+.fukuchan-image {
+  position: absolute;
+  top: 92px;
+  right: 650px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  z-index: 10000;
+  cursor: pointer;
+  object-fit: cover;
+
+  /* もやもや登場 */
+  opacity: 0;
+  filter: blur(20px);
+  transform: scale(1.2);
+  transition: all 1s ease;
+}
+
+.fukuchan-visible {
+  opacity: 1;
+  filter: blur(0px);
+  transform: scale(1);
+}
+
+.bgm-controls {
+  position: fixed;
+  bottom: 40px;
+  left: 80px;
+  z-index: 1000;
+  background: #4ba26525;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+
+  /* もやもや登場 */
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.bgm-btn {
+  background: #4ba26525;
+  color: rgb(217, 255, 0);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+
+  /* ボタンがふわっと光る効果 */
+  &:hover {
+    color: rgb(170, 255, 0);
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(129, 162, 75, 0.3);
+  }
+
+  /* クリック時の効果 */
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.volume-slider {
+  width: 80px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  outline: none;
+  appearance: none;
+  transition: all 0.2s ease;
+
+  /* スライダー全体のホバー効果 */
+  &:hover {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(208, 255, 0, 0.8) !important;
+    cursor: pointer;
+    border: none !important;
+    box-shadow: none !important;
+    transition: all 0.2s ease;
+  }
+
+  /* つまみが大きくなって光る */
+  &:hover::-webkit-slider-thumb {
+    width: 12px;
+    height: 12px;
+    background: rgb(217, 255, 0) !important;
+    box-shadow: 0 0 8px rgba(217, 255, 0, 0.5) !important;
+  }
+}
+
+/* 音楽再生中のパルス効果 */
+.bgm-controls.playing {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(75, 162, 101, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(75, 162, 101, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(75, 162, 101, 0); }
+}

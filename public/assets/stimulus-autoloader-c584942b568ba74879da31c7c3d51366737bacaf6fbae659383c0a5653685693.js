@@ -51,4 +51,4 @@ new MutationObserver((mutationsList) => {
 
 autoloadControllersWithin(document)
 
-console.warn("stimulus-autoload.js has been deprecated in favor of stimulus-loading.js")
+console.warn("stimulus-autoload.js has been deprecated in favor of stimulus-loading.js");
