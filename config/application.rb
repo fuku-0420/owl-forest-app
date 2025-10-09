@@ -15,7 +15,7 @@ module FukurouApp
     # 🎯 Rails 8 Propshaft アセット設定を追加
     config.assets.paths << Rails.root.join("app", "assets", "builds")
     config.assets.paths << Rails.root.join("app", "assets", "images")
-    
+
     # 開発環境でのアセット配信を確実にする
     config.assets.compile = true if Rails.env.development?
 

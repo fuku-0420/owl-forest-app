@@ -6,6 +6,27 @@ Rails.application.configure do
   config.consider_all_requests_local = false
   config.action_controller.perform_caching = true
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
+
+  # 🔥 ここから追加設定 🔥
+  # 静的ファイル配信を有効化
+  config.public_file_server.enabled = true
+  config.serve_static_assets = true
+
+  # アセット設定
+  config.assets.compile = false
+  config.assets.precompile += %w[
+    app.css
+    owls.css
+    application.js
+    *.js
+    *.png *.jpg *.jpeg *.gif *.svg
+  ]
+    # 🔥 キャッシュ設定の最適化 🔥
+  config.public_file_server.headers = { 
+    "cache-control" => "public, max-age=#{1.year.to_i}",
+    "expires" => 1.year.from_now.to_formatted_s(:rfc822)
+  }
+
   config.active_storage.service = :local
   config.assume_ssl = true
   config.force_ssl = true
