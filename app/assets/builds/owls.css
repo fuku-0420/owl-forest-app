@@ -1,16 +1,33 @@
 /* === indexページ用スタイル === */
 .owls-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+
+    /* サイズ調整 */
+    max-width: 450px;
+    min-height: 100px;
+    padding: 20px;
+
+    /* スクロール対応 */
+    max-height: 80vh;
+    overflow-y: auto;
+
 }
 
 .owl-card {
-  border: 2px solid #a7877041;
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 20px;
-  background-color: #70c54351;
+    /* レイアウト */
+    max-width: 100%;
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    margin-bottom: 20px;
+
+    /* デザイン */
+    border: 2px solid #a7877041;
+    border-radius: 10px;
+    background-color: #70c54351;
 }
 
 .owl-message {
