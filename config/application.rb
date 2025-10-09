@@ -12,6 +12,13 @@ module FukurouApp
 
     config.autoload_lib(ignore: %w[assets tasks])
 
+    # 🎯 Rails 8 Propshaft アセット設定を追加
+    config.assets.paths << Rails.root.join("app", "assets", "builds")
+    config.assets.paths << Rails.root.join("app", "assets", "images")
+    
+    # 開発環境でのアセット配信を確実にする
+    config.assets.compile = true if Rails.env.development?
+
     # 🌟 Rails 8対応の安全なマイグレーション実行
     if ENV['FORCE_MIGRATION'] == 'true' && Rails.env.production?
       config.after_initialize do

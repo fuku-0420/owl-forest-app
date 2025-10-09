@@ -15,9 +15,9 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <!-- 修正: publicディレクトリから直接読み込み -->
-    <link rel="stylesheet" href="/app.css">
-    <link rel="stylesheet" href="/owls.css">
+    <!-- Rails 8 Propshaft対応の正しいアセット読み込み -->
+    <%= stylesheet_link_tag 'app', 'data-turbo-track': 'reload' %>
+    <%= stylesheet_link_tag 'owls', 'data-turbo-track': 'reload' %>
 
     <%= javascript_importmap_tags %>
   </head>

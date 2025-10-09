@@ -94,7 +94,7 @@
 
 /* ページ全体の背景 */
 body.owl-show-page {
-  background-image: url('/images/tisikinomori_fuyu.png');
+  background-image: url('tisikinomori_fuyu.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
