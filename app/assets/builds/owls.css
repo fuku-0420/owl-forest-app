@@ -1,14 +1,16 @@
 /* === indexページ用スタイル === */
 .owls-container {
-  position: fixed;
-  top: 20px;
-  right: 20px;
+  position: fixed !important;
+  top: 20px !important;
+  right: 20px !important;
+  left: auto !important;
+  bottom: auto !important;
   z-index: 1000;
-  max-width: 450px;
-  min-height: 100px;
-  height: clamp(300px, 40dvh, 560px);
+  width: clamp(300px, 40vw, 450px);
+  height: auto !important;
+  max-height: 80vh;
   padding: 20px;
-  overflow-y: auto;
+  overflow: visible; /* ← ここがポイント */
 }
 
 .owl-card {
