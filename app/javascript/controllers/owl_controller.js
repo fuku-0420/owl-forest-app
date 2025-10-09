@@ -523,6 +523,7 @@ export default class extends Controller {
       owlsContainer.style.transform = 'translateY(20px)'
       owlsContainer.style.transition = 'all 0.8s ease-in-out'
       owlsContainer.style.display = 'block'
+      owlsContainer.style.height = 'clamp(300px, 40dvh, 560px)'
 
       // 登場アニメーション（フクちゃん画像の後に登場）
       setTimeout(() => {
