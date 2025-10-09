@@ -4,107 +4,103 @@
     top: 20px;
     right: 20px;
     z-index: 1000;
-
-    /* サイズ調整 */
     max-width: 450px;
     min-height: 100px;
     padding: 20px;
-
-    /* スクロール対応 */
     max-height: 80vh;
     overflow-y: auto;
-
 }
 
 .owl-card {
-    /* レイアウト */
     max-width: 100%;
     width: 100%;
     text-align: center;
     padding: 20px;
     margin-bottom: 20px;
-
-    /* デザイン */
     border: 2px solid #a7877041;
     border-radius: 10px;
     background-color: #70c54351;
+    animation: gentle-float 3s ease-in-out infinite;
 }
 
 .owl-message {
-  background-color: #91ff0075;
-  padding: 15px;
-  border-radius: 5px;
-  margin: 10px 0;
-
-  width: 450px;
-  height: 90px;
-  box-sizing: border-box;
+    background-color: #91ff0075;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 10px 0;
+    width: 450px;
+    height: 90px;
+    box-sizing: border-box;
 }
 
 .blackboard {
-  position: absolute;
-  top: 32%;
-  left: 50%;
-  transform: translateX(-40%);
-  border-radius: 15px;
-  padding: 45px;
-  z-index: 10;
+    position: absolute;
+    top: 32%;
+    left: 50%;
+    transform: translateX(-40%);
+    border-radius: 15px;
+    padding: 45px;
+    z-index: 10;
 }
 
 .chalk-text-button {
-  background: none;
-  border: none;
-  font-size: 2rem;
-  color: #fcb900;
-  cursor: pointer;
-  padding: 15px 30px;
-  border-radius: 10px;
-  transition: all 0.3s ease;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #fcb900;
+    cursor: pointer;
+    padding: 15px 30px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    opacity: 0.7;
+}
 
-  /* タイピング中は無効化 */
-  pointer-events: none;
-  opacity: 0.7;
-
-  &:hover {
+.chalk-text-button:hover {
     color: #00e1ff;
     background-color: rgba(31, 175, 26, 0.003);
     transform: scale(1.05);
-  }
+}
 
-  &:active {
+.chalk-text-button:active {
     transform: scale(0.95);
-  }
 }
 
-/* タイピング完了後のスタイル */
 .chalk-text-button.typing-complete {
-  pointer-events: auto;
-  opacity: 1;
-  animation: glow 2s ease-in-out infinite alternate;
+    pointer-events: auto;
+    opacity: 1;
+    animation: glow 2s ease-in-out infinite alternate;
 }
 
-/* 光る効果 */
+/* === アニメーション === */
+@keyframes gentle-float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
 @keyframes glow {
-  from {
-    text-shadow: 0 0 5px #e0e056c7, 0 0 10px #dce152bd;
-  }
+    from {
+        text-shadow: 0 0 5px #e0e056c7, 0 0 10px #dce152bd;
+    }
 }
 
-/* タイピング中のカーソル効果 */
 .typing-text::after {
-  content: '|';
-  animation: blink 1s infinite;
-  color: #ffaa00;
+    content: '|';
+    animation: blink 1s infinite;
+    color: #ffaa00;
 }
 
-/* タイピング完了後はカーソルを非表示 */
 .typing-complete .typing-text::after {
-  display: none;
+    display: none;
 }
 
 @keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
 }
 
 /* === showページ用スタイル === */

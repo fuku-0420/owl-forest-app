@@ -38,19 +38,6 @@
   filter: brightness(1.0) sepia(0.3) saturate(1.2); /* 秋らしい色調 */
 }
 
-/* ふわふわアニメーション */
-@keyframes gentle-float {
-
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-
-  50% {
-    transform: translateY(-5px);
-  }
-}
-
 .consultation-room-container {
   margin-top: 30px;
   padding: 20px;
