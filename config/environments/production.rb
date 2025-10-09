@@ -5,33 +5,38 @@ Rails.application.configure do
   config.eager_load = true
   config.consider_all_requests_local = false
   config.action_controller.perform_caching = true
-  config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
 
-  # 🔥 ここから追加設定 🔥
-  # 静的ファイル配信を有効化
+  # 🔥 Propshaft + Rails 8 対応設定 🔥
   config.public_file_server.enabled = true
-  config.serve_static_assets = true
+  config.serve_static_files = true
 
-  # アセット設定
-  config.assets.compile = false
+  # Propshaft 設定（Rails 8 対応）
+  config.assets.compile = true
+  config.assets.digest = true
+  config.assets.debug = false
+
+  # builds ディレクトリのファイルを明示的に指定
   config.assets.precompile += %w[
-    app.css
-    owls.css
+    builds/app.css
+    builds/owls.css
     application.js
     *.js
+    *.css
     *.png *.jpg *.jpeg *.gif *.svg
   ]
-    # 🔥 キャッシュ設定の最適化 🔥
-  config.public_file_server.headers = { 
+
+  # キャッシュ設定
+  config.public_file_server.headers = {
     "cache-control" => "public, max-age=#{1.year.to_i}",
     "expires" => 1.year.from_now.to_formatted_s(:rfc822)
   }
 
+  # その他の設定...
   config.active_storage.service = :local
   config.assume_ssl = true
   config.force_ssl = true
   config.log_tags = [ :request_id ]
-  config.logger   = ActiveSupport::TaggedLogging.logger(STDOUT)
+  config.logger = ActiveSupport::TaggedLogging.logger(STDOUT)
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
   config.silence_healthcheck_path = "/up"
   config.active_support.report_deprecations = false
