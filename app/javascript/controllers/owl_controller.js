@@ -438,46 +438,25 @@ export default class extends Controller {
   }
 
   showOwlProfile() {
-    // 🕐 TurboやRenderの描画遅延に対応
-    requestAnimationFrame(() => {
+    const owlsContainer = document.querySelector('.owls-container')
+
+    if (owlsContainer) {
+      owlsContainer.style.display = 'block'
+      owlsContainer.classList.add('hidden-init')
+
       setTimeout(() => {
-        const owlsContainer = document.querySelector('.owls-container')
-        console.log("🦉 owlContainer HTML内容:", owlsContainer?.innerHTML)
+        owlsContainer.classList.add('showing')
 
-        if (!owlsContainer) {
-          console.warn("⚠️ owlsContainer が見つかりませんでした")
-          return
-        }
-
-        // 表示を有効化
-        owlsContainer.style.display = 'block'
-        owlsContainer.classList.add('hidden-init')
-
-        // フェードインアニメーション
         setTimeout(() => {
-          owlsContainer.classList.add('showing')
+          const owlCards = owlsContainer.querySelectorAll('.owl-card')
+          owlCards.forEach(card => card.classList.add('show-floating'))
 
           setTimeout(() => {
-            const owlCards = owlsContainer.querySelectorAll('.owl-card')
-            console.log("🦉 検出された owlCards:", owlCards.length)
-
-            if (owlCards.length === 0) {
-              console.warn("⚠️ Owlカードがまだ読み込まれていません。再試行します...")
-              setTimeout(() => this.showOwlProfile(), 800)
-              return
-            }
-
-            // カードを浮かせて順次表示
-            owlCards.forEach(card => card.classList.add('show-floating'))
-
-            // 全メッセージを順番に表示
-            setTimeout(() => {
-              this.showAllOwlMessages()
-            }, 500)
-          }, 800)
-        }, 1000)
-      }, 800)
-    })
+            this.showAllOwlMessages()
+          }, 500)
+        }, 800)
+      }, 1000)
+    }
   }
 
   // ★ 全ての梟のメッセージを自動表示
