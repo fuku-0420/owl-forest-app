@@ -4,8 +4,3 @@ Owl.find_or_create_by(name: "フクちゃん") do |owl|
   owl.habitat = "RUNTEQ 知識の森"
   owl.description = ""
 end
-
-# 追加で確認用のレコードも
-Owl.find_or_create_by(name: "Renderテストフクロウ") do |owl|
-  owl.description = "無料プランから追加したデータです"
-end
