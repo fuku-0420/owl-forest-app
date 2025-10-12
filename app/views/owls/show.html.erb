@@ -67,7 +67,9 @@
     </div>
 
     <!-- ❄️ プロフィールBGM -->
-    <div class="bgm-controls" data-controller="bgm-show">
+    <div class="bgm-controls"
+          data-controller="bgm-show"
+          data-bgm-path="<%= asset_path('snow_ambient.mp3') %>">
       <button data-bgm-show-target="toggleButton"
               data-action="click->bgm-show#toggle"
               class="bgm-btn">

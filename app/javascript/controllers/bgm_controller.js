@@ -4,7 +4,9 @@ export default class extends Controller {
   static targets = ["toggleButton", "volumeSlider"]
 
   connect() {
-    this.bgm = new Audio('/forest_ambient.mp3')
+    // Railsがプリコンパイルした正しいURLを取得する
+    const bgmPath = this.element.dataset.bgmPath
+    this.bgm = new Audio(bgmPath)
     this.bgm.loop = true
     this.bgm.volume = parseFloat(this.volumeSliderTarget?.value || 0.2)
     this.isPlaying = false
@@ -20,7 +22,7 @@ export default class extends Controller {
 
   toggle() {
     if (this.isPlaying) {
-      this.fadeOutAndPause() // 🎵 フェードアウト停止に変更
+      this.fadeOutAndPause()
       this.toggleButtonTarget.textContent = '森のBGM'
       this.element.classList.remove('playing')
       this.isPlaying = false
@@ -46,7 +48,6 @@ export default class extends Controller {
         clearInterval(fade)
         this.bgm.pause()
         this.bgm.currentTime = 0
-        // 🎵 フェードアウト完了後に音量を元に戻す
         this.bgm.volume = originalVolume
         return
       }

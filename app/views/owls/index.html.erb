@@ -29,7 +29,9 @@
 </div>
 
 <!-- BGMコントロール -->
-<div class="bgm-controls" data-controller="bgm">
+<div class="bgm-controls"
+    data-controller="bgm"
+    data-bgm-path="<%= asset_path('forest_ambient.mp3') %>">
   <button data-bgm-target="toggleButton"
           data-action="click->bgm#toggle"
           class="bgm-btn">

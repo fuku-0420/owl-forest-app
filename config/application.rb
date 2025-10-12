@@ -15,6 +15,7 @@ module FukurouApp
     # 🎯 Rails 8 Propshaft アセット設定を追加
     config.assets.paths << Rails.root.join("app", "assets", "builds")
     config.assets.paths << Rails.root.join("app", "assets", "images")
+    config.assets.paths << Rails.root.join("app", "assets", "audios") # ← これを追加！
 
     # 開発環境でのアセット配信を確実にする
     config.assets.compile = true if Rails.env.development?
@@ -35,13 +36,11 @@ module FukurouApp
               ActiveRecord::Tasks::DatabaseTasks.migrate
               Rails.logger.info "✅ Migration completed successfully!"
             else
-              # フォールバック: Rakeタスクを使用
               Rails.application.load_tasks
               Rake::Task["db:migrate"].invoke
               Rails.logger.info "✅ Migration completed via Rake task!"
             end
 
-            # テーブル存在確認
             if ActiveRecord::Base.connection.table_exists?("owls")
               Rails.logger.info "✅ owls table created successfully!"
             else

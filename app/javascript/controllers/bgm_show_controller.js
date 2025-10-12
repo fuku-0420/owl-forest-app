@@ -5,7 +5,10 @@ export default class extends Controller {
     static targets = ["toggleButton"]
 
     connect() {
-        this.bgm = new Audio('/snow_ambient.mp3') // 冬の森のBGM
+        // ✅ Railsが生成するfingerprint付きのURLを使う
+        const bgmPath = this.element.dataset.bgmPath
+
+        this.bgm = new Audio(bgmPath)
         this.bgm.loop = true
         this.bgm.volume = 0.15
 
