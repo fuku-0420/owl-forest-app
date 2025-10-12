@@ -11,9 +11,10 @@
 
     <%= yield :head %>
 
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
+    <!-- 🦉 Favicon設定 -->
+    <link rel="icon" href="<%= asset_path('favicon.png') %>" type="image/png">
+    <link rel="apple-touch-icon" href="<%= asset_path('favicon.png') %>">
+    <link rel="icon" href="<%= asset_path('favicon.svg') %>" type="image/svg+xml">
 
     <!-- Rails 8 Propshaft対応の正しいアセット読み込み -->
     <%= stylesheet_link_tag "owls", data: { turbo_track: "reload" } %>

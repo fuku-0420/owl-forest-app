@@ -6,44 +6,52 @@ export default class extends Controller {
   connect() {
     this.bgm = new Audio('/forest_ambient.mp3')
     this.bgm.loop = true
-    this.bgm.volume = 0.3
+    this.bgm.volume = parseFloat(this.volumeSliderTarget?.value || 0.2)
     this.isPlaying = false
-
-    this.bgm.addEventListener('loadeddata', () => {
-      console.log('BGM file loaded successfully!')
-    })
-
-    this.bgm.addEventListener('error', (e) => {
-      console.error('BGM file failed to load:', e)
-    })
   }
 
-  // ★ 追加！コントローラーが切断される時の処理
   disconnect() {
-    console.log('BGMコントローラーが切断されます')
     if (this.bgm) {
       this.bgm.pause()
-      this.bgm.currentTime = 0  // 再生位置もリセット
-      this.bgm = null  // オブジェクトも削除
+      this.bgm.currentTime = 0
+      this.bgm = null
     }
   }
 
   toggle() {
     if (this.isPlaying) {
-      this.bgm.pause()
+      this.fadeOutAndPause() // 🎵 フェードアウト停止に変更
       this.toggleButtonTarget.textContent = '森のBGM'
+      this.element.classList.remove('playing')
+      this.isPlaying = false
     } else {
       this.bgm.play().then(() => {
-        console.log('BGM started playing')
         this.toggleButtonTarget.textContent = 'BGM停止'
         this.isPlaying = true
+        this.element.classList.add('playing')
       }).catch(error => {
         console.error('BGM play failed:', error)
-        alert('BGMファイルが見つかりません。ファイルの配置を確認してください。')
       })
-      return
     }
-    this.isPlaying = !this.isPlaying
+  }
+
+  fadeOutAndPause() {
+    if (!this.bgm) return
+    const originalVolume = this.bgm.volume
+    let currentVolume = originalVolume
+
+    const fade = setInterval(() => {
+      currentVolume -= 0.02
+      if (currentVolume <= 0.01) {
+        clearInterval(fade)
+        this.bgm.pause()
+        this.bgm.currentTime = 0
+        // 🎵 フェードアウト完了後に音量を元に戻す
+        this.bgm.volume = originalVolume
+        return
+      }
+      this.bgm.volume = Math.max(currentVolume, 0)
+    }, 100)
   }
 
   adjustVolume() {

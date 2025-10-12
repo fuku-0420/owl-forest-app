@@ -65,5 +65,14 @@
     <div class="action-buttons">
       <%= link_to "一覧に戻る", owls_path, class: "btn btn-secondary" %>
     </div>
+
+    <!-- ❄️ プロフィールBGM -->
+    <div class="bgm-controls" data-controller="bgm-show">
+      <button data-bgm-show-target="toggleButton"
+              data-action="click->bgm-show#toggle"
+              class="bgm-btn">
+        BGM停止
+      </button>
+    </div>
   </div>
 </div>

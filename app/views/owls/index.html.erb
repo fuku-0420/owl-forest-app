@@ -1,12 +1,29 @@
 <div class="classroom-container" data-controller="owl">
-  <div class="blackboard" data-owl-target="blackboard">
-    <button class="chalk-text-button" data-action="click->owl#enterForest">
-      <span class="typing-text" data-owl-target="typingText"></span>
-    </button>
-  </div>
+  <!-- 🌳 森の背景画像をHTML内に追加 -->
+  <img src="<%= asset_path('tisikinomori.png') %>"
+      alt="森の背景"
+      class="forest-bg"
+      data-owl-target="forest"
+      data-autumn-image="<%= asset_path('tisikinomori_aki.png') %>">
+
+<!-- 黒板エリア -->
+<div class="blackboard" data-owl-target="blackboard">
+  <!-- 🦉 フクちゃん画像を黒板内に移動 -->
+  <img src="<%= asset_path('fukuchan.png') %>"
+      alt="フクちゃん"
+      class="fukuchan-image"
+      data-owl-target="fukuchan"
+      data-happy-image="<%= asset_path('fukuchan-happy.png') %>"
+      data-normal-image="<%= asset_path('fukuchan.png') %>">
+
+  <button class="chalk-text-button"
+          data-owl-target="click"
+          data-action="click->owl#enterForest">
+    <span class="typing-text" data-owl-target="typingText"></span>
+  </button>
 </div>
 
-<!-- リアルタイム時計エリア -->
+<!-- リアルタイム時計 -->
 <div data-controller="clock">
   <div id="current-time" class="clock-display" data-clock-target="display"></div>
 </div>
@@ -36,8 +53,9 @@
       <p><strong>種類:</strong> <%= owl.species %></p>
       <p><strong>年齢:</strong> <%= owl.age %>歳</p>
       <p><strong>住んでいる場所:</strong> <%= owl.habitat %></p>
+
       <div>
-        <strong>📝 自己紹介:</strong>
+        <strong>自己紹介</strong>
         <p style="margin: 4px 0;">プログラミング学習の新しい味方😄</p>
         <p style="margin: 4px 0;">知っていると便利な情報やアドバイスをくれるよ✨</p>
         <p style="margin: 4px 0 0 0;">みんなの学習を楽しくサポートします!!</p>

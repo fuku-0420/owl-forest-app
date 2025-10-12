@@ -1,4 +1,4 @@
-if ENV['FORCE_MIGRATION'] == 'true' && Rails.env.production?
+if ENV["FORCE_MIGRATION"] == "true" && Rails.env.production?
   Rails.application.configure do
     config.after_initialize do
       Thread.new do

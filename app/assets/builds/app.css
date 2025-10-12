@@ -1,43 +1,55 @@
-/* 教室背景コンテナ */
+/* === 全体余白リセット === */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden; /* 上下横スライド禁止 */
+}
+
+/* =========================================================
+  🌳 1. 教室背景コンテナ・季節切り替え
+   ========================================================= */
 .classroom-container {
-  height: 90vh;
-  width: 90vw;
-  /* 画面幅いっぱい */
   position: relative;
   display: flex;
+  flex-direction: column; /* 縦方向に積む */
   align-items: center;
   justify-content: center;
+  height: 100vh;
+  width: 100vw;
   margin: 0;
-  /* マージンをリセット */
   padding: 0;
-  /* パディングをリセット */
+  overflow: hidden;
 }
 
-/* 背景画像専用（明るく調整） */
-.classroom-container::before {
-  content: '';
-  position: fixed;
+/* === 森の背景画像（HTML内img用） === */
+.forest-bg {
+  position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100vw;
-  height: 100vh;
-  background-image: url('tisikinomori.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   filter: brightness(1.1);
   z-index: -1;
-  transition: all 0.5s ease; /* 切り替えアニメーション */
+  transition: all 0.8s ease;
 }
 
-/* 秋の背景画像 */
-.classroom-container.autumn::before {
-  background-image: url('tisikinomori_aki.png');
-  filter: brightness(1.0) sepia(0.3) saturate(1.2); /* 秋らしい色調 */
+/* 🍁 秋モード：スキップ後など */
+.classroom-container.autumn .forest-bg {
+  filter: brightness(1.0) sepia(0.3) saturate(1.2);
+  content: url("/assets/tisikinomori_aki.png");
 }
 
+
+.classroom-container.autumn .forest-bg {
+  filter: brightness(1.0) sepia(0.3) saturate(1.2);
+}
+
+/* =========================================================
+  🪶 2. 黒板・相談室ブロック
+   ========================================================= */
 .consultation-room-container {
   margin-top: 30px;
   padding: 20px;
@@ -58,19 +70,21 @@
   margin-top: 20px;
 }
 
-/* フクちゃんの基本スタイル */
+/* =========================================================
+  🦉 3. フクちゃん（キャラクター要素）
+   ========================================================= */
 .fukuchan-image {
-  position: absolute;
-  top: 92px;
-  right: 650px;
-  width: 120px;
-  height: 120px;
+  position: absolute;   /* 黒板に相対配置 */
+  top: -61px;
+  right: 1px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
-  z-index: 10000;
-  cursor: pointer;
   object-fit: cover;
+  z-index: 5;
+  cursor: pointer;
 
-  /* もやもや登場 */
+  /* 登場演出 */
   opacity: 0;
   filter: blur(20px);
   transform: scale(1.2);
@@ -79,10 +93,13 @@
 
 .fukuchan-visible {
   opacity: 1;
-  filter: blur(0px);
+  filter: blur(0);
   transform: scale(1);
 }
 
+/* =========================================================
+  🎵 4. BGMコントロールUI
+   ========================================================= */
 .bgm-controls {
   position: fixed;
   bottom: 40px;
@@ -96,15 +113,14 @@
   align-items: center;
   gap: 12px;
   transition: all 0.3s ease;
+}
 
-  /* もやもや登場 */
-  &:hover {
-    transform: translateY(-2px);
-  }
+.bgm-controls:hover {
+  transform: translateY(-2px);
 }
 
 .bgm-btn {
-  background: #4ba26525;
+  background: #4ba26517;
   color: rgb(217, 255, 0);
   border: none;
   padding: 8px 12px;
@@ -112,18 +128,16 @@
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.2s ease;
+}
 
-  /* ボタンがふわっと光る効果 */
-  &:hover {
-    color: rgb(170, 255, 0);
-    transform: scale(1.05);
-    box-shadow: 0 2px 8px rgba(129, 162, 75, 0.3);
-  }
+.bgm-btn:hover {
+  color: rgb(170, 255, 0);
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(129, 162, 75, 0.3);
+}
 
-  /* クリック時の効果 */
-  &:active {
-    transform: scale(0.98);
-  }
+.bgm-btn:active {
+  transform: scale(0.98);
 }
 
 .volume-slider {
@@ -133,32 +147,30 @@
   outline: none;
   appearance: none;
   transition: all 0.2s ease;
+}
 
-  /* スライダー全体のホバー効果 */
-  &:hover {
-    height: 4px;
-    background: rgba(255, 255, 255, 0.4);
-  }
+.volume-slider:hover {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.4);
+}
 
-  &::-webkit-slider-thumb {
-    appearance: none;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(208, 255, 0, 0.8) !important;
-    cursor: pointer;
-    border: none !important;
-    box-shadow: none !important;
-    transition: all 0.2s ease;
-  }
+.volume-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(208, 255, 0, 0.8) !important;
+  cursor: pointer;
+  border: none !important;
+  box-shadow: none !important;
+  transition: all 0.2s ease;
+}
 
-  /* つまみが大きくなって光る */
-  &:hover::-webkit-slider-thumb {
-    width: 12px;
-    height: 12px;
-    background: rgb(217, 255, 0) !important;
-    box-shadow: 0 0 8px rgba(217, 255, 0, 0.5) !important;
-  }
+.volume-slider:hover::-webkit-slider-thumb {
+  width: 12px;
+  height: 12px;
+  background: rgb(217, 255, 0) !important;
+  box-shadow: 0 0 8px rgba(217, 255, 0, 0.5) !important;
 }
 
 /* 音楽再生中のパルス効果 */
@@ -166,8 +178,43 @@
   animation: pulse 2s infinite;
 }
 
+/* =========================================================
+  ❄️ SHOWページ専用BGM（シンプル版）
+   ========================================================= */
+body.owl-show-page .bgm-controls {
+  position: fixed;
+  bottom: 40px;
+  left: 60px;
+  z-index: 900;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px 14px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+body.owl-show-page .bgm-btn {
+  background: transparent;
+  color: #ffff8a;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+body.owl-show-page .bgm-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
+  color: #ffffff;
+}
+
+/* =========================================================
+    アニメーション
+   ========================================================= */
 @keyframes pulse {
   0% { box-shadow: 0 0 0 0 rgba(75, 162, 101, 0.4); }
   70% { box-shadow: 0 0 0 10px rgba(75, 162, 101, 0); }
   100% { box-shadow: 0 0 0 0 rgba(75, 162, 101, 0); }
 }
+
