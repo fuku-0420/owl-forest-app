@@ -440,6 +440,8 @@ export default class extends Controller {
   showOwlProfile() {
     const owlsContainer = document.querySelector('.owls-container')
 
+    console.log("🦉 owlContainer HTML内容:", owlsContainer?.innerHTML)
+
     if (owlsContainer) {
       owlsContainer.style.display = 'block'
       owlsContainer.classList.add('hidden-init')
@@ -449,6 +451,7 @@ export default class extends Controller {
 
         setTimeout(() => {
           const owlCards = owlsContainer.querySelectorAll('.owl-card')
+          console.log("🦉 検出された owlCards:", owlCards.length)
           owlCards.forEach(card => card.classList.add('show-floating'))
 
           setTimeout(() => {
