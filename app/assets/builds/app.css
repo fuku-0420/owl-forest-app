@@ -194,7 +194,7 @@ body.owl-show-page .bgm-controls {
 
 body.owl-show-page .bgm-btn {
   background: transparent;
-  color: #ffff8a;
+  color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.3);
   padding: 8px 18px;
   border-radius: 6px;
@@ -206,7 +206,7 @@ body.owl-show-page .bgm-btn {
 body.owl-show-page .bgm-btn:hover {
   background: rgba(255, 255, 255, 0.1);
   transform: scale(1.05);
-  color: #ffffff;
+  color: #ffff8a;
 }
 
 /* =========================================================
