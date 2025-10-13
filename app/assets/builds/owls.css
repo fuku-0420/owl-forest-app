@@ -12,22 +12,13 @@
 
 /* gentle浮遊アニメーション */
 @keyframes gentle-float {
-
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-
-  50% {
-    transform: translateY(-5px);
-  }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
 }
 
 /* 発光アニメーション */
 @keyframes glow {
-  from {
-    text-shadow: 0 0 5px #e0e056c7, 0 0 10px #dce152bd;
-  }
+  from { text-shadow: 0 0 5px #e0e056c7, 0 0 10px #dce152bd; }
 }
 
 /* タイピングカーソル */
@@ -36,22 +27,11 @@
   animation: blink 1s infinite;
   color: #ffaa00;
 }
-
-.typing-complete .typing-text::after {
-  display: none;
-}
+.typing-complete .typing-text::after { display: none; }
 
 @keyframes blink {
-
-  0%,
-  50% {
-    opacity: 1;
-  }
-
-  51%,
-  100% {
-    opacity: 0;
-  }
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
 }
 
 /* =========================================================
@@ -99,15 +79,13 @@
 /* === 黒板中央の要素配置を固定 === */
 .blackboard {
   position: absolute;
-  top: 39%;
-  /* 背景黒板の中心に合わせた補正値 */
+  top: 39%;           /* 背景黒板の中心に合わせた補正値 */
   left: 49%;
   transform: translate(-50%, -50%);
   width: 600px;
   height: 400px;
   display: flex;
-  flex-direction: column;
-  /* タイトルとボタン縦並び */
+  flex-direction: column; /* タイトルとボタン縦並び */
   justify-content: center;
   align-items: center;
   z-index: 10;
@@ -115,12 +93,10 @@
 
 .button-container {
   display: flex;
-  flex-wrap: wrap;
-  /* 横に並べて折り返し可能 */
+  flex-wrap: wrap; /* 横に並べて折り返し可能 */
   justify-content: center;
   align-items: center;
-  gap: 14px;
-  /* ボタンの間隔 */
+  gap: 14px; /* ボタンの間隔 */
   margin-top: 20px;
 }
 
@@ -128,8 +104,7 @@
   color: #fcc900ff;
   font-size: clamp(20px, 3.5vw, 26px);
   text-align: center;
-  margin-bottom: 15px;
-  /* ボタンとの距離 */
+  margin-bottom: 15px; /* ボタンとの距離 */
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
@@ -203,7 +178,7 @@
   transform: scale(1.08);
   color: #00f7ff;
   text-shadow: 0 0 8px rgba(150, 248, 255, 0.8),
-    0 0 20px rgba(255, 255, 200, 0.4);
+              0 0 20px rgba(255, 255, 200, 0.4);
 }
 
 /* クリック時：少し沈んで“トン”と押す感 */
@@ -216,10 +191,8 @@
 
 .story-skip-button {
   position: fixed;
-  bottom: 34%;
-  /* 下から画面の位置 */
-  right: 34%;
-  /* 右から画面の位置 */
+  bottom: 34%;   /* 下から画面の位置 */
+  right: 34%;    /* 右から画面の位置 */
   padding: 10px 18px;
   background-color: rgba(21, 130, 54, 0.062);
   color: rgba(0, 0, 0, 0.49);
@@ -254,10 +227,8 @@
 
 .advice-text {
   position: absolute;
-  top: 16%;
-  /* 黒板上端からの距離 */
-  left: 5%;
-  /* 黒板左端からの距離 */
+  top: 16%;          /* 黒板上端からの距離 */
+  left: 5%;         /* 黒板左端からの距離 */
   width: 100%;
   color: #ffd000;
   font-size: clamp(16px, 2vw, 18px);
@@ -270,10 +241,8 @@
 
 .back-button {
   position: absolute;
-  bottom: 2%;
-  /* ← 黒板下端からの距離 */
-  right: 0%;
-  /* ← 黒板右端からの距離 */
+  bottom: 2%;      /* ← 黒板下端からの距離 */
+  right: 0%;       /* ← 黒板右端からの距離 */
   background-color: rgba(0, 255, 115, 0.6);
   color: #e2d930;
   padding: 10px 24px;
@@ -283,8 +252,7 @@
   font-size: clamp(14px, 2vw, 18px);
   cursor: pointer;
   opacity: 0;
-  transform: translate(0, 0);
-  /* ホバーずれ防止 */
+  transform: translate(0, 0); /* ホバーずれ防止 */
   transition: all 0.3s ease;
 }
 
@@ -294,34 +262,18 @@
 
 .back-button:hover {
   background-color: rgba(0, 255, 255, 0.8);
-  box-shadow: 0 0 18px rgba(0, 255, 255, 0.9);
-  /* ホバー発光を中央に */
-  transform: scale(1.05);
-  /* ほんの少し拡大 */
+  box-shadow: 0 0 18px rgba(0, 255, 255, 0.9); /* ホバー発光を中央に */
+  transform: scale(1.05); /* ほんの少し拡大 */
 }
 
 @keyframes fadeInAdvice {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
+  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 @keyframes fadeInBack {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 /* 梟カード登場演出 */
@@ -330,7 +282,6 @@
   transform: translateY(20px);
   transition: all 0.8s ease-in-out;
 }
-
 .showing {
   opacity: 1;
   transform: translateY(0);
@@ -350,10 +301,8 @@ body.owl-show-page {
 /* 🕊️ プロフィールページではスクロールを許可（htmlも含めて上書き） */
 html.owl-show-page,
 body.owl-show-page {
-  overflow-y: auto !important;
-  /* 縦スクロールだけ有効に */
-  overflow-x: hidden !important;
-  /* 横スクロール防止 */
+  overflow-y: auto !important; /* 縦スクロールだけ有効に */
+  overflow-x: hidden !important; /* 横スクロール防止 */
   height: auto !important;
   min-height: 100%;
 }
@@ -389,8 +338,8 @@ body.owl-show-page h1 {
   text-shadow:
     -1px -1px 0 rgba(0, 0, 0, 0.9),
     1px -1px 0 rgba(0, 0, 0, 0.9),
-    -1px 1px 0 rgba(0, 0, 0, 0.9),
-    1px 1px 0 rgba(0, 0, 0, 0.9);
+    -1px  1px 0 rgba(0, 0, 0, 0.9),
+    1px  1px 0 rgba(0, 0, 0, 0.9);
 }
 
 body.owl-show-page .profile-details,
@@ -401,16 +350,14 @@ body.owl-show-page .message-box {
   text-shadow:
     -1px -1px 0 rgba(255, 255, 255, 0.8),
     1px -1px 0 rgba(255, 255, 255, 0.8),
-    -1px 1px 0 rgba(255, 255, 255, 0.8),
-    1px 1px 0 rgba(255, 255, 255, 0.8);
+    -1px  1px 0 rgba(255, 255, 255, 0.8),
+    1px  1px 0 rgba(255, 255, 255, 0.8);
 }
-
 body.owl-show-page .profile-details {
   margin: 20px 0;
   padding: 20px;
   font-size: 1.1em;
 }
-
 body.owl-show-page .message-box {
   padding: 15px;
   margin: 10px 0;
@@ -427,7 +374,6 @@ body.owl-show-page .message-box {
   border-radius: 5px;
   transition: background-color 0.3s ease;
 }
-
 .owls-container .btn {
   padding: 10px 20px;
   background-color: #4CAF50;
@@ -465,12 +411,10 @@ body.owl-show-page .message-box {
   padding: 12px 24px;
   font-weight: bold;
 }
-
 .owl-profile .btn-secondary {
   background-color: #6c757d;
   color: white;
 }
-
 .owl-profile .btn-secondary:hover {
   background-color: #5a6268;
 }
@@ -500,81 +444,4 @@ body.owl-show-page .message-box {
   left: 80px !important;
   z-index: 2000;
   transform: none !important;
-}
-
-/* =========================================================
-  📱 レスポンシブ対応（スマホ・タブレット用）
-   ========================================================= */
-
-/* --- スマホ縦 --- */
-@media screen and (max-width: 600px) and (orientation: portrait) {
-  .blackboard {
-    width: 90vw !important;
-    top: 45% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%);
-  }
-
-  .blackboard .board-title {
-    font-size: clamp(16px, 5vw, 22px);
-  }
-
-  .blackboard .board-button {
-    font-size: clamp(14px, 4vw, 18px);
-    padding: 10px 20px;
-  }
-
-  .fukuchan-image {
-    top: -40px;
-    right: 10px;
-    width: 70px;
-    height: 70px;
-  }
-
-  .bgm-controls {
-    bottom: 20px;
-    left: 20px;
-    transform: scale(0.9);
-  }
-
-  .clock-display {
-    left: 20px !important;
-    bottom: 5px !important;
-    font-size: 12px !important;
-  }
-}
-
-/* --- スマホ横 or タブレット横 --- */
-@media screen and (max-width: 1024px) and (orientation: landscape) {
-  .blackboard {
-    width: 70vw !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%);
-  }
-
-  .blackboard .board-title {
-    font-size: clamp(18px, 3vw, 24px);
-  }
-
-  .blackboard .board-button {
-    font-size: clamp(16px, 2.5vw, 20px);
-  }
-
-  .fukuchan-image {
-    width: 80px;
-    height: 80px;
-  }
-}
-
-/* --- 高解像度ディスプレイ（4KやMacなど） --- */
-@media screen and (min-width: 1800px) {
-  .blackboard {
-    width: 50vw !important;
-    top: 45% !important;
-  }
-
-  .blackboard .board-title {
-    font-size: clamp(22px, 2vw, 28px);
-  }
 }
