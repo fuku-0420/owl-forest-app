@@ -21,26 +21,23 @@ document.addEventListener("turbo:load", () => {
     }
 })
 
-
-function adjustBlackboardPosition() {
-    const blackboard = document.querySelector('.blackboard')
-    if (!blackboard) return
-
-    const vw = window.innerWidth
-    const vh = window.innerHeight
-    const topPercent = 0.39
-
-    blackboard.style.transition = 'top 0.5s ease'
-    blackboard.style.left = `${vw * 0.49}px`
-    blackboard.style.top = `${vh * topPercent}px`
-    blackboard.style.transform = 'translate(-50%, -50%)'
-}
-
-// F11切替・リサイズ両対応
-window.addEventListener('resize', () => {
-    // 2段階リセット：即時 + 遅延補正
-    adjustBlackboardPosition()
-    setTimeout(adjustBlackboardPosition, 700)
-    setTimeout(adjustBlackboardPosition, 1300)
-})
-window.addEventListener('load', adjustBlackboardPosition)
+// function adjustBlackboardPosition() {
+//     const blackboard = document.querySelector('.blackboard')
+//     if (!blackboard) return
+//
+//     const vw = window.innerWidth
+//     const vh = window.innerHeight
+//     const topPercent = 0.39
+//
+//     blackboard.style.transition = 'top 0.5s ease'
+//     blackboard.style.left = `${vw * 0.49}px`
+//     blackboard.style.top = `${vh * topPercent}px`
+//     blackboard.style.transform = 'translate(-50%, -50%)'
+// }
+//
+// window.addEventListener('resize', () => {
+//     adjustBlackboardPosition()
+//     setTimeout(adjustBlackboardPosition, 700)
+//     setTimeout(adjustBlackboardPosition, 1300)
+// })
+// window.addEventListener('load', adjustBlackboardPosition)
