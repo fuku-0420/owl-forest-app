@@ -95,7 +95,7 @@ body {
   width: clamp(150px, 20vw, 250px);
   height: auto;
   border-radius: 50%;
-  z-index: 2000;
+  z-index: 1500;
   cursor: pointer;
   transition: all 0.6s ease;
   pointer-events: auto;
