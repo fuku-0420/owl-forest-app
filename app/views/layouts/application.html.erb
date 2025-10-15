@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="turbo-cache-control" content="no-cache">
     <meta name="apple-mobile-web-app-orientation" content="landscape">
+    <meta name="turbo-cache-control" content="no-cache">
+    <meta name="theme-color" content="#3b6430">
 
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
     <%= yield :head %>
 
     <!-- 🦉 Favicon設定 -->
@@ -22,7 +22,6 @@
     <!-- Rails 8 Propshaft対応の正しいアセット読み込み -->
     <%= stylesheet_link_tag "app", data: { turbo_track: "reload" } %>
     <%= stylesheet_link_tag "owls", data: { turbo_track: "reload" } %>
-
     <%= javascript_importmap_tags %>
   </head>
 

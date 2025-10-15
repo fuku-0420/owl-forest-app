@@ -9,7 +9,21 @@ export default class extends Controller {
 
   connect() {
     this.startTypingAnimation()
+
+    // 🎧 初回クリックでオーディオ解放（Mac 対策）
+    const unlockAudio = () => {
+      try {
+        [this.audioCtx, this.audioCtxAdvice, this.sharedAudioCtx].forEach(ctx => {
+          if (ctx && ctx.state === "suspended") ctx.resume()
+        })
+      } catch (e) {
+        console.log("Audio unlock failed:", e.message)
+      }
+      window.removeEventListener("click", unlockAudio)
+    }
+    window.addEventListener("click", unlockAudio, { once: true })
   }
+
 
   startTypingAnimation() {
     const text = "🦉RUNTEQ 知識の森へようこそ🦉"
@@ -460,7 +474,7 @@ export default class extends Controller {
     }
   }
 
-  // ★ 全ての梟のメッセージを自動表示
+  // ★ 梟のメッセージを自動表示
   showAllOwlMessages() {
     const owlCards = document.querySelectorAll('.owl-card')
 
@@ -572,7 +586,7 @@ export default class extends Controller {
       // 🎛 波形：square より少し柔らかい "pulse" 風
       osc.type = "square";
       osc.frequency.value = 700 + Math.random() * 25; // やや高め（ピコピコ）
-      gain.gain.setValueAtTime(0.03, this.audioCtxAdvice.currentTime);
+      gain.gain.setValueAtTime(0.02, this.audioCtxAdvice.currentTime);
 
       // 🎚 音の減衰（短い電子音に）
       gain.gain.exponentialRampToValueAtTime(

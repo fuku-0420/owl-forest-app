@@ -89,8 +89,8 @@ body {
   🦉 3. フクちゃん（キャラクター要素）
    ========================================================= */
 .fukuchan-global {
-  position: absolute;
-  bottom: -2%;
+  position: fixed;
+  bottom: calc(-2% + env(safe-area-inset-bottom));
   right: 22%;
   width: clamp(150px, 20vw, 250px);
   height: auto;
@@ -113,7 +113,7 @@ body {
 /* 💻 〜1500px（MacBook前後） */
 @media (max-width: 1500px) {
   .fukuchan-global {
-    bottom: -1.5%;
+    bottom: calc(-1.5% + env(safe-area-inset-bottom));
     right: 20%;
     width: clamp(130px, 22vw, 220px);
   }
@@ -122,16 +122,25 @@ body {
 /* 📚 タブレット横（1300px以下） */
 @media (max-width: 1300px) {
   .fukuchan-global {
-    bottom: -1%;
+    bottom: calc(-1% + env(safe-area-inset-bottom));
     right: 18%;
     width: clamp(120px, 24vw, 200px);
+  }
+}
+
+/* 📱 エクスペリア1 IIIなど超横長スマホ用 */
+@media (max-width: 1300px) and (max-height: 700px) {
+  .fukuchan-global {
+    bottom: calc(-1% + env(safe-area-inset-bottom));
+    right: 24%;
+    width: clamp(80px, 18vw, 160px); /* ← コンパクトに */
   }
 }
 
 /* 📱 スマホ横（〜850px） */
 @media (max-width: 850px) {
   .fukuchan-global {
-    bottom: -1%;
+    bottom: calc(-1% + env(safe-area-inset-bottom));
     right: 30%;
     width: clamp(80px, 20vw, 110px);
   }
@@ -140,7 +149,7 @@ body {
 /* 📱 小型スマホ（〜768px） */
 @media (max-width: 768px) {
   .fukuchan-global {
-    bottom: -1%;
+    bottom: calc(-1% + env(safe-area-inset-bottom));
     right: 25%;
     width: clamp(60px, 18vw, 110px);
   }
@@ -277,23 +286,5 @@ body.owl-show-page .bgm-btn:hover {
 
   100% {
     box-shadow: 0 0 0 0 rgba(75, 162, 101, 0);
-  }
-}
-
-html {
-  transform-origin: center center;
-}
-
-@media screen and (orientation: portrait) {
-  html {
-    transform: rotate(90deg);
-    transform-origin: center center;
-    width: 100vh;
-    height: 100vw;
-    overflow: hidden;
-  }
-
-  body {
-    transform: rotate(0deg);
   }
 }
