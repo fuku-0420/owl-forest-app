@@ -1,27 +1,27 @@
 <div class="classroom-container" data-controller="owl">
-  <!-- 🌳 森の背景画像をHTML内に追加 -->
+  <!-- 🌳 森の背景 -->
   <img src="<%= asset_path('tisikinomori.png') %>"
       alt="森の背景"
       class="forest-bg"
       data-owl-target="forest"
       data-autumn-image="<%= asset_path('tisikinomori_aki.png') %>">
 
-<!-- 黒板エリア -->
-<div class="blackboard" data-owl-target="blackboard">
-  <!-- 🦉 フクちゃん画像を黒板内に移動 -->
+  <!-- 🎓 黒板 -->
+  <div class="blackboard" data-owl-target="blackboard">
+    <button class="chalk-text-button"
+            data-owl-target="click"
+            data-action="click->owl#enterForest">
+      <span class="typing-text" data-owl-target="typingText"></span>
+    </button>
+  </div>
+
+  <!-- 🦉 フクちゃん：黒板外に独立 -->
   <img src="<%= asset_path('fukuchan.png') %>"
       alt="フクちゃん"
-      class="fukuchan-image"
+      class="fukuchan-global"
       data-owl-target="fukuchan"
       data-happy-image="<%= asset_path('fukuchan-happy.png') %>"
       data-normal-image="<%= asset_path('fukuchan.png') %>">
-
-  <button class="chalk-text-button"
-          data-owl-target="click"
-          data-action="click->owl#enterForest">
-    <span class="typing-text" data-owl-target="typingText"></span>
-  </button>
-</div>
 
 <!-- リアルタイム時計 -->
 <div data-controller="clock">
@@ -69,7 +69,7 @@
             data-message="<%= "こんにちは！僕は梟🦉の#{owl.name}" %>"></div>
         <div class="message-line"
             data-owl-target="typingText"
-            data-message="たくさんの人を笑顔にするのが仕事だホウ〜☆彡"></div>
+            data-message="沢山の人を笑顔にするのが仕事だホウ〜☆彡"></div>
       </div>
 
       <%= link_to "詳しく見る", owl_path(owl), class: "btn btn-primary" %>

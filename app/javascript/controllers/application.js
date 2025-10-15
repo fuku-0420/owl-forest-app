@@ -20,24 +20,3 @@ document.addEventListener("turbo:load", () => {
         html.classList.remove("owl-show-page")
     }
 })
-
-// function adjustBlackboardPosition() {
-//     const blackboard = document.querySelector('.blackboard')
-//     if (!blackboard) return
-//
-//     const vw = window.innerWidth
-//     const vh = window.innerHeight
-//     const topPercent = 0.39
-//
-//     blackboard.style.transition = 'top 0.5s ease'
-//     blackboard.style.left = `${vw * 0.49}px`
-//     blackboard.style.top = `${vh * topPercent}px`
-//     blackboard.style.transform = 'translate(-50%, -50%)'
-// }
-//
-// window.addEventListener('resize', () => {
-//     adjustBlackboardPosition()
-//     setTimeout(adjustBlackboardPosition, 700)
-//     setTimeout(adjustBlackboardPosition, 1300)
-// })
-// window.addEventListener('load', adjustBlackboardPosition)

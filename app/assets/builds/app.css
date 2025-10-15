@@ -88,29 +88,62 @@ body {
 /* =========================================================
   🦉 3. フクちゃん（キャラクター要素）
    ========================================================= */
-.fukuchan-image {
+.fukuchan-global {
   position: absolute;
-  top: -15%;
-  /* 黒板の上に自然に乗る感じ */
-  right: 0%;
-  /* 黒板右上に固定 */
-  width: clamp(60px, 8vw, 100px);
+  bottom: -2%;
+  right: 22%;
+  width: clamp(150px, 20vw, 250px);
   height: auto;
   border-radius: 50%;
-  object-fit: cover;
-  z-index: 5;
+  z-index: 2000;
   cursor: pointer;
-
+  transition: all 0.6s ease;
+  pointer-events: auto;
   opacity: 0;
   filter: blur(20px);
   transform: scale(1.2);
-  transition: all 1s ease;
 }
 
 .fukuchan-visible {
-  opacity: 1;
-  filter: blur(0);
+  opacity: 0.98;
+  filter: brightness(1.00) contrast(0.90) saturate(0.9);
   transform: scale(1);
+}
+
+/* 💻 〜1500px（MacBook前後） */
+@media (max-width: 1500px) {
+  .fukuchan-global {
+    bottom: -1.5%;
+    right: 20%;
+    width: clamp(130px, 22vw, 220px);
+  }
+}
+
+/* 📚 タブレット横（1300px以下） */
+@media (max-width: 1300px) {
+  .fukuchan-global {
+    bottom: -1%;
+    right: 18%;
+    width: clamp(120px, 24vw, 200px);
+  }
+}
+
+/* 📱 スマホ横（〜850px） */
+@media (max-width: 850px) {
+  .fukuchan-global {
+    bottom: -1%;
+    right: 30%;
+    width: clamp(80px, 20vw, 110px);
+  }
+}
+
+/* 📱 小型スマホ（〜768px） */
+@media (max-width: 768px) {
+  .fukuchan-global {
+    bottom: -1%;
+    right: 25%;
+    width: clamp(60px, 18vw, 110px);
+  }
 }
 
 /* =========================================================
@@ -119,7 +152,7 @@ body {
 .bgm-controls {
   position: fixed;
   bottom: 40px;
-  left: 80px;
+  left: 0px;
   z-index: 1000;
   background: #4ba26525;
   padding: 10px;
@@ -244,5 +277,23 @@ body.owl-show-page .bgm-btn:hover {
 
   100% {
     box-shadow: 0 0 0 0 rgba(75, 162, 101, 0);
+  }
+}
+
+html {
+  transform-origin: center center;
+}
+
+@media screen and (orientation: portrait) {
+  html {
+    transform: rotate(90deg);
+    transform-origin: center center;
+    width: 100vh;
+    height: 100vw;
+    overflow: hidden;
+  }
+
+  body {
+    transform: rotate(0deg);
   }
 }

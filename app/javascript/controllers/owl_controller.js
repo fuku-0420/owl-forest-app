@@ -122,7 +122,8 @@ export default class extends Controller {
     const storyLines = [
       "ここは..           知識の森...   ",
       "世界の知識が集まる場所...             ",
-      "生物たちは..              森に救いを求めてやって来る...      ",
+      "生物たちは..",
+      "森に救いを求めてやって来る...      ",
       "今日も..",
       "一羽の梟が新しいことを学んでる...   ",
       "誰かの役に立ちたくて...      ",
@@ -130,7 +131,7 @@ export default class extends Controller {
       "正しい道へ...     帰れるように..."
     ]
 
-    const displayPattern = [1, 1, 1, 1, 1, 2, 1]
+    const displayPattern = [1, 1, 1, 1, 1, 1, 2, 1]
 
     let currentLineIndex = 0
     let patternIndex = 0
@@ -378,7 +379,7 @@ export default class extends Controller {
   }
 
   addFukuchanImage() {
-    const img = document.querySelector('.fukuchan-image')
+    const img = document.querySelector('.fukuchan-global')
     if (!img) return
 
     let showOriginal = true
@@ -401,13 +402,13 @@ export default class extends Controller {
 
       setTimeout(() => {
         canClick = true
-      }, 7500)
+      }, 10000)//　10秒後クリック
     }, 500)
   }
 
   switchToNewMessage() {
     const messageLines = document.querySelectorAll('.message-line')
-    const fukuchanImg = document.querySelector('.fukuchan-image')
+    const fukuchanImg = document.querySelector('.fukuchan-global')
 
     if (messageLines.length >= 2) {
       // 💬 セリフ切り替え
@@ -423,12 +424,12 @@ export default class extends Controller {
 
   switchToOriginalMessage() {
     const messageLines = document.querySelectorAll('.message-line')
-    const fukuchanImg = document.querySelector('.fukuchan-image')
+    const fukuchanImg = document.querySelector('.fukuchan-global')
 
     if (messageLines.length >= 2) {
       // 💬 セリフを元に戻す
       messageLines[0].textContent = 'こんにちは！僕は梟🦉のフクちゃん'
-      messageLines[1].textContent = 'たくさんの人を笑顔にするのが仕事だホウ〜☆彡'
+      messageLines[1].textContent = '沢山の人を笑顔にするのが仕事だホウ〜☆彡'
 
       // 🖼️ 画像を元に戻す
       if (fukuchanImg) {

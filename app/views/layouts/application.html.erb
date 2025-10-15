@@ -7,6 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="turbo-cache-control" content="no-cache">
+    <meta name="apple-mobile-web-app-orientation" content="landscape">
 
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -19,13 +20,14 @@
     <link rel="icon" href="<%= asset_path('favicon.svg') %>" type="image/svg+xml">
 
     <!-- Rails 8 Propshaft対応の正しいアセット読み込み -->
-<%= stylesheet_link_tag "app", data: { turbo_track: "reload" } %>
-<%= stylesheet_link_tag "owls", data: { turbo_track: "reload" } %>
+    <%= stylesheet_link_tag "app", data: { turbo_track: "reload" } %>
+    <%= stylesheet_link_tag "owls", data: { turbo_track: "reload" } %>
 
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="<%= yield(:body_class) %>">
+  <!-- ✅ Stimulusで横画面固定を制御 -->
+  <body data-controller="orientation" class="<%= yield(:body_class) %>">
     <%= yield %>
   </body>
 </html>

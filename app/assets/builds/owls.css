@@ -74,10 +74,11 @@
    ========================================================= */
 .owls-container {
   position: fixed;
-  top: 60px;
-  right: 80px;
+  top: 70px;
+  right: 4vw;
+  /* 余白指定 */
   z-index: 1500;
-  width: clamp(300px, 36vw, 420px);
+  width: clamp(280px, 30vw, 400px);
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -85,28 +86,121 @@
   pointer-events: none;
 }
 
+/* 🦉 フクちゃんカード */
 .owl-card {
   width: 100%;
+  /* containerに追従（固定幅420pxを撤廃） */
   text-align: center;
-  padding: 16px;
-  margin-bottom: 18px;
-  border: 2px solid rgba(66, 246, 105, 0.086);
+  padding: 14px;
+  margin-bottom: 14px;
+  border: 2px solid rgba(66, 246, 105, 0.08);
   border-radius: 12px;
   background-color: rgba(112, 197, 67, 0.35);
   animation: gentle-float 3.5s ease-in-out infinite;
-  box-shadow: 0 0 10px rgba(60, 255, 0, 0.072);
+  box-shadow: 0 0 10px rgba(60, 255, 0, 0.07);
   pointer-events: auto;
 }
 
+/* 💬 メッセージ部分 */
 .owl-message {
   background-color: #91ff0075;
-  padding: 15px;
-  border-radius: 5px;
-  margin: 10px 0;
-  width: 420px;
-  height: 90px;
+  padding: 14px;
+  border-radius: 6px;
+  margin: 8px 0;
+  width: 100%;
+  /* ここも親に合わせて可変に */
+  height: auto;
+  /* 固定高さ90pxをやめて自然に */
+  min-height: 80px;
+  /* 小さくなりすぎ防止 */
   box-sizing: border-box;
 }
+
+/* 💻 〜1500px（MacBook前後） */
+@media (max-width: 1500px) {
+  .owls-container {
+    top: 50px;
+    right: 2.5vw;
+    width: clamp(260px, 28vw, 360px);
+  }
+
+  .owl-card {
+    padding: 12px;
+  }
+}
+
+/* 📚 タブレット横（1300px以下） */
+@media (max-width: 1300px) {
+  html {
+    font-size: 80%;
+    /* ← 全体フォントを0.8倍 */
+  }
+
+  .owls-container {
+    top: 40px;
+    right: 2vw;
+    width: clamp(220px, 30vw, 300px);
+    transform: scale(0.9);
+    transform-origin: top right;
+    /* 右上基準で縮小 */
+  }
+
+  .owl-card {
+    font-size: 0.95rem;
+    padding: 9px;
+  }
+}
+
+/* 📱 スマホ横（〜850px） */
+@media (max-width: 850px) {
+  html {
+    font-size: 60%; /* 全体フォントを0.8倍 */
+  }
+
+  .owls-container {
+    top: 30px;
+    right: 2vw;
+    width: clamp(170px, 28vw, 230px); /* ← ここをスリム化（以前より-約15%） */
+    transform: scale(0.4);
+    transform-origin: top right;
+  }
+
+  .owl-card {
+    font-size: 0.8rem;
+    padding: 6px 7px; /* 横をやや広げて文字切れ防止 */
+  }
+
+  .owl-message {
+    font-size: 0.7rem;
+    min-height: 42px;
+  }
+}
+
+/* 📱 小型スマホ（〜768px） */
+@media (max-width: 768px) {
+  html {
+    font-size: 45%;
+  }
+
+  .owls-container {
+    top: 20px;
+    right: 3vw;
+    width: clamp(140px, 26vw, 200px); /* ← 横幅をさらにスリム化 */
+    transform: scale(0.4);
+    transform-origin: top right;
+  }
+
+  .owl-card {
+    font-size: 0.7rem;
+    padding: 6px 7px;
+  }
+
+  .owl-message {
+    font-size: 0.7rem;
+    min-height: 38px;
+  }
+}
+
 
 /* =========================================================
   🪶 3. 黒板（Boardエリア）
@@ -118,13 +212,40 @@
   left: 49%;
   transform: translate(-50%, -50%);
   width: clamp(300px, 50vw, 600px);
-  /* 画面幅に応じてスケール */
   height: clamp(200px, 33vw, 400px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: 10;
+}
+
+/* 💻 〜1500px（MacBook前後） */
+@media (max-width: 1500px) {
+  .blackboard {
+    transform: translate(-50%, -45%) scale(0.75);
+  }
+}
+
+/* 📚 〜1300px（タブレット横） */
+@media (max-width: 1300px) {
+  .blackboard {
+    transform: translate(-50%, -45%) scale(0.7);
+  }
+}
+
+/* 📱 〜850px（スマホ横） */
+@media (max-width: 850px) {
+  .blackboard {
+    transform: translate(-50%, -52%) scale(0.4);
+  }
+}
+
+/* 📱 〜768px（スマホSE 横） */
+@media (max-width: 768px) {
+  .blackboard {
+    transform: translate(-50%, -52%) scale(0.3);
+  }
 }
 
 .button-container {
@@ -194,7 +315,7 @@
 .chalk-text-button {
   background: none;
   border: none;
-  font-size: clamp(1.2rem, 2vw, 2rem);
+  font-size: 30px;
   color: #fcb900;
   cursor: pointer;
   padding: 1vh 2vw;
@@ -227,6 +348,29 @@
   text-shadow: 0 0 4px rgba(255, 220, 120, 0.5);
   transition: transform 0.1s ease;
 }
+/* 💻 タブレット横（〜1300px） */
+@media (max-width: 1300px) {
+  .chalk-text-button {
+    font-size: 29px;
+    padding: 1vh 1.8vw;
+  }
+}
+
+/* 📱 スマホ横（〜850px） */
+@media (max-width: 850px) {
+  .chalk-text-button {
+    font-size: 24px;
+    padding: 0.8vh 1.6vw;
+  }
+}
+
+/* 📱 小型スマホ（〜768px） */
+@media (max-width: 768px) {
+  .chalk-text-button {
+    font-size: 19px;
+    padding: 0.6vh 1.4vw;
+  }
+}
 
 .story-skip-button {
   position: fixed;
@@ -256,6 +400,22 @@
   transform: scale(0.95);
 }
 
+/* 📱 〜850px（スマホ横） */
+@media (max-width: 850px) {
+  .story-skip-button {
+    bottom: 28%;
+    right: 34%;
+  }
+}
+
+/* 📱 〜768px（スマホSE 横） */
+@media (max-width: 768px) {
+  .story-skip-button {
+    bottom: 26%;
+    right: 33%;
+  }
+}
+
 /* 物語テキスト */
 .welcome-message {
   font-size: 24px;
@@ -268,10 +428,8 @@
 
 .advice-text {
   position: absolute;
-  top: 16%;
-  /* 黒板上端からの距離 */
+  top: 20%;
   left: 5%;
-  /* 黒板左端からの距離 */
   width: 100%;
   color: #ffd000;
   font-size: clamp(16px, 2vw, 18px);
@@ -282,12 +440,39 @@
   transition: opacity 0.5s ease;
 }
 
+/* 📚 タブレット横（〜1300px） */
+@media (max-width: 1300px) {
+  .advice-text {
+    top: 18%; /* ← 黒板の高さ比が変わるので微調整 */
+    font-size: clamp(14px, 1.6vw, 16px);
+    line-height: 1.7;
+  }
+}
+
+/* 📱 スマホ横（〜850px） */
+@media (max-width: 850px) {
+  .advice-text {
+    top: 5%;
+    left: -10%;
+    font-size: clamp(18px, 2.2vw, 22px);
+    line-height: 1.6;
+  }
+}
+
+/* 📱 小型スマホ（〜768px） */
+@media (max-width: 768px) {
+  .advice-text {
+    top: 1%;
+    left: -30%;
+    font-size: clamp(18px, 1.8vw, 20px);
+    line-height: 1.5;
+  }
+}
+
 .back-button {
   position: absolute;
   bottom: 2%;
-  /* ← 黒板下端からの距離 */
   right: 0%;
-  /* ← 黒板右端からの距離 */
   background-color: rgba(0, 255, 115, 0.6);
   color: #e2d930;
   padding: 10px 24px;
@@ -311,7 +496,22 @@
   box-shadow: 0 0 18px rgba(0, 255, 255, 0.9);
   /* ホバー発光を中央に */
   transform: scale(1.05);
-  /* ほんの少し拡大 */
+}
+
+/* 📱 〜850px（スマホ横） */
+@media (max-width: 850px) {
+  .back-button {
+    bottom: -20%;
+    right: -25%;
+  }
+}
+
+/* 📱 〜768px（スマホSE 横） */
+@media (max-width: 768px) {
+  .back-button {
+    bottom: -55%;
+    right: -50%;
+  }
 }
 
 @keyframes fadeInAdvice {
@@ -448,7 +648,7 @@ body.owl-show-page .message-box {
   color: white;
 }
 
-/* 🟢 詳しく見るボタン（通常） */
+/* 🟢 詳しく見るボタン */
 .owls-container .btn-primary {
   background-color: #ff9900b4;
   color: #fff;
@@ -511,24 +711,7 @@ body.owl-show-page .message-box {
   display: inline-block;
   position: fixed !important;
   bottom: 0 !important;
-  left: 80px !important;
+  left: 0px !important;
   z-index: 2000;
   transform: none !important;
-}
-
-@media (max-width: 768px) {
-  .blackboard {
-    width: 85vw;
-    height: 55vw;
-  }
-
-  .fukuchan-image {
-    top: -10%;
-    right: 2%;
-    width: 14vw;
-  }
-
-  .chalk-text-button {
-    font-size: 1rem;
-  }
 }
