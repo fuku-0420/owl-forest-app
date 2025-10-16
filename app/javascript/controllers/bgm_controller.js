@@ -8,7 +8,7 @@ export default class extends Controller {
     const bgmPath = this.element.dataset.bgmPath
     this.bgm = new Audio(bgmPath)
     this.bgm.loop = true
-    this.bgm.volume = parseFloat(this.volumeSliderTarget?.value || 0.2)
+    this.bgm.volume = parseFloat(this.volumeSliderTarget?.value || 0.15)
     this.isPlaying = false
   }
 
@@ -43,7 +43,7 @@ export default class extends Controller {
     let currentVolume = originalVolume
 
     const fade = setInterval(() => {
-      currentVolume -= 0.02
+      currentVolume -= 0.015
       if (currentVolume <= 0.01) {
         clearInterval(fade)
         this.bgm.pause()

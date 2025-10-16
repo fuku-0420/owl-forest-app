@@ -125,7 +125,7 @@ export default class extends Controller {
         osc.connect(gain)
         gain.connect(this.sharedAudioCtx.destination)
         osc.frequency.value = 1000
-        gain.gain.value = 0.02
+        gain.gain.value = 0.025
         osc.start()
         osc.stop(this.sharedAudioCtx.currentTime + 0.03)
       } catch (e) {
@@ -556,7 +556,7 @@ export default class extends Controller {
       osc.frequency.value = 760 + Math.random() * 40; // 微妙に低めで落ち着きを
 
       // 🔹音量アップ＆余韻を少し長く
-      gain.gain.setValueAtTime(0.08, this.audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.1, this.audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.0001, this.audioCtx.currentTime + 0.06);
 
       osc.start();
@@ -586,7 +586,7 @@ export default class extends Controller {
       // 🎛 波形：square より少し柔らかい "pulse" 風
       osc.type = "square";
       osc.frequency.value = 700 + Math.random() * 25; // やや高め（ピコピコ）
-      gain.gain.setValueAtTime(0.02, this.audioCtxAdvice.currentTime);
+      gain.gain.setValueAtTime(0.025, this.audioCtxAdvice.currentTime);
 
       // 🎚 音の減衰（短い電子音に）
       gain.gain.exponentialRampToValueAtTime(

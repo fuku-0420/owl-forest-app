@@ -108,11 +108,8 @@
   border-radius: 6px;
   margin: 8px 0;
   width: 100%;
-  /* ここも親に合わせて可変に */
   height: auto;
-  /* 固定高さ90pxをやめて自然に */
   min-height: 80px;
-  /* 小さくなりすぎ防止 */
   box-sizing: border-box;
 }
 
@@ -158,9 +155,9 @@
   }
 
   .owls-container {
-    top: 32px;
-    right: 3vw;
-    width: clamp(200px, 26vw, 270px);
+    top: 15px;
+    right: 4vw;
+    width: clamp(200px, 25vw, 260px);
     transform: scale(0.85);
     transform-origin: top right;
   }
@@ -178,7 +175,7 @@
   }
 
   .owls-container {
-    top: 30px;
+    top: 20px;
     right: 2vw;
     width: clamp(170px, 28vw, 230px);
     transform: scale(0.4);

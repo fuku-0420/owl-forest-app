@@ -10,7 +10,7 @@ export default class extends Controller {
 
         this.bgm = new Audio(bgmPath)
         this.bgm.loop = true
-        this.bgm.volume = 0.13
+        this.bgm.volume = 0.11
 
         // 🌙 ページが開かれたら自動スタート
         this.bgm.play().then(() => {
