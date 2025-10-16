@@ -10,12 +10,14 @@ export default class extends Controller {
   connect() {
     this.startTypingAnimation()
 
-    // 🎧 初回クリックでオーディオ解放（Mac 対策）
+    // 🎧 Mac Safari用オーディオ解放
     const unlockAudio = () => {
       try {
-        [this.audioCtx, this.audioCtxAdvice, this.sharedAudioCtx].forEach(ctx => {
-          if (ctx && ctx.state === "suspended") ctx.resume()
-        })
+        const ctx = window._sharedAudioContext
+        if (ctx && ctx.state === "suspended") {
+          ctx.resume()
+          console.log("🔓 AudioContext resumed")
+        }
       } catch (e) {
         console.log("Audio unlock failed:", e.message)
       }
@@ -23,7 +25,6 @@ export default class extends Controller {
     }
     window.addEventListener("click", unlockAudio, { once: true })
   }
-
 
   startTypingAnimation() {
     const text = "🦉RUNTEQ 知識の森へようこそ🦉"
@@ -538,68 +539,66 @@ export default class extends Controller {
   // 🦉 フクロウのタイプ音
   createTypingSoundOwl() {
     try {
-      if (!this.audioCtx) {
-        this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      // 1️⃣ 共通AudioContextを再利用
+      if (!this.sharedAudioCtx) {
+        this.sharedAudioCtx = window._sharedAudioContext || new (window.AudioContext || window.webkitAudioContext)()
+        window._sharedAudioContext = this.sharedAudioCtx
       }
 
-      if (this.audioCtx.state === "suspended") {
-        this.audioCtx.resume();
+      if (this.sharedAudioCtx.state === "suspended") {
+        this.sharedAudioCtx.resume()
       }
 
-      const osc = this.audioCtx.createOscillator();
-      const gain = this.audioCtx.createGain();
+      const osc = this.sharedAudioCtx.createOscillator()
+      const gain = this.sharedAudioCtx.createGain()
 
-      osc.connect(gain);
-      gain.connect(this.audioCtx.destination);
+      osc.connect(gain)
+      gain.connect(this.sharedAudioCtx.destination)
 
-      osc.type = "sine"; // 柔らかいけど明るい
-      osc.frequency.value = 760 + Math.random() * 40; // 微妙に低めで落ち着きを
+      osc.type = "sine"
+      osc.frequency.value = 760 + Math.random() * 40
 
-      // 🔹音量アップ＆余韻を少し長く
-      gain.gain.setValueAtTime(0.1, this.audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, this.audioCtx.currentTime + 0.06);
+      gain.gain.setValueAtTime(0.1, this.sharedAudioCtx.currentTime)
+      gain.gain.exponentialRampToValueAtTime(0.0001, this.sharedAudioCtx.currentTime + 0.06)
 
-      osc.start();
-      osc.stop(this.audioCtx.currentTime + 0.06);
+      osc.start()
+      osc.stop(this.sharedAudioCtx.currentTime + 0.06)
     } catch (e) {
-      console.log("音の再生ができませんでした(Owl):", e.message);
+      console.log("音の再生ができませんでした(Owl):", e.message)
     }
   }
 
-  // ⚙️ アドバイス（黒板メッセージ）用のタイプ音（電子掲示板風ピコピコ）
+  // ⚙️ アドバイス（黒板メッセージ）用のタイプ音
   createTypingSoundAdvice() {
     try {
-      if (!this.audioCtxAdvice) {
-        this.audioCtxAdvice = new (window.AudioContext || window.webkitAudioContext)();
+      // 同じ共有コンテキストを利用
+      if (!this.sharedAudioCtx) {
+        this.sharedAudioCtx = window._sharedAudioContext || new (window.AudioContext || window.webkitAudioContext)()
+        window._sharedAudioContext = this.sharedAudioCtx
       }
 
-      if (this.audioCtxAdvice.state === "suspended") {
-        this.audioCtxAdvice.resume();
+      if (this.sharedAudioCtx.state === "suspended") {
+        this.sharedAudioCtx.resume()
       }
 
-      const osc = this.audioCtxAdvice.createOscillator();
-      const gain = this.audioCtxAdvice.createGain();
+      const osc = this.sharedAudioCtx.createOscillator()
+      const gain = this.sharedAudioCtx.createGain()
 
-      osc.connect(gain);
-      gain.connect(this.audioCtxAdvice.destination);
+      osc.connect(gain)
+      gain.connect(this.sharedAudioCtx.destination)
 
-      // 🎛 波形：square より少し柔らかい "pulse" 風
-      osc.type = "square";
-      osc.frequency.value = 700 + Math.random() * 25; // やや高め（ピコピコ）
-      gain.gain.setValueAtTime(0.025, this.audioCtxAdvice.currentTime);
+      osc.type = "square"
+      osc.frequency.value = 700 + Math.random() * 25
+      gain.gain.setValueAtTime(0.025, this.sharedAudioCtx.currentTime)
+      gain.gain.exponentialRampToValueAtTime(0.0001, this.sharedAudioCtx.currentTime + 0.06)
 
-      // 🎚 音の減衰（短い電子音に）
-      gain.gain.exponentialRampToValueAtTime(
-        0.0001,
-        this.audioCtxAdvice.currentTime + 0.06
-      );
-
-      osc.start();
-      osc.stop(this.audioCtxAdvice.currentTime + 0.06);
+      osc.start()
+      osc.stop(this.sharedAudioCtx.currentTime + 0.06)
     } catch (e) {
-      console.log("音の再生ができませんでした(Advice):", e.message);
+      console.log("音の再生ができませんでした(Advice):", e.message)
     }
   }
+
   // === Turboなどでページ遷移時に確実に呼ぶ ===
   disconnect() {
     console.log("🦉 Controller disconnected — cleaning up...");
