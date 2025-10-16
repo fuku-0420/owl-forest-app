@@ -1,26 +1,30 @@
 import { Controller } from "@hotwired/stimulus"
 
-// ❄️ プロフィールページ専用の静かなBGMコントローラー
+// ❄️ プロフィールページ専用・静かなBGMコントローラ
 export default class extends Controller {
     static targets = ["toggleButton"]
 
     connect() {
-        // ✅ Railsが生成するfingerprint付きのURLを使う
         const bgmPath = this.element.dataset.bgmPath
-
         this.bgm = new Audio(bgmPath)
         this.bgm.loop = true
-        this.bgm.volume = 0.11
 
-        // 🌙 ページが開かれたら自動スタート
-        this.bgm.play().then(() => {
-            this.isPlaying = true
-            this.toggleButtonTarget.textContent = 'BGM停止'
-        }).catch(() => {
-            // ユーザー操作が必要なブラウザ制限時に対応
-            this.isPlaying = false
-            this.toggleButtonTarget.textContent = 'BGM再生'
-        })
+        // 📱 モバイルでは音量をさらに下げる（スマホスピーカー対策）
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+        this.defaultVolume = isMobile ? 0.05 : 0.15
+        this.bgm.volume = this.defaultVolume
+
+        // 🌙 ページが開かれたら自動再生を試みる（失敗時は静かに待機）
+        this.bgm.play()
+            .then(() => {
+                this.isPlaying = true
+                this.toggleButtonTarget.textContent = "BGM停止"
+            })
+            .catch(() => {
+                // 🕊️ ブラウザ制限（自動再生ブロック）の場合はボタン待機
+                this.isPlaying = false
+                this.toggleButtonTarget.textContent = "BGM再生"
+            })
     }
 
     disconnect() {
@@ -32,14 +36,49 @@ export default class extends Controller {
     }
 
     toggle() {
+        if (!this.bgm) return
+
         if (this.isPlaying) {
-            this.bgm.pause()
+            this.fadeOutAndPause()
             this.isPlaying = false
-            this.toggleButtonTarget.textContent = 'BGM再生'
+            this.toggleButtonTarget.textContent = "BGM再生"
         } else {
-            this.bgm.play()
-            this.isPlaying = true
-            this.toggleButtonTarget.textContent = 'BGM停止'
+            // 🌱 再生時はフェードインして自然に鳴らす
+            this.bgm.volume = 0
+            this.bgm.play().then(() => {
+                this.fadeInToVolume(this.defaultVolume)
+                this.isPlaying = true
+                this.toggleButtonTarget.textContent = "BGM停止"
+            })
         }
+    }
+
+    // 🌾 フェードイン処理
+    fadeInToVolume(targetVolume) {
+        let v = 0
+        const fade = setInterval(() => {
+            v += 0.01
+            if (v >= targetVolume) {
+                v = targetVolume
+                clearInterval(fade)
+            }
+            if (this.bgm) this.bgm.volume = v
+        }, 100)
+    }
+
+    // 🍂 フェードアウトして停止
+    fadeOutAndPause() {
+        if (!this.bgm) return
+        let v = this.bgm.volume
+        const fade = setInterval(() => {
+            v -= 0.01
+            if (v <= 0.01) {
+                clearInterval(fade)
+                this.bgm.pause()
+                this.bgm.volume = this.defaultVolume
+            } else {
+                this.bgm.volume = v
+            }
+        }, 100)
     }
 }

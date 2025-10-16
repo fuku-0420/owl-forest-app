@@ -1,14 +1,24 @@
 import { Controller } from "@hotwired/stimulus"
 
+// 🎵 BGMコントローラ
 export default class extends Controller {
   static targets = ["toggleButton", "volumeSlider"]
 
   connect() {
-    // Railsがプリコンパイルした正しいURLを取得する
     const bgmPath = this.element.dataset.bgmPath
     this.bgm = new Audio(bgmPath)
     this.bgm.loop = true
-    this.bgm.volume = parseFloat(this.volumeSliderTarget?.value || 0.15)
+
+    // 📱スマホでは音量を下げめに設定
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+    const defaultVolume = isMobile ? 0.05 : 0.25
+
+    // 🔁 前回の音量を復元（localStorage使用）
+    const savedVolume = localStorage.getItem("bgmVolume")
+    const volume = savedVolume ? parseFloat(savedVolume) : defaultVolume
+
+    this.bgm.volume = volume
+    if (this.volumeSliderTarget) this.volumeSliderTarget.value = volume
     this.isPlaying = false
   }
 
@@ -23,20 +33,24 @@ export default class extends Controller {
   toggle() {
     if (this.isPlaying) {
       this.fadeOutAndPause()
-      this.toggleButtonTarget.textContent = '森のBGM'
-      this.element.classList.remove('playing')
+      this.toggleButtonTarget.textContent = "森のBGM"
+      this.element.classList.remove("playing")
       this.isPlaying = false
     } else {
+      // 再生時はフェードインで自然に音が出る
+      this.bgm.volume = 0
       this.bgm.play().then(() => {
-        this.toggleButtonTarget.textContent = 'BGM停止'
+        this.fadeInToTargetVolume()
+        this.toggleButtonTarget.textContent = "BGM停止"
+        this.element.classList.add("playing")
         this.isPlaying = true
-        this.element.classList.add('playing')
       }).catch(error => {
-        console.error('BGM play failed:', error)
+        console.error("BGM play failed:", error)
       })
     }
   }
 
+  // 🎧 フェードアウトして停止
   fadeOutAndPause() {
     if (!this.bgm) return
     const originalVolume = this.bgm.volume
@@ -55,9 +69,26 @@ export default class extends Controller {
     }, 100)
   }
 
+  // 🌱 フェードインで音量を上げる
+  fadeInToTargetVolume() {
+    const target = Math.min(parseFloat(this.volumeSliderTarget?.value || 0.15), 0.3)
+    let v = 0
+    const fade = setInterval(() => {
+      v += 0.01
+      if (v >= target) {
+        v = target
+        clearInterval(fade)
+      }
+      this.bgm.volume = v
+    }, 100)
+  }
+
+  // 🎚️ スライダー操作で音量調整（安全リミッター付き）
   adjustVolume() {
     if (this.bgm) {
-      this.bgm.volume = this.volumeSliderTarget.value
+      const safeVolume = Math.min(Math.max(parseFloat(this.volumeSliderTarget.value), 0.0), 0.3)
+      this.bgm.volume = safeVolume
+      localStorage.setItem("bgmVolume", safeVolume)
     }
   }
 }
