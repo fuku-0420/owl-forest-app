@@ -11,7 +11,7 @@ export default class extends Controller {
 
     // 📱スマホでは音量を下げめに設定
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
-    const defaultVolume = isMobile ? 0.05 : 0.25
+    const defaultVolume = isMobile ? 0.04 : 0.25
 
     // 🔁 前回の音量を復元（localStorage使用）
     const savedVolume = localStorage.getItem("bgmVolume")
