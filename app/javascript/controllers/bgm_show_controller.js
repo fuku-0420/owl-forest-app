@@ -11,7 +11,7 @@ export default class extends Controller {
 
         // 📱 モバイルでは音量をさらに下げる（スマホスピーカー対策）
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
-        this.defaultVolume = isMobile ? 0.04 : 0.15
+        this.defaultVolume = isMobile ? 0.035 : 0.15
         this.bgm.volume = this.defaultVolume
 
         // 🌙 ページが開かれたら自動再生を試みる（失敗時は静かに待機）
