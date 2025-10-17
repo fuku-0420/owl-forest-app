@@ -14,6 +14,14 @@
     <%= csp_meta_tag %>
     <%= yield :head %>
 
+        <!-- 🦉 OGP設定 -->
+    <meta property="og:title" content="フクちゃんお悩み掲示板">
+    <meta property="og:description" content="RUNTEQ受講生の『あの時の経験』を後輩に届ける学習サポートアプリです。">
+    <meta property="og:image" content="<%= asset_url('tisikinomori_agp.png') %>">
+    <meta property="og:url" content="https://owl-forest-app.onrender.com">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
     <!-- 🦉 Favicon設定 -->
     <link rel="icon" href="<%= asset_path('favicon.png') %>" type="image/png">
     <link rel="apple-touch-icon" href="<%= asset_path('favicon.png') %>">
@@ -25,7 +33,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <!-- ✅ Stimulusで横画面固定を制御 -->
+  <!--  Stimulusで横画面固定を制御 -->
   <body data-controller="orientation" class="<%= yield(:body_class) %>">
     <%= yield %>
   </body>
