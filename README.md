@@ -1,5 +1,10 @@
 # 🦉 フクちゃん掲示板
 
+### 画面遷移図
+https://www.figma.com/design/6qQWPIpktLOdYNcgOsizaL/%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3%EF%BC%88%E3%83%95%E3%82%AF%E3%81%A1%E3%82%83%E3%82%93%E6%8E%B2%E7%A4%BA%E6%9D%BF%EF%BC%89?node-id=0-1&t=fUQBZD9ijU1qikzV-1
+
+---
+
 ## プログラミング学習者向け掲示板  サービス概要
 
 学習中によく出る疑問やエラーをカテゴリごとに整理し、迷わず調べられる学習サポートアプリです。  
