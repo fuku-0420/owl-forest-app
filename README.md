@@ -1,7 +1,7 @@
 # 🦉 フクちゃん掲示板
 
 ### 画面遷移図
-https://www.figma.com/design/6qQWPIpktLOdYNcgOsizaL/%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3%EF%BC%88%E3%83%95%E3%82%AF%E3%81%A1%E3%82%83%E3%82%93%E6%8E%B2%E7%A4%BA%E6%9D%BF%EF%BC%89?node-id=0-1&t=pcagtPXfv3SHlobg-1
+https://www.figma.com/design/6qQWPIpktLOdYNcgOsizaL/%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3%EF%BC%88%E3%83%95%E3%82%AF%E3%81%A1%E3%82%83%E3%82%93%E6%8E%B2%E7%A4%BA%E6%9D%BF%EF%BC%89?node-id=0-1&t=S233qYW96hbsDZBZ-1
 
 ---
 
@@ -126,6 +126,8 @@ https://www.figma.com/design/6qQWPIpktLOdYNcgOsizaL/%E7%94%BB%E9%9D%A2%E9%81%B7%
 - 複数のアドバイスボタン & ページ分割
 - フクちゃんのアドバイス表示
 - アドバイス案募集フォーム
+- 投稿履歴ページ（投稿一覧・承認状態の確認）
+- アプリ設定ページ（BGM・効果音・背景設定など）
 - 管理者承認機能（投稿されたアドバイス案の承認・掲載）
 
 ⭐ ユーザー行動を促す機能
