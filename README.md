@@ -1,5 +1,10 @@
 # 🦉 フクちゃん掲示板
 
+### ER図
+[![Image from Gyazo](https://i.gyazo.com/2b2d5928a16ee414821455cfb125cac5.png)](https://gyazo.com/2b2d5928a16ee414821455cfb125cac5)
+
+---
+
 ### 画面遷移図
 https://www.figma.com/design/6qQWPIpktLOdYNcgOsizaL/%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3%EF%BC%88%E3%83%95%E3%82%AF%E3%81%A1%E3%82%83%E3%82%93%E6%8E%B2%E7%A4%BA%E6%9D%BF%EF%BC%89?node-id=0-1&t=S233qYW96hbsDZBZ-1
 
@@ -63,7 +68,7 @@ https://www.figma.com/design/6qQWPIpktLOdYNcgOsizaL/%E7%94%BB%E9%9D%A2%E9%81%B7%
 ## 📣 ユーザーの獲得について
 - プログラミング学習者同士で共有し、実際に使ってもらう
 - 「アドバイス案募集」により、参加型運用にすることで継続利用を促す
-- よく読まれた悩みランキングなどでリピート導線を作る
+- よく読まれたアドバイスランキングなどでリピート導線を作る
 
 ---
 
@@ -134,7 +139,7 @@ https://www.figma.com/design/6qQWPIpktLOdYNcgOsizaL/%E7%94%BB%E9%9D%A2%E9%81%B7%
 - お気に入り機能
 - お気に入り解除機能
 - お気に入り済み一覧ページ（全文閲覧仕様）
-- よく読まれた悩みランキング
+- よく読まれたアドバイスランキング
 - 日替わりメッセージ
 
 ### 🔮 将来的に追加したい機能
