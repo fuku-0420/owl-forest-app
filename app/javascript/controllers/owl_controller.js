@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["blackboard", "owlCard", "typingText"]
+  static values = { categories: Array }
 
   // ★ タイマー管理用のプロパティを追加
   currentTimer = null
@@ -33,12 +34,13 @@ export default class extends Controller {
     typingElement.textContent = ""
 
     let index = 0
-    const typeInterval = setInterval(() => {
+    this.typingInterval = setInterval(() => {
       if (index < text.length) {
         typingElement.textContent += text[index]
         index++
       } else {
-        clearInterval(typeInterval)
+        clearInterval(this.typingInterval)
+        this.typingInterval = null
         this.enableButton()
       }
     }, 100)
@@ -71,22 +73,18 @@ export default class extends Controller {
   }
 
   fadeOutButton() {
-    const button = this.typingTextTarget.parentElement
-    const text = this.typingTextTarget
+    // ★ タイピングを完全停止
+    if (this.typingInterval) {
+      clearInterval(this.typingInterval)
+      this.typingInterval = null
+    }
 
-    // タイトルとボタンをフェードアウト
-    button.classList.add('fade-out')
-    text.classList.add('fade-out')
-
-    // イベントを無効化
-    button.style.pointerEvents = 'none'
-    button.disabled = true
-
-    // 0.7秒後に非表示（フェード後に消す）
-    setTimeout(() => {
-      button.style.display = 'none'
-      text.style.display = 'none'
-    }, 700)
+    // ★ chalk-text-button を全削除
+    document.querySelectorAll('.chalk-text-button').forEach(btn => {
+      btn.classList.add('fade-out')
+      btn.style.pointerEvents = 'none'
+      setTimeout(() => btn.remove(), 700)
+    })
   }
 
   showWelcomeMessage() {
@@ -242,9 +240,12 @@ export default class extends Controller {
 
   fadeOutStory() {
     const messageDiv = this.blackboardTarget.querySelector('.welcome-message')
+    if (!messageDiv) return
+
     messageDiv.classList.add('fade-out')
 
     setTimeout(() => {
+      messageDiv.remove()
       this.showConsultationRoom()
     }, 1000)
   }
@@ -258,17 +259,23 @@ export default class extends Controller {
     event.currentTarget.style.transform = 'translateY(0)'
   }
 
+  resetBlackboard() {
+    // 黒板内は完全リセット
+    this.blackboardTarget.replaceChildren()
+  }
+
   showConsultationRoom() {
+    document.querySelectorAll('.story-skip-button').forEach(el => el.remove())
+    this.resetBlackboard()
+
     console.log("掲示板表示開始！")
 
+    if (this.typingInterval) {
+      clearInterval(this.typingInterval)
+      this.typingInterval = null
+    }
+
     const blackboard = this.blackboardTarget
-
-    // 🧹 ストーリーメッセージを削除
-    const welcomeMessage = blackboard.querySelector('.welcome-message')
-    if (welcomeMessage) welcomeMessage.remove()
-
-    // 🧹 skipボタンはbody直下にあるので全削除
-    document.querySelectorAll('.story-skip-button').forEach(btn => btn.remove())
 
     // ===== 黒板タイトル =====
     const title = document.createElement('h2')
@@ -276,35 +283,19 @@ export default class extends Controller {
     title.classList.add('board-title')
 
     // ===== ボタン名リスト =====
-    const buttonLabels = [
-      '☢ エラー大量発生 ☢',
-      '募集中',
-      '募集中',
-      '募集中',
-      '募集中',
-      '募集中',
-      '募集中',
-      '募集中',
-      '募集中',
-      '募集中',
-      '募集中',
-    ]
+    const categories = this.categoriesValue || []
 
     const buttonContainer = document.createElement('div')
     buttonContainer.classList.add('button-container')
 
-    buttonLabels.forEach(label => {
+    categories.forEach(category => {
       const btn = document.createElement('button')
-      btn.textContent = label
+      btn.textContent = category.name
       btn.classList.add('board-button')
 
-      if (label.includes('エラー大量発生')) {
-        btn.addEventListener('click', () => this.showErrorAdvice())
-      } else {
-        btn.addEventListener('click', () => {
-          alert(`${label} は現在準備中です 🦉`)
-        })
-      }
+      btn.addEventListener('click', () => {
+        this.showAdviceList(category)
+      })
 
       buttonContainer.appendChild(btn)
     })
@@ -322,75 +313,119 @@ export default class extends Controller {
     }, 100)
 
     this.addFukuchanImage()
-    this.showOwlProfile()
+
+    if (!this.profileInitialized) {
+      this.showOwlProfile()
+      this.profileInitialized = true
+    }
   }
 
-  showErrorAdvice() {
+  showAdviceList(category) {
+    this.resetBlackboard()
+
     const blackboard = this.blackboardTarget
-    const title = blackboard.querySelector('.board-title')
-    const buttons = blackboard.querySelectorAll('.board-button')
 
-    // タイトルとボタンをフェードアウト
-    title.classList.add('fade-out')
-    buttons.forEach(btn => btn.classList.add('fade-out'))
+    const title = document.createElement("h2")
+    title.textContent = `📌 ${category.name}`
+    title.classList.add("board-title")
 
-    // 500ms 後に黒板テキスト切り替え
-    const fadeId = setTimeout(() => {
-      title.classList.add('hidden')
-      buttons.forEach(btn => btn.classList.add('hidden'))
+    const buttonContainer = document.createElement("div")
+    buttonContainer.classList.add("button-container")
 
-      const advice = `現在の作業ブランチ内で修正できなかった場合は
-新しいブランチを切ってリモートから前データを取得するといい
+    const advices = category.advices || []
 
-大切なのは課題を見直してクリアしてから
-何がエラーの原因だったのか理解することだよ‼
+    if (advices.length === 0) {
+      const empty = document.createElement("div")
+      empty.classList.add("advice-text")
+      empty.textContent = "このカテゴリにはまだアドバイスがありません。"
+      blackboard.appendChild(title)
+      blackboard.appendChild(empty)
+    } else {
+      advices.forEach(advice => {
+        const btn = document.createElement("button")
+        btn.textContent = advice.title
+        btn.classList.add("board-button")
 
-失敗したブランチと比較してみてね‼
-エラーが出ても焦らずやっていこう(o^―^o)`
+        btn.addEventListener("click", () => {
+          this.showAdviceDetail(advice, category)
+        })
 
-      const textArea = document.createElement('div')
-      textArea.classList.add('advice-text')
-      blackboard.appendChild(textArea)
-
-      const backButton = document.createElement('button')
-      backButton.textContent = '戻る'
-      backButton.classList.add('back-button')
-      blackboard.appendChild(backButton)
-
-      backButton.addEventListener('click', () => {
-        textArea.remove()
-        backButton.remove()
-        title.classList.remove('hidden', 'fade-out')
-        buttons.forEach(btn => btn.classList.remove('hidden', 'fade-out'))
+        buttonContainer.appendChild(btn)
       })
 
-      // タイピング効果
-      let index = 0
-      const typeWriterWithSound = () => {
-        if (index < advice.length) {
-          textArea.textContent = advice.substring(0, index + 1) + '|'
-          if (advice[index] !== ' ' && advice[index] !== '\n') {
-            this.createTypingSoundAdvice();
-          }
-          index++
-          const id = setTimeout(typeWriterWithSound, 78)
-          if (!this.activeTimeouts) this.activeTimeouts = []
-          this.activeTimeouts.push(id)
-        } else {
-          textArea.textContent = advice
-          const id = setTimeout(() => {
-            backButton.classList.add('visible')
-          }, 500)
-          if (!this.activeTimeouts) this.activeTimeouts = []
-          this.activeTimeouts.push(id)
-        }
+      blackboard.appendChild(title)
+      blackboard.appendChild(buttonContainer)
+    }
+
+    const backButton = document.createElement("button")
+    backButton.textContent = "戻る"
+    backButton.classList.add("back-button")
+    backButton.classList.add("visible")
+    blackboard.appendChild(backButton)
+
+    backButton.addEventListener("click", () => {
+      this.showConsultationRoom()
+    })
+  }
+
+  showAdviceDetail(advice, category) {
+    this.resetBlackboard()
+    const blackboard = this.blackboardTarget
+
+    const textArea = document.createElement("div")
+    textArea.classList.add("advice-text")
+    blackboard.appendChild(textArea)
+
+    // 本文をタイピング表示
+    this.typeText(textArea, advice.body || "", { speed: 50, withSound: true })
+
+    const backButton = document.createElement("button")
+    backButton.textContent = "戻る"
+    backButton.classList.add("back-button", "visible")
+    blackboard.appendChild(backButton)
+
+    backButton.addEventListener("click", () => {
+      // 戻るときにタイピング止める
+      if (this.currentTimer) {
+        clearTimeout(this.currentTimer)
+        this.currentTimer = null
       }
+      this.showAdviceList(category)
+    })
+  }
 
-      typeWriterWithSound()
-    }, 500)
+  typeText(element, text, { speed = 50, withSound = false } = {}) {
+    if (this.currentTimer) {
+      clearTimeout(this.currentTimer)
+      this.currentTimer = null
+    }
 
-    if (!this.activeTimeouts) this.activeTimeouts = []
-    this.activeTimeouts.push(fadeId)
+    let i = 0
+    element.textContent = ""
+
+    const tick = () => {
+      if (i < text.length) {
+        element.textContent = text.slice(0, i + 1) + "|"
+
+        if (withSound && text[i] !== " " && text[i] !== "\n") {
+          this.createTypingSoundAdvice()
+        }
+
+        let delay = speed
+        const c = text[i]
+        if (c === "。" || c === "、" || c === "！" || c === "？") {
+          delay = speed * 10
+        }
+
+        i++
+        this.currentTimer = setTimeout(tick, delay)
+      } else {
+        element.textContent = text
+        this.currentTimer = null
+      }
+    }
+
+    tick()
   }
 
   addFukuchanImage() {
