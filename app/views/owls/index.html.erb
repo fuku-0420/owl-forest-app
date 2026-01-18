@@ -1,4 +1,7 @@
-<div class="classroom-container" data-controller="owl">
+<div class="classroom-container"
+    data-controller="owl"
+    data-owl-categories-value="<%= json_escape(@categories_json.to_json) %>">
+
   <!-- 🌳 森の背景 -->
   <img src="<%= asset_path('tisikinomori.png') %>"
       alt="森の背景"
