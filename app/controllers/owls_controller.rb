@@ -4,10 +4,10 @@ class OwlsController < ApplicationController
     @categories = Category.includes(:advices).order(:id)
 
     @categories_json = @categories.as_json(
-      only: [:id, :name],
+      only: [ :id, :name ],
       include: {
         advices: {
-          only: [:id, :title, :body]
+          only: [ :id, :title, :body ]
         }
       }
     )
