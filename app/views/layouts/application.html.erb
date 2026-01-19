@@ -34,21 +34,9 @@
   </head>
 
   <!--  Stimulusで横画面固定を制御 -->
-<body data-controller="orientation" class="<%= yield(:body_class) %>">
+  <body data-controller="orientation" class="<%= yield(:body_class) %>">
 
-  <!-- 🔐 auth-guard 動作確認用 -->
-    <div style="position: fixed; top: 8px; right: 12px; z-index: 9999; font-size: 12px;">
-      <% if user_signed_in? %>
-        <span>ログイン中：<%= current_user.email %></span>
-        <%= button_to "ログアウト",
-              destroy_user_session_path,
-              method: :delete,
-              form: { style: "display:inline" } %>
-      <% else %>
-        <%= link_to "ログイン", new_user_session_path %> /
-        <%= link_to "新規登録", new_user_registration_path %>
-      <% end %>
-    </div>
+    <%= render "shared/auth_links" %>
 
     <%= yield %>
   </body>

@@ -1,0 +1,13 @@
+<div style="position: fixed; top: 8px; right: 12px; z-index: 9999; font-size: 12px;">
+  <% if user_signed_in? %>
+    <%= link_to "設定", settings_path %> /
+    <span><%= current_user.email %></span>
+    <%= button_to "ログアウト",
+          destroy_user_session_path,
+          method: :delete,
+          form: { style: "display:inline" } %>
+  <% else %>
+    <%= link_to "ログイン", new_user_session_path %> /
+    <%= link_to "新規登録", new_user_registration_path %>
+  <% end %>
+</div>
