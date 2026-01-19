@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :advice_suggestions, only: [ :index, :new, :create ]
   get "settings", to: "settings#index"
   devise_for :users
   # RESTfulなルーティング

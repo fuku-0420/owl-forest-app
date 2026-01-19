@@ -1,0 +1,29 @@
+<h1>投稿履歴</h1>
+
+<% if notice.present? %>
+  <p style="color: green;"><%= notice %></p>
+<% end %>
+
+<% if @advice_suggestions.any? %>
+  <ul>
+    <% @advice_suggestions.each do |s| %>
+      <% status_label =
+           if s.status_pending?
+             "承認待ち"
+           elsif s.status_approved?
+             "承認済み"
+           else
+             "非公開"
+           end
+      %>
+      <li>
+        [<%= status_label %>] <%= s.category.name %>：<%= s.body.truncate(60) %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>まだ投稿はありません。</p>
+<% end %>
+
+<p><%= link_to "新しく投稿する", new_advice_suggestion_path %></p>
+<p><%= link_to "← 掲示板へ戻る", root_path %></p>

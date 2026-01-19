@@ -1,0 +1,25 @@
+<h1>アドバイス投稿</h1>
+
+<% if @advice_suggestion.errors.any? %>
+  <ul>
+    <% @advice_suggestion.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<%= form_with model: @advice_suggestion do |f| %>
+  <div>
+    <%= f.label :category_id, "カテゴリ" %><br>
+    <%= f.collection_select :category_id, Category.all, :id, :name, prompt: "選択してください" %>
+  </div>
+
+  <div>
+    <%= f.label :body, "内容" %><br>
+    <%= f.text_area :body, rows: 6 %>
+  </div>
+
+  <%= f.submit "送信" %>
+<% end %>
+
+<p><%= link_to "← 掲示板へ戻る", root_path %></p>
