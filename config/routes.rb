@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "settings", to: "settings#index"
+  devise_for :users
   # RESTfulなルーティング
   resources :owls, only: [ :index, :show ]
 
