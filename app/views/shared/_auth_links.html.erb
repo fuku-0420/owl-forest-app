@@ -1,5 +1,6 @@
 <div style="position: fixed; top: 8px; right: 12px; z-index: 9999; font-size: 12px;">
   <% if user_signed_in? %>
+    <%= link_to "投稿", new_advice_suggestion_path %> /
     <%= link_to "設定", settings_path %> /
     <span><%= current_user.email %></span>
     <%= button_to "ログアウト",
@@ -11,3 +12,4 @@
     <%= link_to "新規登録", new_user_registration_path %>
   <% end %>
 </div>
+
