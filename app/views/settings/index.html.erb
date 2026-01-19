@@ -1,2 +1,14 @@
-<h1>Settings#index</h1>
-<p>Find me in app/views/settings/index.html.erb</p>
+<p><%= link_to "← 掲示板へ戻る", root_path %></p>
+
+<h1>設定</h1>
+
+<% if user_signed_in? %>
+  <p>ログイン中：<%= current_user.email %></p>
+
+  <ul>
+    <li><%= link_to "アカウント情報を編集", edit_user_registration_path %></li>
+  </ul>
+<% else %>
+  <p>ログインが必要です。</p>
+  <%= link_to "ログイン", new_user_session_path %>
+<% end %>
