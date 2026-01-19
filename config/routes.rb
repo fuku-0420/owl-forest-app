@@ -1,4 +1,13 @@
 Rails.application.routes.draw do
+  namespace :admin do
+    resources :advice_suggestions, only: [ :index ] do
+      member do
+        patch :approve
+        patch :reject
+      end
+    end
+  end
+
   resources :advice_suggestions, only: [ :index, :new, :create ]
   get "settings", to: "settings#index"
   devise_for :users

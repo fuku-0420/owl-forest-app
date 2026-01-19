@@ -1,0 +1,37 @@
+<h1>承認待ちアドバイス一覧</h1>
+
+<% if notice.present? %>
+  <p style="color: green;"><%= notice %></p>
+<% end %>
+
+<% if @advice_suggestions.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>投稿者</th>
+        <th>カテゴリ</th>
+        <th>内容</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @advice_suggestions.each do |s| %>
+        <tr>
+          <td><%= s.user.email %></td>
+          <td><%= s.category.name %></td>
+          <td><%= s.body.truncate(80) %></td>
+          <td>
+            <%= button_to "承認", approve_admin_advice_suggestion_path(s),
+                  method: :patch %>
+            <%= button_to "却下", reject_admin_advice_suggestion_path(s),
+                  method: :patch %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>承認待ちの投稿はありません。</p>
+<% end %>
+
+<p><%= link_to "← 掲示板へ戻る", root_path %></p>
