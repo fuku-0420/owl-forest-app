@@ -2,26 +2,77 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["blackboard", "owlCard", "typingText"]
-  static values = { categories: Array }
+  static values = {
+    categories: Array,
+    signedIn: Boolean,
+    favoriteIds: Array
+  }
+
+  static storageKey = "fukuchan_board_state"
 
   // ★ タイマー管理用のプロパティを追加
   currentTimer = null
   sharedAudioCtx = null
 
+  saveBoardState(state) {
+    try {
+      sessionStorage.setItem(this.constructor.storageKey, JSON.stringify(state))
+    } catch (e) {
+      console.log("saveBoardState failed:", e.message)
+    }
+  }
+
+  clearBoardState() {
+    try {
+      sessionStorage.removeItem(this.constructor.storageKey)
+    } catch (e) {
+      // noop
+    }
+  }
+
+  restoreBoardState() {
+    try {
+      const raw = sessionStorage.getItem(this.constructor.storageKey)
+      if (!raw) return false
+
+      const state = JSON.parse(raw)
+      if (!state || state.view !== "category_list") return false
+
+      const categories = this.categoriesValue || []
+      const category = categories.find(c => Number(c.id) === Number(state.categoryId))
+      if (!category) return false
+
+      this.showAdviceList(category, { fromRestore: true })
+      return true
+    } catch (e) {
+      console.log("restoreBoardState failed:", e.message)
+      return false
+    }
+  }
+
   connect() {
+    const params = new URLSearchParams(window.location.search)
+    this.fromBoardReturn = params.get("board") === "1"
+
+    // ① 掲示板へ戻る：相談室へ直行（演出なし）
+    if (this.fromBoardReturn) {
+      this.showConsultationRoom({ fromReturn: true })
+      history.replaceState({}, "", window.location.pathname)
+      return
+    }
+
+    // ② 保存状態があれば復元（カテゴリ一覧へ直行）
+    const restored = this.restoreBoardState()
+    if (restored) return
+
+    // ③ それ以外は通常演出
     this.startTypingAnimation()
 
-    // 🎧 Mac Safari用オーディオ解放
     const unlockAudio = () => {
       try {
         const ctx = window._sharedAudioContext
-        if (ctx && ctx.state === "suspended") {
-          ctx.resume()
-          console.log("🔓 AudioContext resumed")
-        }
-      } catch (e) {
-        console.log("Audio unlock failed:", e.message)
-      }
+        if (ctx && ctx.state === "suspended") ctx.resume()
+      } catch (e) { }
       window.removeEventListener("click", unlockAudio)
     }
     window.addEventListener("click", unlockAudio, { once: true })
@@ -264,7 +315,7 @@ export default class extends Controller {
     this.blackboardTarget.replaceChildren()
   }
 
-  showConsultationRoom() {
+  showConsultationRoom({ fromReturn = false } = {}) {
     document.querySelectorAll('.story-skip-button').forEach(el => el.remove())
     this.resetBlackboard()
 
@@ -277,14 +328,13 @@ export default class extends Controller {
 
     const blackboard = this.blackboardTarget
 
-    // ===== 黒板タイトル =====
+    // ===== タイトル =====
     const title = document.createElement('h2')
     title.textContent = '🦉 フクちゃんお悩み掲示板 🦉'
     title.classList.add('board-title')
 
-    // ===== ボタン名リスト =====
+    // ===== カテゴリボタン =====
     const categories = this.categoriesValue || []
-
     const buttonContainer = document.createElement('div')
     buttonContainer.classList.add('button-container')
 
@@ -292,36 +342,46 @@ export default class extends Controller {
       const btn = document.createElement('button')
       btn.textContent = category.name
       btn.classList.add('board-button')
-
-      btn.addEventListener('click', () => {
-        this.showAdviceList(category)
-      })
-
+      btn.addEventListener('click', () => this.showAdviceList(category))
       buttonContainer.appendChild(btn)
     })
 
     blackboard.appendChild(title)
     blackboard.appendChild(buttonContainer)
 
-    title.style.opacity = '0'
-    title.style.transform = 'translateY(-30px)'
-    title.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)'
+    // ✅ 戻りのときはフェード演出もしない（好み）
+    if (!fromReturn) {
+      title.style.opacity = '0'
+      title.style.transform = 'translateY(-30px)'
+      title.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)'
+      setTimeout(() => {
+        title.style.opacity = '1'
+        title.style.transform = 'translateY(0)'
+      }, 100)
+    }
 
-    setTimeout(() => {
-      title.style.opacity = '1'
-      title.style.transform = 'translateY(0)'
-    }, 100)
+    if (fromReturn) {
+      this.showOwlProfileStatic()
+      return
+    }
 
+    // 初回だけフル演出
     this.addFukuchanImage()
 
     if (!this.profileInitialized) {
       this.showOwlProfile()
       this.profileInitialized = true
     }
+
   }
 
-  showAdviceList(category) {
+  showAdviceList(category, { fromRestore = false } = {}) {
     this.resetBlackboard()
+
+    //  復元時は保存しない（通常遷移のときだけ保存）
+    if (!fromRestore) {
+      this.saveBoardState({ view: "category_list", categoryId: category.id })
+    }
 
     const blackboard = this.blackboardTarget
 
@@ -359,13 +419,16 @@ export default class extends Controller {
 
     const backButton = document.createElement("button")
     backButton.textContent = "戻る"
-    backButton.classList.add("back-button")
-    backButton.classList.add("visible")
+    backButton.classList.add("back-button", "visible")
     blackboard.appendChild(backButton)
 
     backButton.addEventListener("click", () => {
-      this.showConsultationRoom()
+      this.clearBoardState()
+      this.showConsultationRoom({ fromReturn: true })
     })
+
+    if (fromRestore) {
+    }
   }
 
   showAdviceDetail(advice, category) {
@@ -376,22 +439,95 @@ export default class extends Controller {
     textArea.classList.add("advice-text")
     blackboard.appendChild(textArea)
 
-    // 本文をタイピング表示
+    // 本文タイピング
     this.typeText(textArea, advice.body || "", { speed: 50, withSound: true })
 
+    // ===== お気に入りボタン（右上）=====
+    if (this.signedInValue) {
+      const favBtn = document.createElement("button")
+      favBtn.classList.add("favorite-button")
+
+      const ids = new Set((this.favoriteIdsValue || []).map(Number))
+      const isFav = ids.has(Number(advice.id))
+      favBtn.textContent = isFav ? "♥ 登録済み" : "♡ お気に入り"
+
+      favBtn.addEventListener("click", async () => {
+        const token = document.querySelector("meta[name='csrf-token']").content
+
+        const res = await fetch("/favorites", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-Token": token,
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({ favorite: { advice_id: advice.id } })
+        })
+
+        if (!res.ok) {
+          alert("お気に入り登録に失敗しました")
+          return
+        }
+
+        // JS側のID配列を更新して表示も維持する
+        if (ids.has(Number(advice.id))) {
+          ids.delete(Number(advice.id))
+          favBtn.textContent = "♡ お気に入り"
+        } else {
+          ids.add(Number(advice.id))
+          favBtn.textContent = "♥ 登録済み"
+        }
+
+        this.favoriteIdsValue = Array.from(ids)
+      })
+
+      blackboard.appendChild(favBtn)
+    }
+
+    // 戻る
     const backButton = document.createElement("button")
     backButton.textContent = "戻る"
     backButton.classList.add("back-button", "visible")
     blackboard.appendChild(backButton)
 
     backButton.addEventListener("click", () => {
-      // 戻るときにタイピング止める
       if (this.currentTimer) {
         clearTimeout(this.currentTimer)
         this.currentTimer = null
       }
       this.showAdviceList(category)
+      this.showOwlProfileStatic()
     })
+  }
+
+  addFavoriteButton(blackboard, adviceId) {
+    if (!this.signedInValue) return
+
+    const btn = document.createElement("button")
+    btn.textContent = "♡ お気に入り"
+    btn.classList.add("favorite-button")
+
+    btn.addEventListener("click", async () => {
+      const token = document.querySelector("meta[name='csrf-token']").content
+
+      const res = await fetch("/favorites", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": token
+        },
+        body: JSON.stringify({ favorite: { advice_id: adviceId } })
+      })
+
+      if (res.ok) {
+        btn.textContent = "♥ 登録済み"
+        btn.disabled = true
+      } else {
+        alert("お気に入り登録に失敗しました")
+      }
+    })
+
+    blackboard.appendChild(btn)
   }
 
   typeText(element, text, { speed = 50, withSound = false } = {}) {
@@ -507,6 +643,34 @@ export default class extends Controller {
           }, 500)
         }, 800)
       }, 1000)
+    }
+  }
+
+  // ★ 静的にプロフィールを表示（戻り用）
+  showOwlProfileStatic() {
+    const owlsContainer = document.querySelector('.owls-container')
+    if (!owlsContainer) return
+
+    owlsContainer.style.display = 'block'
+    owlsContainer.classList.remove('hidden-init')
+    owlsContainer.classList.remove('showing')
+
+    owlsContainer.querySelectorAll('.owl-card')
+      .forEach(card => card.classList.add('show-floating'))
+
+    // ✅ セリフが空なら dataset.message をそのまま出す（タイピングしない）
+    owlsContainer.querySelectorAll('.message-line').forEach(line => {
+      if (line.textContent.trim() === "") {
+        line.textContent = line.dataset.message || ""
+      }
+    })
+
+    // ✅ フクちゃん画像が消えてたら強制表示（CSS次第で最低限これ）
+    const img = document.querySelector('.fukuchan-global')
+    if (img) {
+      img.style.opacity = '1'
+      img.style.display = 'block'
+      img.classList.add('fukuchan-visible')
     }
   }
 
@@ -667,6 +831,11 @@ export default class extends Controller {
         this.audioCtxAdvice.close();
       } catch (_) { }
       this.audioCtxAdvice = null;
+    }
+
+    if (this.sharedAudioCtx && this.sharedAudioCtx.state !== "closed") {
+      try { this.sharedAudioCtx.close() } catch (_) { }
+      this.sharedAudioCtx = null
     }
 
     console.log("🧹 Cleaned up all audio & timers.");

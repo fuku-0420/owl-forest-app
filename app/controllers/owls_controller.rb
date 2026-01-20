@@ -6,11 +6,17 @@ class OwlsController < ApplicationController
     @categories_json = @categories.as_json(
       only: [ :id, :name ],
       include: {
-        advices: {
-          only: [ :id, :title, :body ]
-        }
+        advices: { only: [ :id, :title, :body ] }
       }
     )
+
+    # ▼追加：ログイン中ユーザーがお気に入りしてる Advice のID一覧
+    @favorite_ids =
+      if user_signed_in?
+        current_user.favorites.pluck(:advice_id)
+      else
+        []
+      end
   end
 
   def show

@@ -218,6 +218,60 @@
   }
 }
 
+/* =========================
+  🧭 右側メニュー（遷移図風）
+========================= */
+
+/* メニュー用カード */
+.owl-menu-card {
+  text-align: center;
+  /*animation: none; 浮遊が邪魔なら追加。 */
+}
+
+.owl-menu-title {
+  margin: 8px 0 12px;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #0d1a0d;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+}
+
+.owl-menu {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.owl-menu-btn {
+  display: block;
+  width: 100%;
+  padding: 12px 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  border: 2px solid rgba(237, 255, 39, 0.35);
+  background: rgba(94, 247, 28, 0.25);
+  color: #0d1a0d;
+  font-weight: 700;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.owl-menu-btn:hover {
+  transform: translateY(-1px);
+}
+
+.owl-menu-btn.primary {
+  background: rgba(255, 153, 0, 0.7);
+  border-color: rgba(255, 153, 0, 0.4);
+  color: #fff;
+}
+
+.owl-menu-btn.danger {
+  background: rgba(255, 80, 80, 0.55);
+  border-color: rgba(255, 80, 80, 0.35);
+  color: #fff;
+}
 
 /* =========================================================
   🪶 3. 黒板（Boardエリア）
@@ -465,6 +519,22 @@
   opacity: 1;
 }
 
+/* ❤️ お気に入りボタン（黒板内） */
+.favorite-button {
+  position: absolute;
+  top: 50px;
+  right: 14px;
+  z-index: 30;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  background: rgba(178, 252, 109, 0.75);
+  color: #1b1b1b;
+}
+.favorite-button:hover { transform: scale(1.05); }
+
 .advice-text {
   position: absolute;
   top: 20%;
@@ -600,7 +670,7 @@ body.owl-show-page {
   background-attachment: fixed;
 }
 
-/* 🕊️ プロフィールページではスクロールを許可（htmlも含めて上書き） */
+/* 🕊️ プロフィールページではスクロールを許可 */
 html.owl-show-page,
 body.owl-show-page {
   overflow-y: auto !important;

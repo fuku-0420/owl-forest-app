@@ -3,4 +3,5 @@ class Advice < ApplicationRecord
 
   validates :title, presence: true
   validates :body, presence: true
+  has_many :favorites, dependent: :destroy
 end
