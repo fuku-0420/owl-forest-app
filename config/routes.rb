@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   devise_for :users
   # RESTfulなルーティング
   resources :owls, only: [ :index, :show ]
-  resources :favorites, only: [:create, :destroy]
+  resources :favorites, only: [ :create, :destroy ]
   get "favorites", to: "favorites#index"
 
   get "up" => "rails/health#show", as: :rails_health_check
