@@ -1,0 +1,19 @@
+<h1>お気に入り</h1>
+
+<% if notice.present? %>
+  <p style="color: green;"><%= notice %></p>
+<% end %>
+
+<% if @advices.any? %>
+  <ul>
+    <% @advices.each do |a| %>
+      <li>
+        <%= a.category.name %>：<%= a.title %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>まだお気に入りはありません。</p>
+<% end %>
+
+<%= render "shared/back_to_board" %>

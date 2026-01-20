@@ -1,15 +1,37 @@
-<div style="position: fixed; top: 8px; right: 12px; z-index: 9999; font-size: 12px;">
+<div class="auth-links" data-controller="coming-soon">
   <% if user_signed_in? %>
-    <%= link_to "投稿", new_advice_suggestion_path %> /
-    <%= link_to "設定", settings_path %> /
-    <span><%= current_user.email %></span>
-    <%= button_to "ログアウト",
+
+    <%# TODO: ログアウト機能実装後に復活 %>
+    <%#= button_to "ログアウト",
           destroy_user_session_path,
           method: :delete,
-          form: { style: "display:inline" } %>
+          class: "auth-btn auth-logout",
+          form: { class: "auth-form", data: { turbo: false } } %>
+
+    <button type="button"
+            class="auth-link auth-logout"
+            data-action="click->coming-soon#comingSoon"
+            data-feature="ログアウト">
+      ログアウト
+    </button>
+
   <% else %>
-    <%= link_to "ログイン", new_user_session_path %> /
-    <%= link_to "新規登録", new_user_registration_path %>
+
+    <button type="button"
+            class="auth-link"
+            data-action="click->coming-soon#comingSoon"
+            data-feature="ログイン">
+      ログイン
+    </button>
+
+    <span class="auth-sep">|</span>
+
+    <button type="button"
+            class="auth-link"
+            data-action="click->coming-soon#comingSoon"
+            data-feature="新規登録">
+      新規登録
+    </button>
+
   <% end %>
 </div>
-
