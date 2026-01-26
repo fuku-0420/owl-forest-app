@@ -1,4 +1,18 @@
 Rails.application.routes.draw do
+  get "terms",   to: "static_pages#terms"
+  get "privacy", to: "static_pages#privacy"
+
+  # お問い合わせ
+  resources :contacts, only: [ :new, :create ], path: "contact" do
+    collection do
+      get :thanks
+    end
+  end
+
+  # アプリ設定
+  resource :app_settings, only: [ :show ]
+
+  # 管理者
   namespace :admin do
     resources :advice_suggestions, only: [ :index ] do
       member do
@@ -8,16 +22,33 @@ Rails.application.routes.draw do
     end
   end
 
+  # ユーザー投稿
   resources :advice_suggestions, only: [ :index, :new, :create ]
+  resources :favorites, only: [ :index, :create, :destroy ]
+
+  # 🔧 ユーザー設定（ハブ）
   get "settings", to: "settings#index"
+
+  # 👤 プロフィール（単数）
+  resource :profile, only: [ :edit, :update ]
+
+  #  Devise分離（メール / パスワード / 退会）
+  namespace :users do
+    get "withdrawals/show"
+    get "passwords/edit"
+    get "emails/edit"
+    get "emails/update"
+    resource :email,      only: [ :edit, :update ]
+    resource :password,   only: [ :edit, :update ]
+    resource :withdrawal, only: [ :show, :destroy ]
+  end
+
+  # 認証
   devise_for :users
-  # RESTfulなルーティング
+
+  # メイン
   resources :owls, only: [ :index, :show ]
-  resources :favorites, only: [ :create, :destroy ]
-  get "favorites", to: "favorites#index"
 
   get "up" => "rails/health#show", as: :rails_health_check
-
-  # ルートページをふくちゃんの紹介ページに設定
   root "owls#index"
 end

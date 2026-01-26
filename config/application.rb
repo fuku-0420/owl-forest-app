@@ -8,16 +8,21 @@ module FukurouApp
   class Application < Rails::Application
     config.load_defaults 8.0
 
+    # i18n
+    config.i18n.default_locale = :ja
+    config.i18n.available_locales = [ :ja, :en ]
+    config.i18n.fallbacks = { ja: :en } # 翻訳が無いキーは英語へフォールバック
+
     config.encoding = "utf-8"
 
     config.autoload_lib(ignore: %w[assets tasks])
 
-    # 🎯 Rails 8 Propshaft アセット設定を追加
+    # 🎯 Rails 8 Propshaft アセット設定
     config.assets.paths << Rails.root.join("app", "assets", "builds")
     config.assets.paths << Rails.root.join("app", "assets", "images")
-    config.assets.paths << Rails.root.join("app", "assets", "audios") # ← これを追加！
+    config.assets.paths << Rails.root.join("app", "assets", "audios")
 
-    # 開発環境でのアセット配信を確実にする
+    # 開発環境でのアセット配信
     config.assets.compile = true if Rails.env.development?
 
     # 🌟 Rails 8対応の安全なマイグレーション実行
@@ -27,11 +32,9 @@ module FukurouApp
           begin
             Rails.logger.info "🔄 FORCE_MIGRATION enabled - Starting migration..."
 
-            # データベース接続確認
             ActiveRecord::Base.connection.execute("SELECT 1")
             Rails.logger.info "✅ Database connection established"
 
-            # Rails 8対応の安全なマイグレーション実行
             if defined?(ActiveRecord::Tasks::DatabaseTasks)
               ActiveRecord::Tasks::DatabaseTasks.migrate
               Rails.logger.info "✅ Migration completed successfully!"

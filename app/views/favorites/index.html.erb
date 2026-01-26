@@ -1,19 +1,33 @@
-<h1>お気に入り</h1>
+<div class="page-container favorites-page">
+  <div class="page-header">
+    <h1>お気に入り</h1>
+  </div>
 
-<% if notice.present? %>
-  <p style="color: green;"><%= notice %></p>
-<% end %>
-
-<% if @advices.any? %>
-  <ul>
-    <% @advices.each do |a| %>
-      <li>
-        <%= a.category.name %>：<%= a.title %>
-      </li>
+  <div class="page-body">
+    <% if notice.present? %>
+      <p class="notice"><%= notice %></p>
     <% end %>
-  </ul>
-<% else %>
-  <p>まだお気に入りはありません。</p>
-<% end %>
+
+    <div class="favorites-board">
+      <% if @advices.any? %>
+        <ul class="favorites-list">
+          <% @advices.each do |a| %>
+            <li class="favorite-card">
+              <div class="favorite-meta">
+                <span class="favorite-category"><%= a.category.name %></span>
+              </div>
+
+              <p class="favorite-title">
+                <%= a.title %>
+              </p>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="empty">まだお気に入りはありません。</p>
+      <% end %>
+    </div>
+  </div>
+</div>
 
 <%= render "shared/back_to_board" %>

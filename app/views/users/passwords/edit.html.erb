@@ -1,0 +1,53 @@
+<div class="page-container user-settings-page">
+  <div class="page-header">
+    <h1>パスワード変更</h1>
+  </div>
+
+  <div class="page-body">
+    <% if notice.present? %>
+      <p class="notice"><%= notice %></p>
+    <% end %>
+
+    <% if alert.present? %>
+      <p class="alert"><%= alert %></p>
+    <% end %>
+
+    <%= render "devise/shared/error_messages", resource: @user %>
+
+    <section class="settings-section">
+      <%= form_with model: @user,
+            url: users_password_path,
+            method: :patch,
+            class: "settings-form" do |f| %>
+
+        <div class="form-group">
+          <%= f.label :password, "新しいパスワード" %>
+          <%= f.password_field :password, autocomplete: "new-password" %>
+          <% if @minimum_password_length %>
+            <p class="form-note">※ <%= @minimum_password_length %>文字以上</p>
+          <% end %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :password_confirmation, "新しいパスワード（確認）" %>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :current_password, "現在のパスワード（変更の保存に必要）" %>
+          <%= f.password_field :current_password, autocomplete: "current-password" %>
+        </div>
+
+        <div class="form-actions">
+          <%= f.submit "更新する", class: "primary-btn" %>
+        </div>
+      <% end %>
+
+      <div class="settings-subnav">
+        <%= link_to "ユーザー設定へ戻る", settings_path, class: "sub-link" %>
+      </div>
+    </section>
+  </div>
+</div>
+
+<%= render "shared/back_to_board" %>

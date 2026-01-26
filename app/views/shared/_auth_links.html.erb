@@ -1,37 +1,56 @@
 <div class="auth-links" data-controller="coming-soon">
   <% if user_signed_in? %>
 
-    <%# TODO: ログアウト機能実装後に復活 %>
-    <%#= button_to "ログアウト",
+    <!-- ログアウト（本物） -->
+    <%= button_to "ログアウト",
           destroy_user_session_path,
           method: :delete,
-          class: "auth-btn auth-logout",
+          class: "auth-link auth-logout",
           form: { class: "auth-form", data: { turbo: false } } %>
 
+    <%#
+    <!-- ログアウト（ガード用：デプロイ直前に復活） -->
     <button type="button"
             class="auth-link auth-logout"
             data-action="click->coming-soon#comingSoon"
             data-feature="ログアウト">
       ログアウト
     </button>
+    %>
 
   <% else %>
 
+    <!-- ログイン -->
+    <%= link_to "ログイン",
+          new_user_session_path,
+          class: "auth-link" %>
+
+    <%#
+    <!-- ログイン（ガード用） -->
     <button type="button"
             class="auth-link"
             data-action="click->coming-soon#comingSoon"
             data-feature="ログイン">
       ログイン
     </button>
+    %>
 
     <span class="auth-sep">|</span>
 
+    <!-- 新規登録 -->
+    <%= link_to "新規登録",
+          new_user_registration_path,
+          class: "auth-link" %>
+
+    <%#
+    <!-- 新規登録（ガード用） -->
     <button type="button"
             class="auth-link"
             data-action="click->coming-soon#comingSoon"
             data-feature="新規登録">
       新規登録
     </button>
+    %>
 
   <% end %>
 </div>

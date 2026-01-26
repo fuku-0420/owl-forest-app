@@ -79,7 +79,7 @@ export default class extends Controller {
   }
 
   startTypingAnimation() {
-    const text = "🦉RUNTEQ 知識の森へようこそ🦉"
+    const text = "🦉知識の森へようこそ🦉"
     const typingElement = this.typingTextTarget
 
     typingElement.textContent = ""

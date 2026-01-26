@@ -1,53 +1,74 @@
 /* =========================================================
   🦉 app.css（アプリ全体の基盤スタイル）
   ---------------------------------------------------------
-  このファイルは全ページ共通のベースデザインを担当します。
-  主な内容：
-  - 全体リセット（html, body）
-  - 森の背景と季節切り替え
-  - 黒板・相談室のベース構造
-  - フクちゃん共通位置（ページ共通）
-  - BGMコントロールUI
-  - SHOWページの簡易スタイル
-  - 共通アニメーション
+  目的：
+  - 全ページ共通の土台（レイアウト/背景/共通UI）
+  - トップページ（黒板UI）は no-scroll で固定
+  - それ以外のページはスクロールできる（フォーム等が崩れない）
   ---------------------------------------------------------
-  ページ固有の演出（タイピング・黒板テキスト・カードUIなど）は
-  👉 owls.css 側で管理します。
-   ========================================================= */
+  ページ固有の演出は 👉 owls.css（/owls#index）へ
+========================================================= */
 
-/* === 全体余白リセット === */
+/* =========================================================
+  0. リセット / ベース
+========================================================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html,
 body {
   margin: 0;
   padding: 0;
-  height: 100%;
   width: 100%;
-  overflow: hidden;
-  /* 上下横スライド禁止 */
+  min-height: 100%;
+}
+
+/*  基本はスクロールOK（フォームや規約ページが死なない） */
+html,
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* トップ（黒板UI）だけ固定したいとき用 */
+html.no-scroll,
+body.no-scroll {
+  height: 100%;
+  overflow: hidden !important;
+}
+
+/* iOS系の安全策 */
+body {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
 }
 
 /* =========================================================
-  🌳 1. 教室背景コンテナ・季節切り替え
-   ========================================================= */
+  1. 教室背景コンテナ（トップで使用）
+========================================================= */
 .classroom-container {
   position: relative;
   display: flex;
   flex-direction: column;
-  /* 縦方向に積む */
   align-items: center;
   justify-content: center;
+
   height: 100vh;
   width: 100vw;
+
   margin: 0;
   padding: 0;
   overflow: hidden;
 }
 
-/* === 森の背景画像（HTML内img用） === */
+/* 背景画像 */
 .forest-bg {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -56,38 +77,50 @@ body {
   transition: all 0.8s ease;
 }
 
-/* 🍁 秋モード：スキップ後など */
+/* 🍁 秋モード */
 .classroom-container.autumn .forest-bg {
   filter: brightness(1.0) sepia(0.3) saturate(1.2);
   content: url("/assets/tisikinomori_aki.png");
 }
 
 /* =========================================================
-  🪶 2. 黒板・相談室ブロック
-   ========================================================= */
-.consultation-room-container {
-  margin-top: 30px;
-  padding: 20px;
-  border: 2px solid #8B4513;
-  border-radius: 10px;
-  background-color: #F5F5DC;
+  2. 共通ページ用コンテナ（トップ以外のベース）
+  - 規約/フォーム/設定/一覧など
+========================================================= */
+.page-container {
+  width: min(980px, calc(100% - 32px));
+  margin: 80px auto 40px;
+  padding: 18px 16px;
+
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.18),
+    inset 0 0 12px rgba(255, 255, 255, 0.10);
 }
 
-.btn-consultation {
-  background-color: #8B4513;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
+/* ページ見出し */
+.page-container h1 {
+  margin: 0 0 14px;
+  font-size: 28px;
+  color: rgb(255, 196, 0);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
 }
 
-.consultation-content {
-  margin-top: 20px;
+.page-container p,
+.page-container li,
+.page-container label {
+  color: rgba(0, 0, 0, 0.85);
+  text-shadow: 0 1px 2px rgba(255,255,255,0.35);
 }
 
 /* =========================================================
-  🦉 3. フクちゃん（キャラクター要素）
-   ========================================================= */
+  3. フクちゃん（共通キャラ：トップなど）
+========================================================= */
 .fukuchan-global {
   position: fixed;
   bottom: calc(-2% + env(safe-area-inset-bottom));
@@ -97,11 +130,12 @@ body {
   border-radius: 50%;
   z-index: 1500;
   cursor: pointer;
-  transition: all 0.6s ease;
   pointer-events: auto;
+
   opacity: 0;
   filter: blur(20px);
   transform: scale(1.2);
+  transition: all 0.6s ease;
 }
 
 .fukuchan-visible {
@@ -110,7 +144,7 @@ body {
   transform: scale(1);
 }
 
-/* 💻 〜1500px（MacBook前後） */
+/* 💻 〜1500px */
 @media (max-width: 1500px) {
   .fukuchan-global {
     bottom: calc(-1.5% + env(safe-area-inset-bottom));
@@ -119,7 +153,7 @@ body {
   }
 }
 
-/* 📚 タブレット横（1300px以下） */
+/* 📚 〜1300px */
 @media (max-width: 1300px) {
   .fukuchan-global {
     bottom: calc(-1% + env(safe-area-inset-bottom));
@@ -128,16 +162,16 @@ body {
   }
 }
 
-/* 📱 エクスペリア1 IIIなど超横長スマホ用 */
+/* 📱 超横長 */
 @media (max-width: 1300px) and (max-height: 700px) {
   .fukuchan-global {
     bottom: calc(-1% + env(safe-area-inset-bottom));
     right: 24%;
-    width: clamp(80px, 18vw, 160px); /* ← コンパクトに */
+    width: clamp(80px, 18vw, 160px);
   }
 }
 
-/* 📱 スマホ横（〜850px） */
+/* 📱 〜850px */
 @media (max-width: 850px) {
   .fukuchan-global {
     bottom: calc(-1% + env(safe-area-inset-bottom));
@@ -146,7 +180,7 @@ body {
   }
 }
 
-/* 📱 小型スマホ（〜768px） */
+/* 📱 〜768px */
 @media (max-width: 768px) {
   .fukuchan-global {
     bottom: calc(-1% + env(safe-area-inset-bottom));
@@ -156,20 +190,23 @@ body {
 }
 
 /* =========================================================
-  🎵 4. BGMコントロールUI
-   ========================================================= */
+  4. BGMコントロール（共通）
+========================================================= */
 .bgm-controls {
   position: fixed;
   bottom: 40px;
   left: 0px;
   z-index: 1000;
+
   background: #4ba26525;
   padding: 10px;
   border-radius: 10px;
+
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 12px;
+
   transition: all 0.3s ease;
 }
 
@@ -231,70 +268,47 @@ body {
   box-shadow: 0 0 8px rgba(217, 255, 0, 0.5) !important;
 }
 
-/* 音楽再生中のパルス効果 */
+/* 再生中のパルス */
 .bgm-controls.playing {
   animation: pulse 2s infinite;
 }
 
 /* =========================================================
-  ❄️ SHOWページ専用BGM（シンプル版）
-   ========================================================= */
-body.owl-show-page .bgm-controls {
-  position: fixed;
-  bottom: 40px;
-  left: 60px;
-  z-index: 900;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 8px 14px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-}
+  5. 時計（共通）
+========================================================= */
+.clock-display {
+  background: linear-gradient(135deg, #66ea7c18 0%, #4ba26525 100%);
+  color: rgb(217, 255, 0);
 
-body.owl-show-page .bgm-btn {
-  background: transparent;
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 8px 18px;
+  padding: 8px 12px;
   border-radius: 6px;
-  cursor: pointer;
+
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
   font-weight: bold;
-  transition: all 0.2s ease;
-}
 
-body.owl-show-page .bgm-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: scale(1.05);
-  color: #ffff8a;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.205);
+  margin: 0 !important;
+
+  display: inline-block;
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0px !important;
+  z-index: 2000;
 }
 
 /* =========================================================
-  💫 6. 共通アニメーション
-  ---------------------------------------------------------
-  - pulse：BGMボタンの発光エフェクト（全ページ共通）
-  ---------------------------------------------------------
-  ※ 黒板やタイピング演出など、ページ固有のアニメーションは
-    owls.css に記載されています。
-   ========================================================= */
+  6. 共通アニメーション
+========================================================= */
 @keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(75, 162, 101, 0.4);
-  }
-
-  70% {
-    box-shadow: 0 0 0 10px rgba(75, 162, 101, 0);
-  }
-
-  100% {
-    box-shadow: 0 0 0 0 rgba(75, 162, 101, 0);
-  }
+  0% { box-shadow: 0 0 0 0 rgba(75, 162, 101, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(75, 162, 101, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(75, 162, 101, 0); }
 }
 
 /* =========================================================
-  🔐 auth-links（右上のログイン / ログアウト）
-  ・ガラスは常時表示（ホバーで変化しない）
-  ・ホバーは文字のみ
-   ========================================================= */
-
+  7. auth-links（右上のログイン / ログアウト）
+========================================================= */
 .auth-links {
   position: fixed;
   top: 10px;
@@ -308,22 +322,15 @@ body.owl-show-page .bgm-btn:hover {
   padding: 6px 10px;
   border-radius: 10px;
 
-  /* 🌿 本物っぽいガラス感（明るめ） */
   background: rgba(255, 255, 255, 0.024);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-
   border: 1px solid rgba(255, 255, 255, 0.18);
 
-  /* 🌿 軽い浮遊感（暗くしすぎない） */
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.18),
     inset 0 0 10px rgba(255, 255, 255, 0.12);
 }
-
-/* ---------------------------------------------------------
-   テキスト（ログイン / 新規登録 / ログアウト）
-   --------------------------------------------------------- */
 
 .auth-link {
   background: none;
@@ -336,14 +343,9 @@ body.owl-show-page .bgm-btn:hover {
   appearance: none;
 }
 
-/* フォーカス枠を消す */
 .auth-link:focus {
   outline: none;
 }
-
-/* ---------------------------------------------------------
-   ✨ ホバーは「文字だけ」
-   --------------------------------------------------------- */
 
 .auth-link:hover,
 .auth-btn:hover {
@@ -351,10 +353,13 @@ body.owl-show-page .bgm-btn:hover {
   text-decoration: underline;
 }
 
-/* =========================================================
-   🔙 掲示板に戻る（全ページ共通ナビ）
-   ========================================================= */
+.auth-sep {
+  color: rgba(255, 255, 255, 0.35);
+}
 
+/* =========================================================
+  8. 掲示板へ戻る（共通）
+========================================================= */
 .back-to-board {
   position: fixed;
   bottom: 18px;
@@ -362,7 +367,7 @@ body.owl-show-page .bgm-btn:hover {
   z-index: 9999;
 }
 
-.back-to-board__btn{
+.back-to-board__btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -372,7 +377,6 @@ body.owl-show-page .bgm-btn:hover {
   text-decoration: none;
   font-size: 14px;
 
-  /* ガラス感：少し明るく */
   background: rgba(255, 255, 255, 0.10);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
@@ -381,13 +385,735 @@ body.owl-show-page .bgm-btn:hover {
   color: rgb(0, 0, 0);
   text-shadow: 0 1px 2px rgba(0,0,0,0.85);
 
-  /* 存在感UP（見つけやすく） */
   box-shadow:
     0 6px 16px rgba(0, 0, 0, 0.25),
     inset 0 0 10px rgba(255, 255, 255, 0.10);
 }
 
-.back-to-board__btn:hover{
+.back-to-board__btn:hover {
   color: rgb(255, 213, 0);
   text-decoration: underline;
+}
+
+/* =========================================================
+  9. フォーム（投稿/設定/Devise共通で使える）
+========================================================= */
+.form-group {
+  margin-bottom: 16px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+  width: 100%;
+  max-width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.15);
+  background: rgba(255,255,255,0.75);
+}
+
+textarea {
+  resize: vertical;
+}
+
+.form-note {
+  margin: 12px 0;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.form-actions {
+  margin-top: 16px;
+  text-align: right;
+}
+
+.primary-btn {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.12);
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  transform: translateY(-1px);
+}
+
+.form-errors {
+  margin: 12px 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,0,0,0.35);
+  background: rgba(255,0,0,0.08);
+}
+
+.form-footer-links {
+  margin-top: 18px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.footer-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  color: rgba(0,0,0,0.85);
+}
+
+.footer-link:hover {
+  color: rgb(0, 255, 128);
+}
+
+.footer-sep {
+  opacity: 0.6;
+}
+
+/* =========================================================
+  10. owl showページ
+  - showページは縦スクロール許可
+========================================================= */
+body.owl-show-page {
+  background-image: url('tisikinomori_fuyu.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html.owl-show-page,
+body.owl-show-page {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: auto !important;
+  min-height: 100%;
+}
+
+/* =========================================================
+  📝 遷移図寄せ：アドバイス案募集フォーム（赤寄り）
+========================================================= */
+.page-container.advice-form {
+  width: min(1040px, calc(100% - 32px));
+  margin: 50px auto 50px;
+  padding: 0;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: none;
+  border: 1px solid rgba(0,0,0,0.18);
+  box-shadow: none;
+}
+
+/* 上の帯：えんじ〜赤茶 */
+.page-container.advice-form .page-header {
+  background: linear-gradient(180deg, #c73636 0%, #d21818 100%);
+  padding: 14px 18px;
+  border-radius: 10px 10px 0 0;
+}
+
+.page-container.advice-form .page-header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #ffb700;
+  text-shadow: none;
+  font-weight: 800;
+  text-align: center;
+}
+
+/* 本体余白 */
+.page-container.advice-form .page-body {
+  padding: 18px 22px 16px;
+}
+
+.page-container.advice-form .form-group {
+  margin-bottom: 18px;
+}
+
+.page-container.advice-form .form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 800;
+  color: #111;
+}
+
+.page-container.advice-form .form-control {
+  width: 100%;
+  border-radius: 0;
+  border: 1px solid #666;
+  background: #fff;
+  padding: 10px 12px;
+  font-size: 16px;
+}
+
+/* 本文はしっかり大きく */
+.page-container.advice-form .form-textarea {
+  min-height: 450px;
+  max-height: 55vh;
+}
+
+/* 注意文（赤系に寄せすぎず、落ち着き） */
+.page-container.advice-form .form-note {
+  margin: 12px 0 16px;
+  font-size: 13px;
+  color: rgba(60, 0, 0, 0.65);
+}
+
+/* 投稿ボタン：えんじ */
+.page-container.advice-form .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.page-container.advice-form .btn-submit {
+  border: none;
+  border-radius: 0;
+  background: linear-gradient(180deg, #c73636 0%, #d21818 100%);
+  color: #ffd000;
+  padding: 12px 22px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.page-container.advice-form .btn-submit:hover {
+  filter: brightness(0.95);
+}
+
+/* 下部リンク：中央寄せ */
+.page-container.advice-form .footer-links {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(0,0,0,0.15);
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.page-container.advice-form .footer-link {
+  color: #111;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.page-container.advice-form .footer-link:hover {
+  text-decoration: underline;
+}
+
+.page-container.advice-form .footer-sep {
+  opacity: 0.7;
+}
+
+/* エラー：赤と馴染ませる */
+.page-container.advice-form .form-errors {
+  margin: 14px 18px 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(127, 29, 29, 0.35);
+  background: rgba(127, 29, 29, 0.06);
+  border-radius: 6px;
+}
+
+/* =========================================================
+  📜 Policy Pages（利用規約 / プライバシーポリシー 共通）
+========================================================= */
+
+.page-container.policy-page {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  padding: 28px;
+}
+
+.page-container.policy-page h1 {
+  text-align: center;
+  margin: 0 0 20px;
+  font-size: 30px;
+  color: #111;
+  text-shadow: none;
+}
+
+.page-container.policy-page .terms-content {
+  text-align: left;
+  color: rgba(0, 0, 0, 0.88);
+  line-height: 1.9;
+  font-size: 15px;
+}
+
+.page-container.policy-page .terms-content h2 {
+  margin: 26px 0 10px;
+  font-size: 18px;
+  color: #111;
+}
+
+.page-container.policy-page .terms-content p {
+  margin: 10px 0;
+  text-shadow: none;
+}
+
+.page-container.policy-page .terms-content ul {
+  margin: 10px 0 14px 18px;
+  padding: 0;
+}
+
+.page-container.policy-page .terms-content li {
+  margin: 6px 0;
+}
+
+.page-container.policy-page .terms-end {
+  text-align: right;
+  margin-top: 32px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* =========================================================
+  🧾 投稿一覧（投稿履歴）
+========================================================= */
+
+.page-container.submissions-page {
+  width: min(1040px, calc(100% - 32px));
+  margin: 50px auto 50px;
+  padding: 0;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: none;
+  border: 1px solid rgba(0,0,0,0.14);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.10);
+}
+
+.page-container.submissions-page .page-header {
+  background: linear-gradient(180deg, #ffb224 0%, #ff9800 100%);
+  padding: 14px 18px;
+  border-radius: 12px 12px 0 0;
+  border-bottom: 1px solid rgba(0,0,0,0.10);
+}
+
+.page-container.submissions-page .page-header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #111;
+  text-shadow: none;
+  font-weight: 900;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+.page-container.submissions-page .page-body {
+  padding: 18px 22px 20px;
+}
+
+.page-container.submissions-page .notice {
+  margin: 0 0 12px;
+  color: #2e7d32;
+  font-weight: 800;
+}
+
+.submissions-board {
+  background: linear-gradient(180deg, #ff843d 0%, #f0c901 100%);
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.10);
+}
+
+.submissions-section {
+  padding: 10px 10px 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(0,0,0,0.08);
+}
+
+.submissions-section + .submissions-section {
+  margin-top: 14px;
+}
+
+.submissions-section h2 {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 900;
+  color: rgba(0,0,0,0.85);
+  letter-spacing: 0.02em;
+}
+
+.submissions-list {
+  background: rgba(255,255,255,0.92);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.10);
+
+  min-height: 64px;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.submissions-list::-webkit-scrollbar { width: 10px; }
+.submissions-list::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.18);
+  border-radius: 999px;
+}
+.submissions-list::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.06);
+  border-radius: 999px;
+}
+
+.submission-card {
+  position: relative;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 10px;
+  padding: 10px 12px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+}
+
+.submission-card + .submission-card { margin-top: 10px; }
+
+.submission-card::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 10px;
+  width: 6px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.12);
+}
+
+.submission-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  padding-left: 14px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 900;
+  border-radius: 999px;
+  color: #111;
+  border: 1px solid rgba(0,0,0,0.10);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.status-badge.pending  { background: rgba(255, 205, 0, 0.92); }
+.status-badge.approved { background: rgba(0, 220, 120, 0.78); }
+.status-badge.rejected { background: rgba(255, 80, 80, 0.78); }
+
+.submission-meta .category {
+  font-size: 12px;
+  font-weight: 900;
+  color: rgba(0,0,0,0.70);
+}
+
+.submission-body {
+  margin: 0;
+  padding-left: 14px;
+  color: rgba(0,0,0,0.88);
+  text-shadow: none;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.submission-card.pending::before  { background: rgba(255, 205, 0, 0.95); }
+.submission-card.approved::before { background: rgba(0, 220, 120, 0.85); }
+.submission-card.rejected::before { background: rgba(255, 80, 80, 0.85); }
+
+.submissions-section .empty {
+  margin: 0;
+  padding: 2px 0 6px;
+  color: rgba(0,0,0,0.55);
+  font-size: 12px;
+}
+
+.submissions-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
+}
+
+/* 投稿者 */
+.submission-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  padding-left: 14px;
+
+  justify-content: space-between;
+}
+
+.submission-meta .author {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 900;
+  color: rgba(0,0,0,0.70);
+  background: rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.10);
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+/* =========================================================
+  ⚙️ アプリ設定（青寄り）
+========================================================= */
+.page-container.app-settings-page {
+  width: min(1040px, calc(100% - 32px));
+  margin: 50px auto 50px;
+  padding: 0;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: none;
+  border: 1px solid rgba(0,0,0,0.18);
+  box-shadow: none;
+}
+
+.page-container.app-settings-page .page-header {
+  background: linear-gradient(180deg, #6b8cff 0%, #3f5bd9 100%);
+  padding: 14px 18px;
+  border-radius: 10px 10px 0 0;
+}
+
+.page-container.app-settings-page .page-header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #111;
+  text-shadow: none;
+  font-weight: 800;
+  text-align: center;
+}
+
+.page-container.app-settings-page .page-body {
+  padding: 18px 22px 20px;
+}
+
+.settings-panel {
+  background: linear-gradient(180deg, #4b5e9e 0%, #374785 100%);
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.settings-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: #f2f2f2;
+  border: 1px solid rgba(0,0,0,0.2);
+  padding: 14px 16px;
+  margin: 0 0 12px;
+
+  font-weight: 800;
+  color: #111;
+  cursor: pointer;
+}
+
+.settings-row:last-child { margin-bottom: 0; }
+
+.settings-row.select-row { cursor: default; }
+
+.settings-row select {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(0,0,0,0.25);
+  background: #fff;
+  font-weight: 700;
+}
+
+.settings-value {
+  display: inline-block;
+  min-width: 44px;
+  text-align: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(63, 91, 217, 0.12);
+}
+
+.settings-note {
+  margin-top: 12px;
+  font-size: 12px;
+  color: rgba(0,0,0,0.65);
+}
+
+/* =========================================================
+  ⭐ お気に入り一覧（黄色系）
+========================================================= */
+
+.page-container.favorites-page {
+  width: min(1040px, calc(100% - 32px));
+  margin: 50px auto 50px;
+  padding: 0;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: none;
+  border: 1px solid rgba(0,0,0,0.18);
+  box-shadow: none;
+}
+
+/* 上の帯：黄色〜琥珀 */
+.page-container.favorites-page .page-header {
+  background: linear-gradient(180deg, #ffe082 0%, #ffca28 100%);
+  padding: 14px 18px;
+  border-radius: 10px 10px 0 0;
+}
+
+.page-container.favorites-page .page-header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #111;
+  text-shadow: none;
+  font-weight: 800;
+  text-align: center;
+}
+
+/* 本体 */
+.page-container.favorites-page .page-body {
+  padding: 18px 22px 20px;
+}
+
+.page-container.favorites-page .notice {
+  margin: 0 0 12px;
+  color: rgba(120, 90, 0, 0.9);
+  font-weight: 800;
+}
+
+/* ボード：黄を薄く */
+.favorites-board {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 202, 40, 0.55) 0%,
+    rgba(255, 224, 130, 0.35) 100%
+  );
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.10);
+}
+
+.favorites-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.favorite-card {
+  background: rgba(255,255,255,0.92);
+  border-radius: 10px;
+  padding: 12px 12px;
+  border: 1px solid rgba(0,0,0,0.10);
+}
+
+.favorite-card + .favorite-card {
+  margin-top: 10px;
+}
+
+.favorite-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.favorite-category {
+  display: inline-block;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 900;
+  border-radius: 999px;
+  background: rgba(255, 202, 40, 0.35);
+  color: rgba(0,0,0,0.75);
+  border: 1px solid rgba(255, 202, 40, 0.50);
+}
+
+.favorite-title {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #111;
+  text-shadow: none;
+}
+
+.favorite-link {
+  color: #111;
+  text-decoration: none;
+  font-weight: 900;
+}
+
+.favorite-link:hover {
+  text-decoration: underline;
+}
+
+.page-container.favorites-page .empty {
+  margin: 0;
+  color: rgba(0,0,0,0.70);
+  font-size: 13px;
+  background: rgba(255, 202, 40, 0.20);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 202, 40, 0.30);
+}
+
+/* =========================================================
+  👤 User Settings
+========================================================= */
+
+/* ヘッダーの色を強めて “ページ感” を出す */
+.page-container.user-settings-index .page-header,
+.page-container.user-settings-page .page-header {
+  background: linear-gradient(180deg, #3f5bd9 0%, #2e3f9f 100%);
+  border-bottom: 1px solid rgba(0,0,0,0.12);
+}
+
+.page-container.user-settings-index .page-header h1,
+.page-container.user-settings-page .page-header h1 {
+   text-align: center;
+  color: #ffd000;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.25);
+  letter-spacing: 0.06em;
+}
+
+.page-container.user-settings-page .notice,
+.page-container.user-settings-page .alert {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-weight: 900;
+  border: 1px solid rgba(0,0,0,0.12);
+}
+
+.page-container.user-settings-page .notice {
+  background: rgba(0, 220, 120, 0.12);
+  color: rgba(0,0,0,0.80);
+}
+
+.page-container.user-settings-page .alert {
+  background: rgba(255, 80, 80, 0.10);
+  color: rgba(0,0,0,0.80);
+  border-color: rgba(255, 80, 80, 0.25);
+}
+
+/* 退会ページのボタンを“危険操作”っぽく */
+.page-container.user-settings-page .danger-btn,
+.page-container.user-settings-page .danger button,
+.page-container.user-settings-page .danger input[type="submit"] {
+  background: #ff5050;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.page-container.user-settings-page .danger-btn:hover,
+.page-container.user-settings-page .danger button:hover,
+.page-container.user-settings-page .danger input[type="submit"]:hover {
+  filter: brightness(0.95);
 }

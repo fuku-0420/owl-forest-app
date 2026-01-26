@@ -1,0 +1,34 @@
+<div class="page-container user-settings-page">
+  <div class="page-header">
+    <h1>退会</h1>
+  </div>
+
+  <div class="page-body">
+    <% if notice.present? %>
+      <p class="notice"><%= notice %></p>
+    <% end %>
+
+    <% if alert.present? %>
+      <p class="alert"><%= alert %></p>
+    <% end %>
+
+    <section class="settings-section danger">
+      <h2 class="settings-title">退会の確認</h2>
+      <p class="settings-note">退会するとデータを復元できません。本当に退会しますか？</p>
+
+      <div class="form-actions">
+        <%= button_to "退会する",
+              users_withdrawal_path,
+              method: :delete,
+              data: { turbo_confirm: "本当に退会しますか？" },
+              class: "danger-btn" %>
+      </div>
+
+      <div class="settings-subnav">
+        <%= link_to "ユーザー設定へ戻る", settings_path, class: "sub-link" %>
+      </div>
+    </section>
+  </div>
+</div>
+
+<%= render "shared/back_to_board" %>

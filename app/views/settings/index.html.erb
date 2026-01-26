@@ -1,14 +1,27 @@
+<div class="page-container user-settings-index">
+  <div class="page-header">
+    <h1>ユーザー設定</h1>
+  </div>
+
+  <div class="page-body">
+    <% if user_signed_in? %>
+      <p class="notice">ログイン中：<%= current_user.email %></p>
+
+      <div class="settings-panel">
+        <%= link_to "プロフィール編集", edit_profile_path, class: "settings-row" %>
+        <%= link_to "メールアドレス変更", edit_users_email_path, class: "settings-row" %>
+        <%= link_to "パスワード変更", edit_users_password_path, class: "settings-row" %>
+
+        <div class="settings-divider"></div>
+
+        <%= link_to "退会", users_withdrawal_path, class: "settings-row danger" %>
+      </div>
+
+    <% else %>
+      <p>ログインが必要です。</p>
+      <%= link_to "ログイン", new_user_session_path, class: "primary-btn" %>
+    <% end %>
+  </div>
+</div>
+
 <%= render "shared/back_to_board" %>
-
-<h1>設定</h1>
-
-<% if user_signed_in? %>
-  <p>ログイン中：<%= current_user.email %></p>
-
-  <ul>
-    <li><%= link_to "アカウント情報を編集", edit_user_registration_path %></li>
-  </ul>
-<% else %>
-  <p>ログインが必要です。</p>
-  <%= link_to "ログイン", new_user_session_path %>
-<% end %>

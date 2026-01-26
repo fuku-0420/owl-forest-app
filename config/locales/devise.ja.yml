@@ -1,0 +1,35 @@
+ja:
+  devise:
+    sessions:
+      new:
+        sign_in: "ログイン"
+
+    registrations:
+      new:
+        sign_up: "新規登録"
+      edit:
+        title: "アカウント設定"
+        update: "更新する"
+        cancel_my_account: "退会する"
+        are_you_sure: "本当によろしいですか？"
+
+    passwords:
+      new:
+        forgot_your_password: "パスワードをお忘れですか？"
+        send_me_reset_password_instructions: "パスワード再設定メールを送信する"
+      edit:
+        change_your_password: "パスワードを変更"
+        new_password: "新しいパスワード"
+        confirm_new_password: "新しいパスワード（確認）"
+        change_my_password: "パスワードを変更する"
+
+    confirmations:
+      new:
+        resend_confirmation_instructions: "確認メールを再送する"
+
+    shared:
+      links:
+        sign_in: "ログイン"
+        sign_up: "新規登録"
+        forgot_your_password: "パスワードを忘れた方はこちら"
+        didn_t_receive_confirmation_instructions: "確認メールが届かない場合"
