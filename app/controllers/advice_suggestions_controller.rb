@@ -2,7 +2,11 @@ class AdviceSuggestionsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @advice_suggestions = current_user.advice_suggestions.includes(:category).order(created_at: :desc)
+    base = current_user.advice_suggestions.includes(:category).order(created_at: :desc)
+
+    @pending  = base.select(&:status_pending?)
+    @approved = base.select(&:status_approved?)
+    @rejected = base.reject { |s| s.status_pending? || s.status_approved? }
   end
 
   def new

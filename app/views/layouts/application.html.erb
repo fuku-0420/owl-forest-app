@@ -13,7 +13,7 @@
     <%= csp_meta_tag %>
     <%= yield :head %>
 
-        <!-- OGP設定 -->
+    <!-- OGP設定 -->
     <meta property="og:title" content="フクちゃんお悩み掲示板">
     <meta property="og:description" content="RUNTEQ受講生の『あの時の経験』を後輩に届ける学習サポートアプリです。">
     <meta property="og:image" content="https://owl-forest-app.onrender.com/ogp.png">
@@ -32,10 +32,15 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <!--  Stimulusで横画面固定を制御 -->
-  <body data-controller="orientation" class="<%= yield(:body_class) %>">
+  <!-- Stimulusで横画面固定を制御 -->
+  <body
+    data-controller="orientation"
+    class="<%= yield(:body_class) %> <%= 'no-scroll' if controller_name == 'owls' && action_name == 'index' %>">
 
-    <%= render "shared/auth_links" %>
+    <%#  auth_links は owls#index（/owls）だけ表示 %>
+    <% if controller_name == "owls" && action_name == "index" %>
+      <%= render "shared/auth_links" %>
+    <% end %>
 
     <%= yield %>
   </body>

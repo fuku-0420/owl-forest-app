@@ -1,0 +1,52 @@
+<div class="page-container advice-form contact-form">
+  <div class="page-header">
+    <h1>お問い合わせ</h1>
+  </div>
+
+  <% if @contact.errors.any? %>
+    <div class="form-errors">
+      <ul>
+        <% @contact.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="page-body">
+    <%= form_with model: @contact do |f| %>
+
+      <div class="form-group">
+        <%= f.label :name, "お名前", class: "form-label" %>
+        <%= f.text_field :name, class: "form-control", placeholder: "例：フクちゃん" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :email, "メールアドレス", class: "form-label" %>
+        <%= f.email_field :email, class: "form-control", placeholder: "example@email.com" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :subject, "件名", class: "form-label" %>
+        <%= f.text_field :subject, class: "form-control", placeholder: "例：要望 / 不具合報告 など" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :body, "内容", class: "form-label" %>
+        <%= f.text_area :body, class: "form-control form-textarea", rows: 10, placeholder: "できるだけ詳しく書いてください" %>
+      </div>
+
+      <p class="form-note">
+        送信内容は管理者が確認し、対応が必要な場合に返信します。<br>
+        ※ 返信までお時間をいただく場合があります。
+      </p>
+
+      <div class="form-actions">
+        <%= f.submit "送信", class: "btn-submit" %>
+      </div>
+
+    <% end %>
+  </div>
+</div>
+
+<%= render "shared/back_to_board" %>

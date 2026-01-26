@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_19_154223) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_25_105212) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,6 +42,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_19_154223) do
     t.index ["name"], name: "index_categories_on_name", unique: true
   end
 
+  create_table "contacts", force: :cascade do |t|
+    t.string "name"
+    t.string "email"
+    t.string "subject"
+    t.text "body"
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "favorites", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "advice_id", null: false
@@ -59,6 +69,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_19_154223) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "profiles", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "display_name"
+    t.text "bio"
+    t.string "avatar"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_profiles_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -79,4 +99,5 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_19_154223) do
   add_foreign_key "advices", "categories"
   add_foreign_key "favorites", "advices"
   add_foreign_key "favorites", "users"
+  add_foreign_key "profiles", "users"
 end

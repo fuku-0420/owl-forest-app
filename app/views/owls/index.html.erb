@@ -11,6 +11,10 @@
        data-owl-target="forest"
        data-autumn-image="<%= asset_path('tisikinomori_aki.png') %>">
 
+  <div class="dev-banner">
+    🚧 現在β版（開発中）です。データは予告なく削除される可能性があります。
+  </div>
+
   <!-- 🎓 黒板 -->
   <div class="blackboard" data-owl-target="blackboard">
     <button class="chalk-text-button"
@@ -57,44 +61,43 @@
            data-owl-index="<%= index %>"
            data-action="mouseenter->owl#hoverOwl mouseleave->owl#leaveOwl">
 
-        <!-- メニュー（全部 開発中） -->
+        <!-- メニュー（通常：リンク運用  -->
         <div class="owl-menu">
 
-          <button type="button"
-                  class="owl-menu-btn"
-                  data-action="click->coming-soon#comingSoon"
-                  data-feature="ユーザー設定">
-            ユーザー設定
-          </button>
+          <!-- ユーザー設定 -->
+          <%= link_to "ユーザー設定", settings_path, class: "owl-menu-btn" %>
+          <%# <button type="button"
+                class="owl-menu-btn"
+                data-action="click->coming-soon#comingSoon"
+                data-feature="ユーザー設定">ユーザー設定</button> %>
 
-          <button type="button"
-                  class="owl-menu-btn"
-                  data-action="click->coming-soon#comingSoon"
-                  data-feature="お気に入り">
-            お気に入り
-          </button>
+          <!-- お気に入り（一覧） -->
+          <%= link_to "お気に入り", favorites_path, class: "owl-menu-btn" %>
+          <%# <button type="button"
+                class="owl-menu-btn"
+                data-action="click->coming-soon#comingSoon"
+                data-feature="お気に入り">お気に入り</button> %>
 
-          <button type="button"
-                  class="owl-menu-btn"
-                  data-action="click->coming-soon#comingSoon"
-                  data-feature="アドバイス案募集">
-            アドバイス案募集
-          </button>
+          <!-- アドバイス案募集 -->
+          <%= link_to "アドバイス案募集", new_advice_suggestion_path, class: "owl-menu-btn" %>
+          <%# <button type="button"
+                class="owl-menu-btn"
+                data-action="click->coming-soon#comingSoon"
+                data-feature="アドバイス案募集">アドバイス案募集</button> %>
 
-          <button type="button"
-                  class="owl-menu-btn"
-                  data-action="click->coming-soon#comingSoon"
-                  data-feature="投稿一覧">
-            投稿一覧
-          </button>
+          <!-- 投稿一覧（advice_suggestions#index） -->
+          <%= link_to "投稿一覧", advice_suggestions_path, class: "owl-menu-btn" %>
+          <%# <button type="button"
+                class="owl-menu-btn"
+                data-action="click->coming-soon#comingSoon"
+                data-feature="投稿一覧">投稿一覧</button> %>
 
+          <!-- アプリ設定 -->
+          <%#= link_to "アプリ設定", app_settings_path, class: "owl-menu-btn" %>
           <button type="button"
-                  class="owl-menu-btn"
-                  data-action="click->coming-soon#comingSoon"
-                  data-feature="アプリ設定">
-            アプリ設定
-          </button>
-
+                class="owl-menu-btn"
+                data-action="click->coming-soon#comingSoon"
+                data-feature="アプリ設定">アプリ設定</button>
         </div>
 
         <!-- メッセージ（静的） -->

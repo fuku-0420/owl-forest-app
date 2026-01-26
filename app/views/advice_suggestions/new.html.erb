@@ -1,25 +1,53 @@
-<h1>アドバイス投稿</h1>
+<div class="page-container advice-form">
 
-<% if @advice_suggestion.errors.any? %>
-  <ul>
-    <% @advice_suggestion.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
+  <div class="page-header">
+    <h1>アドバイス案募集フォーム</h1>
+  </div>
+
+  <% if @advice_suggestion.errors.any? %>
+    <div class="form-errors">
+      <ul>
+        <% @advice_suggestion.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="page-body">
+    <%= form_with model: @advice_suggestion do |f| %>
+
+      <div class="form-group">
+        <%= f.label :category_id, "カテゴリ", class: "form-label" %>
+        <%= f.collection_select :category_id, Category.all, :id, :name,
+              { prompt: "選択してください" },
+              { class: "form-control" } %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :body, "本文", class: "form-label" %>
+        <%= f.text_area :body, rows: 10, class: "form-control form-textarea" %>
+      </div>
+
+      <div class="form-note">
+        <p>投稿されたアドバイスは管理者が内容を確認・調整したうえで、承認された場合に掲示板へ掲載されます。</p>
+        <p>掲載までにお時間をいただく場合があります。承認状況は投稿一覧ページから確認できます。</p>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit "投稿", class: "btn-submit" %>
+      </div>
     <% end %>
-  </ul>
-<% end %>
 
-<%= form_with model: @advice_suggestion do |f| %>
-  <div>
-    <%= f.label :category_id, "カテゴリ" %><br>
-    <%= f.collection_select :category_id, Category.all, :id, :name, prompt: "選択してください" %>
+      <div class="footer-links">
+        <%= link_to "利用規約", terms_path, class: "footer-link" %>
+        <span class="footer-sep">|</span>
+        <%= link_to "プライバシーポリシー", privacy_path, class: "footer-link" %>
+        <span class="footer-sep">|</span>
+        <%= link_to "お問い合わせ", new_contact_path, class: "footer-link" %>
+      </div>
+
   </div>
-
-  <div>
-    <%= f.label :body, "内容" %><br>
-    <%= f.text_area :body, rows: 6 %>
-  </div>
-
-  <%= f.submit "送信" %>
-<% end %>
+</div>
 
 <%= render "shared/back_to_board" %>

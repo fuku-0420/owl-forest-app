@@ -1,0 +1,51 @@
+ja:
+  activerecord:
+    models:
+      advice_suggestion: "アドバイス"
+      user: "ユーザー"
+      profile: "プロフィール"
+
+    attributes:
+      advice_suggestion:
+        category: "カテゴリ"
+        body: "本文"
+
+      user:
+        email: "メールアドレス"
+        password: "パスワード"
+        password_confirmation: "パスワード（確認）"
+        current_password: "現在のパスワード"
+
+      profile:
+        display_name: "表示名"
+        bio: "ひとこと"
+        avatar: "アイコンURL"
+
+  errors:
+    messages:
+      not_saved:
+        one: "%{resource}を保存できませんでした。"
+        other: "%{resource}を保存できませんでした。"
+
+  # バリデーション文言
+  activerecord:
+    errors:
+      models:
+        advice_suggestion:
+          attributes:
+            category:
+              required: "を選択してください"
+              blank: "を選択してください"
+            body:
+              blank: "を入力してください"
+
+        user:
+          attributes:
+            password:
+              too_short: "は%{count}文字以上で入力してください"
+            email:
+              blank: "を入力してください"
+              taken: "はすでに使用されています"
+            current_password:
+              blank: "を入力してください"
+              invalid: "が正しくありません"
