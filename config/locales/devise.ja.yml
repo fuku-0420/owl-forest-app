@@ -1,9 +1,18 @@
 ja:
   devise:
+    # =========================
+    # セッション（ログイン / ログアウト）
+    # =========================
     sessions:
+      signed_in: "ログインしました。"
+      signed_out: "ログアウトしました。"
+
       new:
         sign_in: "ログイン"
 
+    # =========================
+    # 新規登録 / アカウント編集
+    # =========================
     registrations:
       new:
         sign_up: "新規登録"
@@ -13,6 +22,9 @@ ja:
         cancel_my_account: "退会する"
         are_you_sure: "本当によろしいですか？"
 
+    # =========================
+    # パスワード再設定
+    # =========================
     passwords:
       new:
         forgot_your_password: "パスワードをお忘れですか？"
@@ -23,13 +35,26 @@ ja:
         confirm_new_password: "新しいパスワード（確認）"
         change_my_password: "パスワードを変更する"
 
+    # =========================
+    # メール確認
+    # =========================
     confirmations:
       new:
         resend_confirmation_instructions: "確認メールを再送する"
 
+    # =========================
+    # 共通リンク
+    # =========================
     shared:
       links:
         sign_in: "ログイン"
         sign_up: "新規登録"
         forgot_your_password: "パスワードを忘れた方はこちら"
         didn_t_receive_confirmation_instructions: "確認メールが届かない場合"
+
+    # =========================
+    # 失敗時メッセージ（重要）
+    # =========================
+    failure:
+      invalid: "メールアドレスまたはパスワードが違います。"
+      unauthenticated: "ログインしてください。"

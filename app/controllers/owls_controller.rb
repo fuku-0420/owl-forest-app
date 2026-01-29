@@ -10,7 +10,7 @@ class OwlsController < ApplicationController
       }
     )
 
-    # ▼追加：ログイン中ユーザーがお気に入りしてる Advice のID一覧
+    # ログイン中ユーザーがお気に入りしてる Advice のID一覧
     @favorite_ids =
       if user_signed_in?
         current_user.favorites.pluck(:advice_id)

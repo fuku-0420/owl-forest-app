@@ -687,7 +687,285 @@
 }
 
 /* =========================================================
-  🕊️ 5. SHOWページ（プロフィール）
+  👤 ミニプロフィール（トップ右側カード用）
+  - 右上カードの最上部に出る「アイコン + 名前 + ひとこと」
+  - 未設定でも見た目が自然 / 文字のはみ出し防止
+========================================================= */
+
+.user-mini-profile--link{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  width: fit-content;
+  max-width: 100%;
+
+  /* 右寄せ + メニューとの隙間 */
+  margin: 6px 0 14px auto;
+  padding: 8px 12px;
+
+  text-decoration: none;
+  color: inherit;
+
+  border-radius: 14px;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.22);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.10);
+
+  /* ガラス感ちょい足し（嫌なら消してOK） */
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+}
+
+.user-mini-profile--link:hover{
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.14);
+}
+
+.user-mini-profile--link:active{
+  transform: translateY(0);
+}
+
+/* 右側テキスト */
+.user-mini-profile__text{
+  text-align: right;
+  min-width: 0;
+}
+
+/* 名前（長い時に省略） */
+.user-mini-profile__name{
+  font-weight: 900;
+  font-size: 14px;
+  line-height: 1.2;
+
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ひとこと（1行で省略して崩れ防止） */
+.user-mini-profile__bio{
+  font-size: 12px;
+  opacity: 0.9;
+  line-height: 1.2;
+
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* アイコン枠 */
+.user-mini-profile__avatar{
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  overflow: hidden;
+
+  display: grid;
+  place-items: center;
+
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255,255,255,0.55);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+
+  flex: 0 0 44px;
+
+  /* 画像をきれいに見せる系（効くことがある） */
+  transform: translateZ(0);
+}
+
+/* 画像 */
+.user-mini-profile__img{
+  width: 100%;
+  height: 100%;
+  display: block;
+
+  object-fit: cover;
+  object-position: center;
+
+  /* 変なフィルタで滲むの防止 */
+  filter: none;
+
+  /* ちょい安定（効く環境がある） */
+  backface-visibility: hidden;
+}
+
+/* プレースホルダー（頭文字） */
+.user-mini-profile__placeholder{
+  font-weight: 900;
+  font-size: 18px;
+  color: rgba(0,0,0,0.78);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+}
+
+/* スマホ微調整 */
+@media (max-width: 768px){
+  .user-mini-profile__name,
+  .user-mini-profile__bio{
+    max-width: 140px;
+  }
+
+  .user-mini-profile__avatar{
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+  }
+
+  .user-mini-profile__placeholder{
+    font-size: 16px;
+  }
+}
+
+/* =========================================================
+  ミニプロフィール遷移先ページスタイル
+========================================================= */
+
+.profile-page {
+  width: min(1040px, calc(100% - 32px));
+  margin: 60px auto;
+}
+
+/* 見出し帯 */
+.profile-page .page-header {
+  margin-bottom: 18px;
+}
+
+.profile-page .page-header h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: #1e2a1f;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.65);
+}
+
+/* 本体カード */
+.profile-card {
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  overflow: hidden;
+}
+
+/* 上部ヘッダー */
+.profile-card::before{
+  content:"";
+  display:block;
+  height: 110px;
+  background: radial-gradient(circle at 30% 20%, rgba(120,255,170,0.35), transparent 55%),
+              linear-gradient(90deg, rgba(60,200,120,0.22), rgba(255,200,80,0.18));
+}
+
+/* 内側 */
+.profile-card {
+  padding: 0;
+}
+
+.profile-card .profile-avatar,
+.profile-card .profile-info,
+.profile-card .form-actions,
+.profile-card .settings-subnav {
+  padding: 18px 24px;
+}
+
+/* アバター：丸＋縁＋浮かせる */
+.profile-avatar {
+  margin-top: -55px;
+  display: grid;
+  place-items: center;
+  padding-bottom: 6px;
+}
+
+.profile-avatar .avatar-img,
+.profile-avatar .avatar-placeholder {
+  width: 120px;
+  height: 120px;
+  border-radius: 9999px;
+  overflow: hidden;
+
+  border: 3px solid rgba(255,255,255,0.9);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+  background: rgba(255,255,255,0.35);
+}
+
+.profile-avatar .avatar-img{
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.profile-avatar .avatar-placeholder{
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 34px;
+  color: rgba(20,40,25,0.75);
+}
+
+/* 情報：見出しっぽく整える */
+.profile-info p{
+  margin: 10px 0;
+  line-height: 1.7;
+  color: #172317;
+}
+
+.profile-info strong{
+  display: inline-block;
+  width: 70px;
+  color: rgba(20,40,25,0.75);
+}
+
+/* ボタン類 */
+.form-actions{
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.primary-btn{
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 800;
+
+  background: rgba(255, 153, 0, 0.85);
+  border: 1px solid rgba(255,153,0,0.45);
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.primary-btn:hover{
+  filter: brightness(1.03);
+  transform: translateY(-1px);
+}
+
+.settings-subnav{
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+.sub-link{
+  color: rgba(20,40,25,0.75);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.sub-link:hover{
+  text-decoration: underline;
+}
+
+/* =========================================================
+  🕊️ 5. SHOWページ
    ========================================================= */
 body.owl-show-page {
   background-image: url('tisikinomori_fuyu.png');
