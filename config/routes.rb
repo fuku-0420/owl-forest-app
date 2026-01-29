@@ -14,7 +14,7 @@ Rails.application.routes.draw do
 
   # 管理者
   namespace :admin do
-    resources :advice_suggestions, only: [ :index ] do
+    resources :advice_suggestions, only: %i[index show] do
       member do
         patch :approve
         patch :reject
@@ -23,7 +23,8 @@ Rails.application.routes.draw do
   end
 
   # ユーザー投稿
-  resources :advice_suggestions, only: [ :index, :new, :create ]
+  resources :advice_suggestions, only: [ :index, :new, :create, :show ]
+  resources :advices, only: [ :show ]
   resources :favorites, only: [ :index, :create, :destroy ]
 
   # 🔧 ユーザー設定（ハブ）

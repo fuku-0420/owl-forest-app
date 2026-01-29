@@ -12,14 +12,14 @@
       <% if @advices.any? %>
         <ul class="favorites-list">
           <% @advices.each do |a| %>
-            <li class="favorite-card">
-              <div class="favorite-meta">
-                <span class="favorite-category"><%= a.category.name %></span>
-              </div>
+            <li class="favorites-item">
+              <%= link_to advice_path(a), class: "favorite-card" do %>
+                <div class="favorite-meta">
+                  <span class="favorite-category"><%= a.category.name %></span>
+                </div>
 
-              <p class="favorite-title">
-                <%= a.title %>
-              </p>
+                <p class="favorite-title"><%= a.title %></p>
+              <% end %>
             </li>
           <% end %>
         </ul>

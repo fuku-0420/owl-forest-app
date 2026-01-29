@@ -1,0 +1,23 @@
+<div class="page-container advice-show-page">
+  <div class="page-header">
+    <h1><%= @advice.title %></h1>
+  </div>
+
+  <div class="page-body">
+    <div class="advice-show-meta">
+      <span class="advice-show-badge"><%= @advice.category.name %></span>
+    </div>
+
+    <div class="advice-show-board">
+      <div class="advice-show-body">
+        <%= simple_format(h(@advice.body)) %>
+      </div>
+
+      <div class="advice-show-actions">
+        <%= link_to "お気に入りに戻る", favorites_path, class: "primary-btn" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= render "shared/back_to_board" %>

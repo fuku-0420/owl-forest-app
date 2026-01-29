@@ -1,0 +1,32 @@
+<div class="page-container submissions-page">
+  <div class="page-header">
+    <h1>投稿の詳細</h1>
+  </div>
+
+  <div class="page-body">
+    <p>
+      <strong>カテゴリ：</strong>
+      <%= @advice_suggestion.category.name %>
+    </p>
+
+    <p>
+      <strong>ステータス：</strong>
+      <%= I18n.t("enums.advice_suggestion.status.#{@advice_suggestion.status}") %>
+    </p>
+
+    <p>
+      <strong>投稿日：</strong>
+      <%= l(@advice_suggestion.created_at) %>
+    </p>
+
+    <hr>
+
+    <div class="submission-body">
+      <%= simple_format(@advice_suggestion.body) %>
+    </div>
+
+    <div class="submissions-actions">
+      <%= link_to "一覧に戻る", advice_suggestions_path, class: "primary-btn" %>
+    </div>
+  </div>
+</div>

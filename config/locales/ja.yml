@@ -1,4 +1,7 @@
 ja:
+  # =========================
+  # モデル・属性
+  # =========================
   activerecord:
     models:
       advice_suggestion: "アドバイス"
@@ -9,6 +12,8 @@ ja:
       advice_suggestion:
         category: "カテゴリ"
         body: "本文"
+        status: "ステータス"
+        created_at: "投稿日時"
 
       user:
         email: "メールアドレス"
@@ -21,14 +26,6 @@ ja:
         bio: "ひとこと"
         avatar: "アイコンURL"
 
-  errors:
-    messages:
-      not_saved:
-        one: "%{resource}を保存できませんでした。"
-        other: "%{resource}を保存できませんでした。"
-
-  # バリデーション文言
-  activerecord:
     errors:
       models:
         advice_suggestion:
@@ -49,3 +46,23 @@ ja:
             current_password:
               blank: "を入力してください"
               invalid: "が正しくありません"
+
+  # =========================
+  # enum 翻訳
+  # =========================
+  enums:
+    advice_suggestion:
+      status:
+        pending: "承認待ち"
+        approved: "承認済み"
+        rejected: "却下"
+
+  # =========================
+  # 日付・時刻フォーマット
+  # =========================
+  time:
+    formats:
+      default: "%Y/%m/%d %H:%M"
+  date:
+    formats:
+      default: "%Y/%m/%d"

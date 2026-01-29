@@ -9,6 +9,10 @@ class AdviceSuggestionsController < ApplicationController
     @rejected = base.reject { |s| s.status_pending? || s.status_approved? }
   end
 
+  def show
+    @advice_suggestion = current_user.advice_suggestions.includes(:category).find(params[:id])
+  end
+
   def new
     @advice_suggestion = current_user.advice_suggestions.new
   end

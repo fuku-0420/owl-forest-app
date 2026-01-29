@@ -761,34 +761,57 @@ body.owl-show-page {
   border-radius: 999px;
 }
 
+/* カード*/
 .submission-card {
   position: relative;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+
   background: rgba(255,255,255,0.96);
   border: 1px solid rgba(0,0,0,0.10);
   border-radius: 10px;
   padding: 10px 12px;
+  padding-left: 30px;
   box-shadow: 0 6px 14px rgba(0,0,0,0.08);
 }
 
 .submission-card + .submission-card { margin-top: 10px; }
 
+.submission-card:hover {
+  transform: translateY(-1px);
+  filter: brightness(0.99);
+}
+
+/* 左ライン */
 .submission-card::before {
   content: "";
   position: absolute;
   top: 10px;
   bottom: 10px;
-  left: 10px;
+  left: 12px;
   width: 6px;
   border-radius: 999px;
   background: rgba(0,0,0,0.12);
 }
+
+.submission-card.pending::before  { background: rgba(255, 205, 0, 0.95); }
+.submission-card.approved::before { background: rgba(0, 220, 120, 0.85); }
+.submission-card.rejected::before { background: rgba(255, 80, 80, 0.85); }
 
 .submission-meta {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-bottom: 6px;
-  padding-left: 14px;
+  justify-content: space-between;
+}
+
+.submission-meta-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
 }
 
 .status-badge {
@@ -800,6 +823,7 @@ body.owl-show-page {
   color: #111;
   border: 1px solid rgba(0,0,0,0.10);
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  white-space: nowrap;
 }
 
 .status-badge.pending  { background: rgba(255, 205, 0, 0.92); }
@@ -810,20 +834,31 @@ body.owl-show-page {
   font-size: 12px;
   font-weight: 900;
   color: rgba(0,0,0,0.70);
+  white-space: nowrap;
 }
 
+.submission-meta .author {
+  font-size: 12px;
+  font-weight: 900;
+  color: rgba(0,0,0,0.70);
+  background: rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.10);
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* 本文 */
 .submission-body {
   margin: 0;
-  padding-left: 14px;
   color: rgba(0,0,0,0.88);
   text-shadow: none;
   font-size: 14px;
   line-height: 1.75;
-}
 
-.submission-card.pending::before  { background: rgba(255, 205, 0, 0.95); }
-.submission-card.approved::before { background: rgba(0, 220, 120, 0.85); }
-.submission-card.rejected::before { background: rgba(255, 80, 80, 0.85); }
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
 
 .submissions-section .empty {
   margin: 0;
@@ -838,26 +873,16 @@ body.owl-show-page {
   margin-top: 14px;
 }
 
-/* 投稿者 */
-.submission-meta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 6px;
-  padding-left: 14px;
-
-  justify-content: space-between;
-}
-
-.submission-meta .author {
-  margin-left: auto;
-  font-size: 12px;
-  font-weight: 900;
-  color: rgba(0,0,0,0.70);
-  background: rgba(0,0,0,0.06);
-  border: 1px solid rgba(0,0,0,0.10);
-  padding: 3px 10px;
-  border-radius: 999px;
+/* スマホ微調整 */
+@media (max-width: 768px) {
+  .submission-meta {
+    gap: 8px;
+  }
+  .submission-meta .author {
+    max-width: 50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 /* =========================================================
@@ -943,121 +968,190 @@ body.owl-show-page {
 }
 
 /* =========================================================
-  ⭐ お気に入り一覧（黄色系）
+  ⭐ Favorites（お気に入り）
 ========================================================= */
 
 .page-container.favorites-page {
   width: min(1040px, calc(100% - 32px));
-  margin: 50px auto 50px;
+  margin: 50px auto;
   padding: 0;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: none;
-  border: 1px solid rgba(0,0,0,0.18);
-  box-shadow: none;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(0,0,0,0.14);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.10);
 }
 
-/* 上の帯：黄色〜琥珀 */
 .page-container.favorites-page .page-header {
-  background: linear-gradient(180deg, #ffe082 0%, #ffca28 100%);
+  background: linear-gradient(180deg, #ffe082 0%, #ffbf00 100%);
   padding: 14px 18px;
-  border-radius: 10px 10px 0 0;
+  border-radius: 12px 12px 0 0;
+  border-bottom: 1px solid rgba(0,0,0,0.10);
 }
 
-.page-container.favorites-page .page-header h1 {
+.page-container.favorites-page .page-header h1{
   margin: 0;
   font-size: 24px;
+  font-weight: 900;
+  text-align: center;
+
+  /*  共通 .page-container h1 の「黄色」を打ち消す */
   color: #111;
   text-shadow: none;
-  font-weight: 800;
-  text-align: center;
 }
 
-/* 本体 */
-.page-container.favorites-page .page-body {
+.page-container.favorites-page .page-body{
   padding: 18px 22px 20px;
 }
 
-.page-container.favorites-page .notice {
-  margin: 0 0 12px;
-  color: rgba(120, 90, 0, 0.9);
-  font-weight: 800;
-}
-
-/* ボード：黄を薄く */
-.favorites-board {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 202, 40, 0.55) 0%,
-    rgba(255, 224, 130, 0.35) 100%
-  );
-  padding: 16px;
-  border-radius: 8px;
+.favorites-board{
+  background: rgba(255, 214, 102, 0.22);
   border: 1px solid rgba(0,0,0,0.10);
-}
-
-.favorites-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.favorite-card {
-  background: rgba(255,255,255,0.92);
   border-radius: 10px;
-  padding: 12px 12px;
+  padding: 14px;
+}
+
+/* 崩れの原因になりがちな ul/li のデフォルトを殺す */
+.favorites-list{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.favorites-item{
+  margin: 0;
+}
+
+/* カードを横幅100%で「ブロックリンク」に */
+.favorite-card{
+  display: block;
+  width: 100%;
+  text-decoration: none;
+
+  background: rgba(255,255,255,0.96);
   border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 10px;
+  padding: 12px 14px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+
+  /*  aタグの青/紫を消して中身の文字色を統一 */
+  color: rgba(0,0,0,0.88);
 }
 
-.favorite-card + .favorite-card {
-  margin-top: 10px;
+.favorite-card:visited{
+  color: rgba(0,0,0,0.88);
 }
 
-.favorite-meta {
+.favorite-card:hover{
+  transform: translateY(-1px);
+  color: rgba(0,0,0,0.88);
+}
+
+.favorite-meta{
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 6px;
+  gap: 12px;
 }
 
-.favorite-category {
-  display: inline-block;
-  padding: 2px 10px;
+.favorite-category{
   font-size: 12px;
   font-weight: 900;
-  border-radius: 999px;
-  background: rgba(255, 202, 40, 0.35);
   color: rgba(0,0,0,0.75);
-  border: 1px solid rgba(255, 202, 40, 0.50);
+  background: rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.10);
+  padding: 3px 10px;
+  border-radius: 999px;
+  flex: 0 0 auto;
 }
 
-.favorite-title {
-  margin: 0;
+.favorite-title{
   font-size: 14px;
-  line-height: 1.7;
+  font-weight: 900;
+  color: rgba(0,0,0,0.88);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+  📌 Advice show（詳細）
+========================================================= */
+
+.page-container.advice-show-page{
+  width: min(1040px, calc(100% - 32px));
+  margin: 50px auto;
+  padding: 0;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(0,0,0,0.14);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.10);
+}
+
+.page-container.advice-show-page .page-header{
+  background: linear-gradient(180deg, #ffb224 0%, #ff9800 100%);
+  padding: 14px 18px;
+  border-radius: 12px 12px 0 0;
+  border-bottom: 1px solid rgba(0,0,0,0.10);
+}
+
+.page-container.advice-show-page .page-header h1{
+  margin: 0;
+  font-size: 22px;
+  font-weight: 900;
+  text-align: center;
+
+  /*  共通 .page-container h1 の「黄色」を打ち消す */
   color: #111;
   text-shadow: none;
 }
 
-.favorite-link {
-  color: #111;
-  text-decoration: none;
+.page-container.advice-show-page .page-body{
+  padding: 18px 22px 20px;
+}
+
+.advice-show-meta{
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+}
+
+.advice-show-badge{
+  font-size: 12px;
   font-weight: 900;
+  color: rgba(0,0,0,0.75);
+  background: rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.10);
+  padding: 3px 10px;
+  border-radius: 999px;
 }
 
-.favorite-link:hover {
-  text-decoration: underline;
+.advice-show-board{
+  background: rgba(255, 162, 0, 0.562);
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.18);
+  padding: 18px;
 }
 
-.page-container.favorites-page .empty {
-  margin: 0;
-  color: rgba(0,0,0,0.70);
-  font-size: 13px;
-  background: rgba(255, 202, 40, 0.20);
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 202, 40, 0.30);
+/*  白文字が背景と喧嘩しやすいので、読みやすさ寄りに調整 */
+.advice-show-body{
+  color: rgba(0,0,0,0.88);
+  text-shadow: none;
+  line-height: 1.9;
+  font-size: 15px;
+  white-space: normal;
+
+  /* 長文の安心 */
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.advice-show-actions{
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
 }
 
 /* =========================================================
@@ -1116,4 +1210,213 @@ body.owl-show-page {
 .page-container.user-settings-page .danger button:hover,
 .page-container.user-settings-page .danger input[type="submit"]:hover {
   filter: brightness(0.95);
+}
+
+/* =========================================================
+  🛡️ Admin: 承認待ち一覧（管理者画面）
+========================================================= */
+
+.page-container.admin-advice-suggestions-page {
+  width: min(1040px, calc(100% - 32px));
+  margin: 50px auto 50px;
+  padding: 0;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: none;
+  border: 1px solid rgba(0,0,0,0.14);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.10);
+}
+
+.page-container.admin-advice-suggestions-page .page-header {
+  background: linear-gradient(180deg, #6f6f6f 0%, #555 100%);
+  padding: 14px 18px;
+  border-radius: 12px 12px 0 0;
+  border-bottom: 1px solid rgba(0,0,0,0.10);
+}
+
+.page-container.admin-advice-suggestions-page .page-header h1 {
+  margin: 0;
+  font-size: 22px;
+  color: #ffd000;
+  text-shadow: none;
+  font-weight: 900;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+.page-container.admin-advice-suggestions-page .page-body {
+  padding: 18px 22px 20px;
+}
+
+.admin-section {
+  margin-top: 14px;
+}
+
+.admin-section h2 {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 900;
+  color: rgba(0,0,0,0.85);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  vertical-align: top;
+  font-size: 14px;
+}
+
+.admin-table th {
+  background: rgba(0,0,0,0.05);
+  font-weight: 900;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.12);
+  background: rgba(255,255,255,0.9);
+  cursor: pointer;
+  font-weight: 900;
+  text-decoration: none;
+  color: #111;
+}
+
+.admin-btn:hover { transform: translateY(-1px); }
+
+.admin-btn.approve {
+  background: rgba(0, 220, 120, 0.18);
+}
+
+.admin-btn.reject {
+  background: rgba(255, 80, 80, 0.16);
+}
+
+.admin-btn.detail {
+  background: rgba(0,0,0,0.06);
+}
+
+.admin-body-preview {
+  color: rgba(0,0,0,0.85);
+  line-height: 1.7;
+}
+
+.page-container.admin-advice-suggestions-page .notice {
+  margin: 0 0 12px;
+  color: #2e7d32;
+  font-weight: 900;
+}
+
+.page-container.admin-advice-suggestions-page .empty {
+  margin: 0;
+  color: rgba(0,0,0,0.65);
+  font-size: 13px;
+}
+
+.admin-detail-link {
+  margin-top: 6px;
+}
+
+.admin-detail-link a {
+  font-size: 12px;
+  font-weight: 900;
+  color: rgba(60, 0, 0, 0.75);
+  background: rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.10);
+  padding: 3px 10px;
+  border-radius: 999px;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.admin-detail-link a:hover {
+  text-decoration: underline;
+}
+
+/* =========================================================
+  🛡️ Admin: AdviceSuggestion 詳細（show）
+========================================================= */
+
+.page-container.admin-advice-suggestions-page.admin-advice-suggestion-show .page-body {
+  padding: 18px 22px 24px;
+}
+
+.admin-show-meta {
+  background: rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 10px;
+  padding: 14px 14px;
+}
+
+.admin-show-meta__row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 10px;
+  padding: 8px 6px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.admin-show-meta__row:last-child {
+  border-bottom: none;
+}
+
+.admin-show-meta__row .label {
+  font-weight: 900;
+  color: rgba(0,0,0,0.65);
+}
+
+.admin-show-meta__row .value {
+  color: rgba(0,0,0,0.88);
+}
+
+.admin-show-title {
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 900;
+  color: rgba(0,0,0,0.85);
+}
+
+.admin-show-body {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 10px;
+  padding: 14px 14px;
+  line-height: 1.85;
+  color: rgba(0,0,0,0.88);
+
+  /* 長文の安心 */
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.admin-show-actions {
+  margin-top: 14px;
+}
+
+.admin-show-links {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
