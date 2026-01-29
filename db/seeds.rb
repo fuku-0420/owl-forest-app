@@ -3,8 +3,8 @@
 # =========================================================
 Owl.find_or_initialize_by(name: "フクちゃん").tap do |owl|
   owl.species     = "学習サポートフクロウ"
-  owl.age         = 26
-  owl.habitat     = "RUNTEQ 知識の森"
+  owl.age         = 28
+  owl.habitat     = "知識の森"
   owl.description = "学習者に寄り添い、つまずきをやさしく案内してくれるフクロウ"
   owl.save!
 end

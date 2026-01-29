@@ -1,111 +1,145 @@
-<div class="classroom-container"
+<div
+  class="classroom-container"
   data-controller="owl coming-soon"
   data-owl-categories-value="<%= json_escape(@categories_json.to_json) %>"
   data-owl-signed-in-value="<%= user_signed_in? %>"
-  data-owl-favorite-ids-value="<%= json_escape(@favorite_ids.to_json) %>">
-
+  data-owl-favorite-ids-value="<%= json_escape(@favorite_ids.to_json) %>"
+>
   <!-- 🌳 森の背景 -->
-  <img src="<%= asset_path('tisikinomori.png') %>"
-       alt="森の背景"
-       class="forest-bg"
-       data-owl-target="forest"
-       data-autumn-image="<%= asset_path('tisikinomori_aki.png') %>">
+  <img
+    src="<%= asset_path('tisikinomori.png') %>"
+    alt="森の背景"
+    class="forest-bg"
+    data-owl-target="forest"
+    data-autumn-image="<%= asset_path('tisikinomori_aki.png') %>"
+  >
 
+  <!-- 🚧 β版バナー -->
   <div class="dev-banner">
     🚧 現在β版（開発中）です。データは予告なく削除される可能性があります。
   </div>
 
   <!-- 🎓 黒板 -->
   <div class="blackboard" data-owl-target="blackboard">
-    <button class="chalk-text-button"
-            data-owl-target="click"
-            data-action="click->owl#enterForest">
+    <button
+      class="chalk-text-button"
+      data-owl-target="click"
+      data-action="click->owl#enterForest"
+    >
       <span class="typing-text" data-owl-target="typingText"></span>
     </button>
   </div>
 
   <!-- 🦉 フクちゃん -->
-  <img src="<%= asset_path('fukuchan.png') %>"
-       alt="フクちゃん"
-       class="fukuchan-global"
-       data-owl-target="fukuchan"
-       data-happy-image="<%= asset_path('fukuchan-happy.png') %>"
-       data-normal-image="<%= asset_path('fukuchan.png') %>">
+  <img
+    src="<%= asset_path('fukuchan.png') %>"
+    alt="フクちゃん"
+    class="fukuchan-global"
+    data-owl-target="fukuchan"
+    data-happy-image="<%= asset_path('fukuchan-happy.png') %>"
+    data-normal-image="<%= asset_path('fukuchan.png') %>"
+  >
 
   <!-- ⏰ リアルタイム時計 -->
   <div data-controller="clock">
-    <div id="current-time" class="clock-display" data-clock-target="display"></div>
+    <div
+      id="current-time"
+      class="clock-display"
+      data-clock-target="display"
+    ></div>
   </div>
 
   <!-- 🎵 BGM -->
-  <div class="bgm-controls"
-       data-controller="bgm"
-       data-bgm-path="<%= asset_path('forest_ambient.mp3') %>">
-    <button data-bgm-target="toggleButton"
-            data-action="click->bgm#toggle"
-            class="bgm-btn">
+  <div
+    class="bgm-controls"
+    data-controller="bgm"
+    data-bgm-path="<%= asset_path('forest_ambient.mp3') %>"
+  >
+    <button
+      data-bgm-target="toggleButton"
+      data-action="click->bgm#toggle"
+      class="bgm-btn"
+    >
       森のBGM
     </button>
-    <input type="range"
-           data-bgm-target="volumeSlider"
-           data-action="input->bgm#adjustVolume"
-           min="0" max="0.3" step="0.01" value="0.15"
-           class="volume-slider">
+
+    <input
+      type="range"
+      data-bgm-target="volumeSlider"
+      data-action="input->bgm#adjustVolume"
+      min="0"
+      max="0.3"
+      step="0.01"
+      value="0.15"
+      class="volume-slider"
+    >
   </div>
 
-  <!-- 🦉 プロフィール一覧 -->
+  <!-- 🦉 メニューカード一覧 -->
   <div class="owls-container" style="display: none;">
     <% @owls.each_with_index do |owl, index| %>
-      <div class="owl-card owl-menu-card"
-           data-owl-target="owlCard"
-           data-owl-index="<%= index %>"
-           data-action="mouseenter->owl#hoverOwl mouseleave->owl#leaveOwl">
+      <div
+        class="owl-card owl-menu-card"
+        data-owl-target="owlCard"
+        data-owl-index="<%= index %>"
+        data-action="mouseenter->owl#hoverOwl mouseleave->owl#leaveOwl"
+      >
+        <!-- 👤 ログインユーザー ミニプロフィール -->
+        <% if user_signed_in? %>
+          <% profile = current_user.profile %>
 
-        <!-- メニュー（通常：リンク運用  -->
+          <%= link_to profile_path, class: "user-mini-profile user-mini-profile--link" do %>
+            <div class="user-mini-profile__avatar">
+              <% if profile&.avatar&.attached? %>
+                <%= image_tag profile.avatar, class: "user-mini-profile__img" %>
+              <% else %>
+                <div class="user-mini-profile__placeholder">
+                  <span aria-hidden="true">👤</span>
+                </div>
+              <% end %>
+            </div>
+
+            <div class="user-mini-profile__text">
+              <div class="user-mini-profile__name">
+                <%= profile&.display_name.presence || current_user.email.split("@").first %>
+              </div>
+
+              <% if profile&.bio.present? %>
+                <div class="user-mini-profile__bio">
+                  <%= profile.bio %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+
+        <!-- 📋 メニュー -->
         <div class="owl-menu">
-
-          <!-- ユーザー設定 -->
           <%= link_to "ユーザー設定", settings_path, class: "owl-menu-btn" %>
-          <%# <button type="button"
-                class="owl-menu-btn"
-                data-action="click->coming-soon#comingSoon"
-                data-feature="ユーザー設定">ユーザー設定</button> %>
-
-          <!-- お気に入り（一覧） -->
           <%= link_to "お気に入り", favorites_path, class: "owl-menu-btn" %>
-          <%# <button type="button"
-                class="owl-menu-btn"
-                data-action="click->coming-soon#comingSoon"
-                data-feature="お気に入り">お気に入り</button> %>
-
-          <!-- アドバイス案募集 -->
           <%= link_to "アドバイス案募集", new_advice_suggestion_path, class: "owl-menu-btn" %>
-          <%# <button type="button"
-                class="owl-menu-btn"
-                data-action="click->coming-soon#comingSoon"
-                data-feature="アドバイス案募集">アドバイス案募集</button> %>
-
-          <!-- 投稿一覧（advice_suggestions#index） -->
           <%= link_to "投稿一覧", advice_suggestions_path, class: "owl-menu-btn" %>
-          <%# <button type="button"
-                class="owl-menu-btn"
-                data-action="click->coming-soon#comingSoon"
-                data-feature="投稿一覧">投稿一覧</button> %>
 
-          <!-- アプリ設定 -->
-          <%#= link_to "アプリ設定", app_settings_path, class: "owl-menu-btn" %>
-          <button type="button"
-                class="owl-menu-btn"
-                data-action="click->coming-soon#comingSoon"
-                data-feature="アプリ設定">アプリ設定</button>
+          <button
+            type="button"
+            class="owl-menu-btn"
+            data-action="click->coming-soon#comingSoon"
+            data-feature="アプリ設定"
+          >
+            アプリ設定
+          </button>
         </div>
 
-        <!-- メッセージ（静的） -->
+        <!-- 💬 メッセージ -->
         <div class="owl-message">
-          <div class="message-line"
-               data-message="<%= "こんにちは！僕は梟🦉の#{owl.name}" %>"></div>
-          <div class="message-line"
-               data-message="沢山の人を笑顔にするのが仕事だホウ〜☆彡"></div>
+          <div
+            class="message-line"
+            data-message="<%= "こんにちは！僕は梟🦉の#{owl.name}" %>"
+          ></div>
+          <div
+            class="message-line"
+            data-message="沢山の人を笑顔にするのが仕事だホウ〜☆彡"
+          ></div>
         </div>
 
         <%= link_to "詳しく見る", owl_path(owl), class: "owl-menu-btn primary" %>

@@ -31,7 +31,7 @@ Rails.application.routes.draw do
   get "settings", to: "settings#index"
 
   # 👤 プロフィール（単数）
-  resource :profile, only: [ :edit, :update ]
+  resource :profile, only: %i[show edit update]
 
   #  Devise分離（メール / パスワード / 退会）
   namespace :users do

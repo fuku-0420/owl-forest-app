@@ -8,7 +8,7 @@ class User < ApplicationRecord
 
   # 👤 プロフィール
   has_one :profile, dependent: :destroy
-  after_create :ensure_profile
+  after_create_commit :ensure_profile!
 
   def admin?
     admin == true
@@ -20,7 +20,10 @@ class User < ApplicationRecord
 
   private
 
-  def ensure_profile
-    create_profile! unless profile
+  # User作成を失敗させないため「作れなかったらログだけ」にする
+  def ensure_profile!
+    create_profile! if profile.nil?
+  rescue ActiveRecord::RecordInvalid => e
+    Rails.logger.error("[ensure_profile!] user_id=#{id} profile create failed: #{e.message}")
   end
 end

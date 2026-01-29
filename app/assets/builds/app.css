@@ -497,7 +497,7 @@ body.owl-show-page {
 }
 
 /* =========================================================
-  📝 遷移図寄せ：アドバイス案募集フォーム（赤寄り）
+  📝 遷移図寄せ：アドバイス案募集フォーム
 ========================================================= */
 .page-container.advice-form {
   width: min(1040px, calc(100% - 32px));
@@ -557,14 +557,14 @@ body.owl-show-page {
   max-height: 55vh;
 }
 
-/* 注意文（赤系に寄せすぎず、落ち着き） */
+/* 注意文 */
 .page-container.advice-form .form-note {
   margin: 12px 0 16px;
   font-size: 13px;
   color: rgba(60, 0, 0, 0.65);
 }
 
-/* 投稿ボタン：えんじ */
+/* 投稿ボタン */
 .page-container.advice-form .form-actions {
   display: flex;
   justify-content: flex-end;
@@ -1161,16 +1161,16 @@ body.owl-show-page {
 /* ヘッダーの色を強めて “ページ感” を出す */
 .page-container.user-settings-index .page-header,
 .page-container.user-settings-page .page-header {
-  background: linear-gradient(180deg, #3f5bd9 0%, #2e3f9f 100%);
+  background: linear-gradient(200deg, #3f5bd9 0%, #2e3f9f 100%);
   border-bottom: 1px solid rgba(0,0,0,0.12);
 }
 
 .page-container.user-settings-index .page-header h1,
 .page-container.user-settings-page .page-header h1 {
-   text-align: center;
+  text-align: center;
   color: #ffd000;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.25);
-  letter-spacing: 0.06em;
+  text-shadow: 0 2px 5px rgba(0,0,0,0.25);
+  letter-spacing: 0.05em;
 }
 
 .page-container.user-settings-page .notice,

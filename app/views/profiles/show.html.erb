@@ -1,0 +1,49 @@
+<div class="page-container profile-page">
+  <div class="page-header">
+    <h1>プロフィール</h1>
+  </div>
+
+  <div class="page-body">
+    <section class="settings-section">
+      <div class="profile-card">
+
+        <%# =========================
+           表示名・アイコンのフォールバック
+           - display_name があればそれ
+           - なければ emailの@より前
+           - それも無理なら "?"
+        ========================= %>
+        <% fallback_name = @profile.display_name.presence || current_user.email.to_s.split("@").first %>
+        <% initial = fallback_name.to_s[0]&.upcase || "?" %>
+
+        <div class="profile-avatar">
+          <% if @profile.avatar.attached? %>
+            <%= image_tag @profile.avatar, class: "avatar-img" %>
+          <% else %>
+            <div class="avatar-placeholder"><%= initial %></div>
+          <% end %>
+        </div>
+
+        <div class="profile-info">
+          <p><strong>表示名：</strong><%= fallback_name %></p>
+
+          <% if @profile.bio.present? %>
+            <p><strong>ひとこと：</strong><%= simple_format(@profile.bio.to_s) %></p>
+          <% else %>
+            <p><strong>ひとこと：</strong><span class="muted">（未設定）</span></p>
+          <% end %>
+        </div>
+
+        <div class="form-actions">
+          <%= link_to "編集する", edit_profile_path, class: "primary-btn" %>
+        </div>
+
+        <div class="settings-subnav">
+          <%= link_to "ユーザー設定へ戻る", settings_path, class: "sub-link" %>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<%= render "shared/back_to_board" %>
