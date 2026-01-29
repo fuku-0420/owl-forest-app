@@ -16,14 +16,17 @@
         <% if @pending.any? %>
           <div class="submissions-list">
             <% @pending.each do |s| %>
-              <article class="submission-card pending">
+              <%= link_to advice_suggestion_path(s), class: "submission-card pending" do %>
                 <div class="submission-meta">
-                  <span class="status-badge pending">承認待ち</span>
-                  <span class="category"><%= s.category.name %></span>
+                  <div class="submission-meta-left">
+                    <span class="status-badge pending">承認待ち</span>
+                    <span class="category"><%= s.category.name %></span>
+                  </div>
                   <span class="author"><%= s.user.display_name_or_email %></span>
                 </div>
+
                 <p class="submission-body"><%= s.body.truncate(80) %></p>
-              </article>
+              <% end %>
             <% end %>
           </div>
         <% else %>
@@ -38,14 +41,17 @@
         <% if @approved.any? %>
           <div class="submissions-list">
             <% @approved.each do |s| %>
-              <article class="submission-card approved">
+              <%= link_to advice_suggestion_path(s), class: "submission-card approved" do %>
                 <div class="submission-meta">
-                  <span class="status-badge approved">承認済み</span>
-                  <span class="category"><%= s.category.name %></span>
+                  <div class="submission-meta-left">
+                    <span class="status-badge approved">承認済み</span>
+                    <span class="category"><%= s.category.name %></span>
+                  </div>
                   <span class="author"><%= s.user.display_name_or_email %></span>
                 </div>
+
                 <p class="submission-body"><%= s.body.truncate(80) %></p>
-              </article>
+              <% end %>
             <% end %>
           </div>
         <% else %>
@@ -60,14 +66,17 @@
         <% if @rejected.any? %>
           <div class="submissions-list">
             <% @rejected.each do |s| %>
-              <article class="submission-card rejected">
+              <%= link_to advice_suggestion_path(s), class: "submission-card rejected" do %>
                 <div class="submission-meta">
-                  <span class="status-badge rejected">非承認</span>
-                  <span class="category"><%= s.category.name %></span>
+                  <div class="submission-meta-left">
+                    <span class="status-badge rejected">非承認</span>
+                    <span class="category"><%= s.category.name %></span>
+                  </div>
                   <span class="author"><%= s.user.display_name_or_email %></span>
                 </div>
+
                 <p class="submission-body"><%= s.body.truncate(80) %></p>
-              </article>
+              <% end %>
             <% end %>
           </div>
         <% else %>

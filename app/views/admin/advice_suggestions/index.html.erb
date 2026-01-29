@@ -1,37 +1,139 @@
-<h1>承認待ちアドバイス一覧</h1>
+<div class="page-container admin-advice-suggestions-page">
+  <div class="page-header">
+    <h1>承認待ちアドバイス一覧</h1>
+  </div>
 
-<% if notice.present? %>
-  <p style="color: green;"><%= notice %></p>
-<% end %>
+  <div class="page-body">
+    <% if notice.present? %>
+      <p class="notice"><%= notice %></p>
+    <% end %>
 
-<% if @advice_suggestions.any? %>
-  <table>
-    <thead>
-      <tr>
-        <th>投稿者</th>
-        <th>カテゴリ</th>
-        <th>内容</th>
-        <th>操作</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @advice_suggestions.each do |s| %>
-        <tr>
-          <td><%= s.user.display_name_or_email %></td>
-          <td><%= s.category.name %></td>
-          <td><%= s.body.truncate(80) %></td>
-          <td>
-            <%= button_to "承認", approve_admin_advice_suggestion_path(s),
-                  method: :patch %>
-            <%= button_to "却下", reject_admin_advice_suggestion_path(s),
-                  method: :patch %>
-          </td>
-        </tr>
+    <!-- 承認待ち -->
+    <section class="admin-section">
+      <h2>承認待ち（<%= @pending.size %>件）</h2>
+
+      <% if @pending.any? %>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>投稿者</th>
+              <th>カテゴリ</th>
+              <th>内容</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @pending.each do |s| %>
+              <tr>
+                <td><%= s.user.display_name_or_email %></td>
+                <td><%= s.category.name %></td>
+                <td class="admin-body-preview">
+                  <%= link_to admin_advice_suggestion_path(s) do %>
+                    <%= s.body.truncate(80) %>
+                  <% end %>
+                  <div class="admin-detail-link">
+                    <%= link_to "詳細を見る", admin_advice_suggestion_path(s) %>
+                  </div>
+                </td>
+                <td>
+                  <div class="admin-actions">
+                    <%= button_to "承認",
+                          approve_admin_advice_suggestion_path(s),
+                          method: :patch,
+                          form: { class: "admin-actions__form" },
+                          class: "admin-btn approve" %>
+
+                    <%= button_to "却下",
+                          reject_admin_advice_suggestion_path(s),
+                          method: :patch,
+                          class: "admin-btn reject" %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p class="empty">承認待ちの投稿はありません。</p>
       <% end %>
-    </tbody>
-  </table>
-<% else %>
-  <p>承認待ちの投稿はありません。</p>
-<% end %>
+    </section>
 
-<%= render "shared/back_to_board" %>
+    <hr>
+
+    <!-- 承認済み -->
+    <section class="admin-section">
+      <h2>承認済み（<%= @approved.size %>件）</h2>
+
+      <% if @approved.any? %>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>投稿者</th>
+              <th>カテゴリ</th>
+              <th>内容</th>
+              <th>ステータス</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @approved.each do |s| %>
+              <tr>
+                <td><%= s.user.display_name_or_email %></td>
+                <td><%= s.category.name %></td>
+                <td class="admin-body-preview">
+                  <%= link_to admin_advice_suggestion_path(s) do %>
+                    <%= s.body.truncate(80) %>
+                  <% end %>
+                  <div class="admin-detail-link">
+                    <%= link_to "詳細を見る", admin_advice_suggestion_path(s) %>
+                  </div>
+                </td>
+                <td>承認済み</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p class="empty">承認済みはありません。</p>
+      <% end %>
+    </section>
+
+    <hr>
+
+    <!-- 却下 -->
+    <section class="admin-section">
+      <h2>却下（<%= @rejected.size %>件）</h2>
+
+      <% if @rejected.any? %>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>投稿者</th>
+              <th>カテゴリ</th>
+              <th>内容</th>
+              <th>ステータス</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @rejected.each do |s| %>
+              <tr>
+                <td><%= s.user.display_name_or_email %></td>
+                <td><%= s.category.name %></td>
+                <td class="admin-body-preview">
+                  <%= link_to admin_advice_suggestion_path(s) do %>
+                    <%= s.body.truncate(80) %>
+                  <% end %>
+                  <div class="admin-detail-link">
+                    <%= link_to "詳細を見る", admin_advice_suggestion_path(s) %>
+                  </div>
+                </td>
+                <td>却下</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p class="empty">却下はありません。</p>
+      <% end %>
+    </section>
+  </div>
+</div>

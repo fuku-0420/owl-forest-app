@@ -1,0 +1,77 @@
+<div class="page-container admin-advice-suggestions-page admin-advice-suggestion-show">
+  <div class="page-header">
+    <h1>投稿アドバイス案 詳細</h1>
+  </div>
+
+  <div class="page-body">
+    <div class="admin-show-meta">
+      <!-- 投稿者 -->
+      <div class="admin-show-meta__row">
+        <span class="label">投稿者</span>
+        <span class="value">
+          <%= @advice_suggestion.user.display_name_or_email %>
+        </span>
+      </div>
+
+      <!-- カテゴリ -->
+      <div class="admin-show-meta__row">
+        <span class="label">カテゴリ</span>
+        <span class="value">
+          <%= @advice_suggestion.category.name %>
+        </span>
+      </div>
+
+      <!-- ステータス -->
+      <div class="admin-show-meta__row">
+        <span class="label">ステータス</span>
+        <span class="value">
+          <% if @advice_suggestion.status_pending? %>
+            <span class="status-badge pending">承認待ち</span>
+          <% elsif @advice_suggestion.status_approved? %>
+            <span class="status-badge approved">承認済み</span>
+          <% else %>
+            <span class="status-badge rejected">却下</span>
+          <% end %>
+        </span>
+      </div>
+
+      <!-- 投稿日時（日本式） -->
+      <div class="admin-show-meta__row">
+        <span class="label">投稿日時</span>
+        <span class="value">
+          <%= l(@advice_suggestion.created_at) %>
+        </span>
+      </div>
+    </div>
+
+    <hr>
+
+    <h2 class="admin-show-title">本文</h2>
+
+    <div class="admin-show-body">
+      <%= simple_format(h(@advice_suggestion.body)) %>
+    </div>
+
+    <div class="admin-show-actions">
+      <% if @advice_suggestion.status_pending? %>
+        <div class="admin-actions">
+          <%= button_to "承認",
+                approve_admin_advice_suggestion_path(@advice_suggestion),
+                method: :patch,
+                class: "admin-btn approve" %>
+
+          <%= button_to "却下",
+                reject_admin_advice_suggestion_path(@advice_suggestion),
+                method: :patch,
+                class: "admin-btn reject" %>
+        </div>
+      <% end %>
+
+      <div class="admin-show-links">
+        <%= link_to "一覧に戻る",
+              admin_advice_suggestions_path,
+              class: "admin-btn detail" %>
+      </div>
+    </div>
+  </div>
+</div>

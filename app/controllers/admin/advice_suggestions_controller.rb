@@ -3,10 +3,15 @@ class Admin::AdviceSuggestionsController < ApplicationController
   before_action :require_admin!
 
   def index
-    @advice_suggestions = AdviceSuggestion
-                            .status_pending
-                            .includes(:user, :category)
-                            .order(created_at: :asc)
+    base = AdviceSuggestion.includes(:user, :category)
+
+    @pending  = base.status_pending.order(created_at: :asc)
+    @approved = base.status_approved.order(created_at: :desc)
+    @rejected = base.status_rejected.order(created_at: :desc)
+  end
+
+  def show
+    @advice_suggestion = AdviceSuggestion.includes(:user, :category).find(params[:id])
   end
 
   def approve
@@ -35,6 +40,7 @@ class Admin::AdviceSuggestionsController < ApplicationController
   private
 
   def require_admin!
-    redirect_to root_path, alert: "権限がありません" unless current_user.admin?
+    return if current_user&.admin?
+    redirect_to root_path, alert: "権限がありません"
   end
 end
