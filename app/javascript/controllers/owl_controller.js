@@ -26,6 +26,8 @@ export default class extends Controller {
   // Enter画面のタイピング
   typingInterval = null
 
+  isHappyMode = false
+
   saveBoardState(state) {
     try {
       sessionStorage.setItem(this.constructor.storageKey, JSON.stringify(state))
@@ -314,7 +316,6 @@ export default class extends Controller {
 
         let charIndex = 0
 
-        // 念のため前のintervalを止める（多重起動対策）
         this.stopStory()
 
         this.storyIntervalId = setInterval(() => {
@@ -385,7 +386,7 @@ export default class extends Controller {
     const messageDiv = this.blackboardTarget.querySelector(".welcome-message")
     if (!messageDiv) return
 
-    // 物語タイマー停止（フェード中に増殖しないように）
+    // 物語タイマー停止
     this.stopStory()
 
     messageDiv.classList.add("fade-out")
@@ -455,9 +456,14 @@ export default class extends Controller {
     }
 
     if (fromReturn) {
+      //  戻ってきた時も日替わりを反映してから静的表示
+      this.applyDailyMessageToFukuchanLines()
       this.showOwlProfileStatic()
       return
     }
+
+    //  初期表示も日替わりを反映
+    this.applyDailyMessageToFukuchanLines()
 
     this.addFukuchanImage()
 
@@ -653,17 +659,18 @@ export default class extends Controller {
     const img = document.querySelector(".fukuchan-global")
     if (!img) return
 
-    let showOriginal = true
     let canClick = false
 
     img.onclick = () => {
       if (!canClick) return
-      if (showOriginal) {
-        this.switchToNewMessage()
-      } else {
+
+      if (this.isHappyMode) {
         this.switchToOriginalMessage()
+      } else {
+        this.switchToNewMessage()
       }
-      showOriginal = !showOriginal
+
+      this.isHappyMode = !this.isHappyMode
     }
 
     setTimeout(() => {
@@ -679,9 +686,42 @@ export default class extends Controller {
     const fukuchanImg = document.querySelector(".fukuchan-global")
 
     if (messageLines.length >= 2) {
-      messageLines[0].textContent = "僕に何か聞きたいっホ～？"
-      messageLines[1].textContent = "頑張り屋さんっホウ〜🦉"
+      const line1 = "僕に何か聞きたいっホ～？"
+      const line2 = "頑張り屋さんっホウ〜🦉"
+
+      messageLines[0].textContent = line1
+      messageLines[1].textContent = line2
+
+      messageLines[0].dataset.message = line1
+      messageLines[1].dataset.message = line2
+
       if (fukuchanImg) fukuchanImg.src = fukuchanImg.dataset.happyImage
+    }
+  }
+
+  getDailyOwlMessage() {
+    const dailySets = [
+      ["こんにちは！僕は梟🦉のフクちゃん", "知識の森へようこそだホウ〜☆彡"],
+      ["今日も来てくれて嬉しいホウ〜🦉", "気軽にカテゴリを選んでみてホウ！"],
+      ["この掲示板はヒントが集まる場所だホウ。", "困ったら一緒に整理するホウ〜！"],
+      ["まずは好きなカテゴリから見ていくホウ。", "ゆっくりで大丈夫だホウ〜🦉"],
+    ]
+
+    const now = new Date()
+    const start = new Date(now.getFullYear(), 0, 0)
+    const oneDay = 1000 * 60 * 60 * 24
+    const yday = Math.floor((now - start) / oneDay) // 1..366
+
+    return dailySets[yday % dailySets.length]
+  }
+
+  applyDailyMessageToFukuchanLines() {
+    const [line1, line2] = this.getDailyOwlMessage()
+    const lines = document.querySelectorAll(".message-line")
+
+    if (lines.length >= 2) {
+      lines[0].dataset.message = line1
+      lines[1].dataset.message = line2
     }
   }
 
@@ -689,9 +729,15 @@ export default class extends Controller {
     const messageLines = document.querySelectorAll(".message-line")
     const fukuchanImg = document.querySelector(".fukuchan-global")
 
+    const [line1, line2] = this.getDailyOwlMessage()
+
     if (messageLines.length >= 2) {
-      messageLines[0].textContent = "こんにちは！僕は梟🦉のフクちゃん"
-      messageLines[1].textContent = "沢山の人を笑顔にするのが仕事だホウ〜☆彡"
+      messageLines[0].textContent = line1
+      messageLines[1].textContent = line2
+
+      messageLines[0].dataset.message = line1
+      messageLines[1].dataset.message = line2
+
       if (fukuchanImg) fukuchanImg.src = fukuchanImg.dataset.normalImage
     }
   }
@@ -742,8 +788,11 @@ export default class extends Controller {
   }
 
   showAllOwlMessages() {
-    // 既存の梟タイマー止める（多重起動対策）
     this.stopOwlMessages()
+
+    document.querySelectorAll(".message-line").forEach(line => {
+      line.textContent = ""
+    })
 
     const owlCards = document.querySelectorAll(".owl-card")
 
