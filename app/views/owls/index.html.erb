@@ -1,6 +1,6 @@
 <div
   class="classroom-container"
-  data-controller="owl coming-soon"
+  data-controller="owl coming-soon bgm"
   data-owl-categories-value="<%= json_escape(@categories_json.to_json) %>"
   data-owl-signed-in-value="<%= user_signed_in? %>"
   data-owl-favorite-ids-value="<%= json_escape(@favorite_ids.to_json) %>"
@@ -188,7 +188,10 @@
           ></div>
         </div>
 
-        <%= link_to "詳しく見る", owl_path(owl), class: "owl-menu-btn primary" %>
+        <%= link_to "詳しく見る",
+                    owl_path(owl),
+                    class: "owl-menu-btn primary",
+                    data: { action: "click->bgm#confirmBeforeNavigate:prevent" } %>
       </div>
     <% end %>
   </div>
