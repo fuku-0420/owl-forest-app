@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
-// 🎵 BGMコントローラ
+// 🎵 BGMコントローラ（即再生/即停止版）
 export default class extends Controller {
   static targets = ["toggleButton", "volumeSlider"]
 
@@ -17,78 +17,74 @@ export default class extends Controller {
     const savedVolume = localStorage.getItem("bgmVolume")
     const volume = savedVolume ? parseFloat(savedVolume) : defaultVolume
 
-    this.bgm.volume = volume
-    if (this.volumeSliderTarget) this.volumeSliderTarget.value = volume
+    this.bgm.volume = this.clampVolume(volume)
+
+    if (this.hasVolumeSliderTarget) {
+      this.volumeSliderTarget.value = this.bgm.volume
+    }
+
     this.isPlaying = false
+    this.updateUi()
   }
 
   disconnect() {
-    if (this.bgm) {
-      this.bgm.pause()
-      this.bgm.currentTime = 0
-      this.bgm = null
-    }
+    this.stopImmediate({ resetTime: true })
+    this.bgm = null
   }
 
+  //  押したら即 再生 / 即 停止
   toggle() {
-    if (this.isPlaying) {
-      this.fadeOutAndPause()
-      this.toggleButtonTarget.textContent = "森のBGM"
-      this.element.classList.remove("playing")
-      this.isPlaying = false
-    } else {
-      // 再生時はフェードインで自然に音が出る
-      this.bgm.volume = 0
-      this.bgm.play().then(() => {
-        this.fadeInToTargetVolume()
-        this.toggleButtonTarget.textContent = "BGM停止"
-        this.element.classList.add("playing")
-        this.isPlaying = true
-      }).catch(error => {
-        console.error("BGM play failed:", error)
-      })
-    }
-  }
-
-  // 🎧 フェードアウトして停止
-  fadeOutAndPause() {
     if (!this.bgm) return
-    const originalVolume = this.bgm.volume
-    let currentVolume = originalVolume
 
-    const fade = setInterval(() => {
-      currentVolume -= 0.015
-      if (currentVolume <= 0.01) {
-        clearInterval(fade)
-        this.bgm.pause()
-        this.bgm.currentTime = 0
-        this.bgm.volume = originalVolume
-        return
-      }
-      this.bgm.volume = Math.max(currentVolume, 0)
-    }, 100)
-  }
+    if (this.isPlaying) {
+      this.stopImmediate({ resetTime: true })
+      this.isPlaying = false
+      this.updateUi()
+      return
+    }
 
-  // 🌱 フェードインで音量を上げる
-  fadeInToTargetVolume() {
-    const target = Math.min(parseFloat(this.volumeSliderTarget?.value || 0.15), 0.3)
-    let v = 0
-    const fade = setInterval(() => {
-      v += 0.01
-      if (v >= target) {
-        v = target
-        clearInterval(fade)
-      }
-      this.bgm.volume = v
-    }, 100)
+    // 再生（即）
+    this.bgm.play()
+      .then(() => {
+        this.isPlaying = true
+        this.updateUi()
+      })
+      .catch(error => {
+        console.error("BGM play failed:", error)
+        this.isPlaying = false
+        this.updateUi()
+      })
   }
 
   // 🎚️ スライダー操作で音量調整（安全リミッター付き）
   adjustVolume() {
-    if (this.bgm) {
-      const safeVolume = Math.min(Math.max(parseFloat(this.volumeSliderTarget.value), 0.0), 0.3)
-      this.bgm.volume = safeVolume
-      localStorage.setItem("bgmVolume", safeVolume)
+    if (!this.bgm || !this.hasVolumeSliderTarget) return
+
+    const safeVolume = this.clampVolume(parseFloat(this.volumeSliderTarget.value))
+    this.bgm.volume = safeVolume
+    localStorage.setItem("bgmVolume", safeVolume)
+  }
+
+  // -------------------------
+  // 内部ユーティリティ
+  // -------------------------
+  clampVolume(v) {
+    const n = Number.isFinite(v) ? v : 0.15
+    return Math.min(Math.max(n, 0.0), 0.3)
+  }
+
+  stopImmediate({ resetTime = true } = {}) {
+    if (!this.bgm) return
+    this.bgm.pause()
+    if (resetTime) this.bgm.currentTime = 0
+  }
+
+  updateUi() {
+    if (this.hasToggleButtonTarget) {
+      this.toggleButtonTarget.textContent = this.isPlaying ? "BGM停止" : "BGMを再生"
     }
+
+    // 見た目用（任意：CSSで playing を使って強調できる）
+    this.element.classList.toggle("playing", this.isPlaying)
   }
 }
