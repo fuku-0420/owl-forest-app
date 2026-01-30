@@ -10,9 +10,21 @@ export default class extends Controller {
 
   static storageKey = "fukuchan_board_state"
 
-  // ★ タイマー管理用のプロパティを追加
-  currentTimer = null
+  // ===== Timer / Audio =====
   sharedAudioCtx = null
+
+  // 物語用（interval と timeout を分離）
+  storyIntervalId = null
+  storyTimeoutId = null
+
+  // アドバイス本文用（setTimeoutチェーン）
+  adviceTimeoutId = null
+
+  // 梟メッセージ用（複数setTimeout）
+  owlTimeoutIds = []
+
+  // Enter画面のタイピング
+  typingInterval = null
 
   saveBoardState(state) {
     try {
@@ -50,7 +62,57 @@ export default class extends Controller {
     }
   }
 
+  getSettings() {
+    try {
+      return JSON.parse(sessionStorage.getItem("fukuchan_settings") || "{}")
+    } catch (_) {
+      return {}
+    }
+  }
+
+  isTypingEnabled() {
+    const s = this.getSettings()
+    return s.typingEnabled !== false // デフォルトON
+  }
+
+  isSfxEnabled() {
+    const s = this.getSettings()
+    return s.sfxEnabled !== false // デフォルトON
+  }
+
+  // ピコピコを鳴らしていい条件（効果音設定だけを見る）
+  shouldPlayTypingSfx() {
+    return this.isSfxEnabled()
+  }
+
+  // ===== Cleanup helpers =====
+  stopStory() {
+    if (this.storyIntervalId) {
+      clearInterval(this.storyIntervalId)
+      this.storyIntervalId = null
+    }
+    if (this.storyTimeoutId) {
+      clearTimeout(this.storyTimeoutId)
+      this.storyTimeoutId = null
+    }
+  }
+
+  stopAdviceTyping() {
+    if (this.adviceTimeoutId) {
+      clearTimeout(this.adviceTimeoutId)
+      this.adviceTimeoutId = null
+    }
+  }
+
+  stopOwlMessages() {
+    if (this.owlTimeoutIds && this.owlTimeoutIds.length > 0) {
+      this.owlTimeoutIds.forEach(id => clearTimeout(id))
+      this.owlTimeoutIds = []
+    }
+  }
+
   connect() {
+    this.applyBackgroundSetting()
     const params = new URLSearchParams(window.location.search)
     this.fromBoardReturn = params.get("board") === "1"
 
@@ -78,6 +140,34 @@ export default class extends Controller {
     window.addEventListener("click", unlockAudio, { once: true })
   }
 
+  applyBackgroundSetting() {
+    const el = document.querySelector(".forest-bg")
+    if (!el) return
+
+    let settings = {}
+    try {
+      settings = JSON.parse(sessionStorage.getItem("fukuchan_settings") || "{}")
+    } catch (_) { }
+
+    const mode = settings.bgMode || "auto"
+    let resolved = mode
+
+    // ⏰ 自動：時間帯で切り替え
+    if (mode === "auto") {
+      const hour = new Date().getHours()
+      // 7:00〜18:59 → 夏、それ以外 → 秋
+      resolved = hour >= 7 && hour < 19 ? "summer" : "autumn"
+    }
+
+    const nextSrc =
+      resolved === "autumn"
+        ? el.dataset.autumnImage
+        : el.dataset.summerImage
+
+    if (!nextSrc) return
+    el.src = nextSrc
+  }
+
   startTypingAnimation() {
     const text = "🦉知識の森へようこそ🦉"
     const typingElement = this.typingTextTarget
@@ -98,42 +188,52 @@ export default class extends Controller {
   }
 
   enableButton() {
-    this.typingTextTarget.parentElement.classList.add('typing-complete')
+    this.typingTextTarget.parentElement.classList.add("typing-complete")
   }
 
   enterForest() {
     console.log("森に入ります！")
 
-    // 🔊 BGMコントローラーを探して再生
+    // 設定を読む
+    let settings = {}
+    try {
+      settings = JSON.parse(sessionStorage.getItem("fukuchan_settings") || "{}")
+    } catch (_) { }
+
+    const bgmPopupEnabled = settings.bgmPopup !== false
+
+    // BGM 再生判断
     const bgmController = this.application.getControllerForElementAndIdentifier(
       document.querySelector("[data-controller='bgm']"),
       "bgm"
     )
 
-    if (bgmController && !bgmController.isPlaying) {
+    let allowPlay = false
+    if (bgmPopupEnabled) {
+      allowPlay = confirm("この先、BGMが再生されます。\n再生しますか？")
+    }
+
+    if (allowPlay && bgmController && !bgmController.isPlaying) {
       bgmController.toggle()
     }
 
-    // ボタンを消すアニメーション
+    // 演出スタート
     this.fadeOutButton()
 
-    // 少し待ってから物語を表示
     setTimeout(() => {
       this.showWelcomeMessage()
     }, 1000)
   }
 
   fadeOutButton() {
-    // ★ タイピングを完全停止
     if (this.typingInterval) {
       clearInterval(this.typingInterval)
       this.typingInterval = null
     }
 
-    // ★ chalk-text-button を全削除
-    document.querySelectorAll('.chalk-text-button').forEach(btn => {
-      btn.classList.add('fade-out')
-      btn.style.pointerEvents = 'none'
+    document.querySelectorAll(".chalk-text-button").forEach(btn => {
+      btn.classList.add("fade-out")
+      btn.style.pointerEvents = "none"
       setTimeout(() => btn.remove(), 700)
     })
   }
@@ -141,32 +241,32 @@ export default class extends Controller {
   showWelcomeMessage() {
     const blackboard = this.blackboardTarget
 
-    if (blackboard.querySelector('.welcome-message')) {
+    if (blackboard.querySelector(".welcome-message")) {
       console.log("既にメッセージが表示されています")
       return
     }
 
-    // スキップボタン追加
+    // 物語開始前に「物語タイマー」を念のため止める（多重起動対策）
+    this.stopStory()
+
     this.addStorySkipButton()
 
-    // メッセージ領域生成
-    const messageDiv = document.createElement('div')
-    messageDiv.classList.add('welcome-message')
+    const messageDiv = document.createElement("div")
+    messageDiv.classList.add("welcome-message")
     blackboard.appendChild(messageDiv)
 
-    // 物語アニメーション開始
     this.showStoryAnimation(messageDiv)
   }
-
 
   showStoryAnimation(messageDiv) {
     const createTypingSound = () => {
       try {
         if (!this.sharedAudioCtx) {
-          this.sharedAudioCtx = new AudioContext()
+          this.sharedAudioCtx = window._sharedAudioContext || new (window.AudioContext || window.webkitAudioContext)()
+          window._sharedAudioContext = this.sharedAudioCtx
         }
 
-        if (this.sharedAudioCtx.state === 'suspended') {
+        if (this.sharedAudioCtx.state === "suspended") {
           this.sharedAudioCtx.resume()
         }
 
@@ -179,7 +279,7 @@ export default class extends Controller {
         osc.start()
         osc.stop(this.sharedAudioCtx.currentTime + 0.03)
       } catch (e) {
-        // エラー時は無音
+        // 無音でOK
       }
     }
 
@@ -213,23 +313,31 @@ export default class extends Controller {
         messageDiv.innerHTML = ""
 
         let charIndex = 0
-        this.currentTimer = setInterval(() => {
+
+        // 念のため前のintervalを止める（多重起動対策）
+        this.stopStory()
+
+        this.storyIntervalId = setInterval(() => {
           if (charIndex < combinedText.length) {
-            if (combinedText[charIndex] === '\n') {
-              messageDiv.innerHTML += '<br>'
+            if (combinedText[charIndex] === "\n") {
+              messageDiv.innerHTML += "<br>"
             } else {
               messageDiv.innerHTML += combinedText[charIndex]
-              if (combinedText[charIndex] !== ' ') {
+              if (combinedText[charIndex] !== " " && this.shouldPlayTypingSfx()) {
                 createTypingSound()
               }
             }
             charIndex++
           } else {
-            clearInterval(this.currentTimer)
-            this.currentTimer = null
+            if (this.storyIntervalId) {
+              clearInterval(this.storyIntervalId)
+              this.storyIntervalId = null
+            }
+
             currentLineIndex += linesToShow
             patternIndex++
-            this.currentTimer = setTimeout(showNextGroup, 2000)
+
+            this.storyTimeoutId = setTimeout(showNextGroup, 2000)
           }
         }, 80)
       } else {
@@ -242,58 +350,45 @@ export default class extends Controller {
   }
 
   addStorySkipButton() {
-    const existingSkip = document.querySelector('.story-skip-button')
+    const existingSkip = document.querySelector(".story-skip-button")
     if (existingSkip) existingSkip.remove()
 
     const stopEverything = () => {
-      if (this.currentTimer) {
-        clearInterval(this.currentTimer)
-        clearTimeout(this.currentTimer)
-        this.currentTimer = null
-      }
+      this.stopStory()
+      this.stopAdviceTyping()
+      this.stopOwlMessages()
+
       if (this.sharedAudioCtx) {
-        this.sharedAudioCtx.close()
+        try { this.sharedAudioCtx.close() } catch (_) { }
         this.sharedAudioCtx = null
+        window._sharedAudioContext = null
       }
     }
 
-    const skipButton = document.createElement('button')
-    skipButton.textContent = 'skip'
-    skipButton.classList.add('story-skip-button')
+    const skipButton = document.createElement("button")
+    skipButton.textContent = "skip"
+    skipButton.classList.add("story-skip-button")
 
-    skipButton.addEventListener('click', () => {
-      if (confirm('物語をスキップしますか？')) {
+    skipButton.addEventListener("click", () => {
+      if (confirm("物語をスキップしますか？")) {
         stopEverything()
         skipButton.remove()
-
-        const classroomContainer = document.querySelector('.classroom-container')
-        const forestImage = classroomContainer?.querySelector('.forest-bg')
-
-        if (forestImage) {
-          // HTML内の data-autumn-image 属性を使ってパスを安全に取得
-          const autumnImage = forestImage.dataset.autumnImage
-
-          // 秋画像に切り替え（フェード演出）
-          forestImage.style.transition = 'opacity 0.8s ease'
-          forestImage.style.opacity = '0'
-
-          setTimeout(() => {
-            forestImage.src = autumnImage
-            forestImage.style.opacity = '1'
-          }, 500)
-        }
-
+        this.applyBackgroundSetting()
         this.showConsultationRoom()
       }
     })
+
     document.body.appendChild(skipButton)
   }
 
   fadeOutStory() {
-    const messageDiv = this.blackboardTarget.querySelector('.welcome-message')
+    const messageDiv = this.blackboardTarget.querySelector(".welcome-message")
     if (!messageDiv) return
 
-    messageDiv.classList.add('fade-out')
+    // 物語タイマー停止（フェード中に増殖しないように）
+    this.stopStory()
+
+    messageDiv.classList.add("fade-out")
 
     setTimeout(() => {
       messageDiv.remove()
@@ -301,25 +396,27 @@ export default class extends Controller {
     }, 1000)
   }
 
-  // フクロウカードのホバー効果
   hoverOwl(event) {
-    event.currentTarget.style.transform = 'translateY(-10px)'
+    event.currentTarget.style.transform = "translateY(-10px)"
   }
 
   leaveOwl(event) {
-    event.currentTarget.style.transform = 'translateY(0)'
+    event.currentTarget.style.transform = "translateY(0)"
   }
 
   resetBlackboard() {
-    // 黒板内は完全リセット
     this.blackboardTarget.replaceChildren()
   }
 
   showConsultationRoom({ fromReturn = false } = {}) {
-    document.querySelectorAll('.story-skip-button').forEach(el => el.remove())
-    this.resetBlackboard()
+    document.querySelectorAll(".story-skip-button").forEach(el => el.remove())
 
-    console.log("掲示板表示開始！")
+    // 画面切り替え時に残留タイマー止める
+    this.stopStory()
+    this.stopAdviceTyping()
+    this.stopOwlMessages()
+
+    this.resetBlackboard()
 
     if (this.typingInterval) {
       clearInterval(this.typingInterval)
@@ -328,35 +425,32 @@ export default class extends Controller {
 
     const blackboard = this.blackboardTarget
 
-    // ===== タイトル =====
-    const title = document.createElement('h2')
-    title.textContent = '🦉 フクちゃんお悩み掲示板 🦉'
-    title.classList.add('board-title')
+    const title = document.createElement("h2")
+    title.textContent = "🦉 フクちゃんお悩み掲示板 🦉"
+    title.classList.add("board-title")
 
-    // ===== カテゴリボタン =====
     const categories = this.categoriesValue || []
-    const buttonContainer = document.createElement('div')
-    buttonContainer.classList.add('button-container')
+    const buttonContainer = document.createElement("div")
+    buttonContainer.classList.add("button-container")
 
     categories.forEach(category => {
-      const btn = document.createElement('button')
+      const btn = document.createElement("button")
       btn.textContent = category.name
-      btn.classList.add('board-button')
-      btn.addEventListener('click', () => this.showAdviceList(category))
+      btn.classList.add("board-button")
+      btn.addEventListener("click", () => this.showAdviceList(category))
       buttonContainer.appendChild(btn)
     })
 
     blackboard.appendChild(title)
     blackboard.appendChild(buttonContainer)
 
-    // ✅ 戻りのときはフェード演出もしない（好み）
     if (!fromReturn) {
-      title.style.opacity = '0'
-      title.style.transform = 'translateY(-30px)'
-      title.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)'
+      title.style.opacity = "0"
+      title.style.transform = "translateY(-30px)"
+      title.style.transition = "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)"
       setTimeout(() => {
-        title.style.opacity = '1'
-        title.style.transform = 'translateY(0)'
+        title.style.opacity = "1"
+        title.style.transform = "translateY(0)"
       }, 100)
     }
 
@@ -365,20 +459,20 @@ export default class extends Controller {
       return
     }
 
-    // 初回だけフル演出
     this.addFukuchanImage()
 
     if (!this.profileInitialized) {
       this.showOwlProfile()
       this.profileInitialized = true
     }
-
   }
 
   showAdviceList(category, { fromRestore = false } = {}) {
+    // 画面切り替え時に本文タイピング止める（連打対策）
+    this.stopAdviceTyping()
+
     this.resetBlackboard()
 
-    //  復元時は保存しない（通常遷移のときだけ保存）
     if (!fromRestore) {
       this.saveBoardState({ view: "category_list", categoryId: category.id })
     }
@@ -405,11 +499,9 @@ export default class extends Controller {
         const btn = document.createElement("button")
         btn.textContent = advice.title
         btn.classList.add("board-button")
-
         btn.addEventListener("click", () => {
           this.showAdviceDetail(advice, category)
         })
-
         buttonContainer.appendChild(btn)
       })
 
@@ -426,12 +518,12 @@ export default class extends Controller {
       this.clearBoardState()
       this.showConsultationRoom({ fromReturn: true })
     })
-
-    if (fromRestore) {
-    }
   }
 
   showAdviceDetail(advice, category) {
+    // 連打で多重にタイピングが走らないように止める
+    this.stopAdviceTyping()
+
     this.resetBlackboard()
     const blackboard = this.blackboardTarget
 
@@ -439,10 +531,8 @@ export default class extends Controller {
     textArea.classList.add("advice-text")
     blackboard.appendChild(textArea)
 
-    // 本文タイピング
     this.typeText(textArea, advice.body || "", { speed: 50, withSound: true })
 
-    // ===== お気に入りボタン（右上）=====
     if (this.signedInValue) {
       const favBtn = document.createElement("button")
       favBtn.classList.add("favorite-button")
@@ -469,7 +559,6 @@ export default class extends Controller {
           return
         }
 
-        // JS側のID配列を更新して表示も維持する
         if (ids.has(Number(advice.id))) {
           ids.delete(Number(advice.id))
           favBtn.textContent = "♡ お気に入り"
@@ -484,17 +573,13 @@ export default class extends Controller {
       blackboard.appendChild(favBtn)
     }
 
-    // 戻る
     const backButton = document.createElement("button")
     backButton.textContent = "戻る"
     backButton.classList.add("back-button", "visible")
     blackboard.appendChild(backButton)
 
     backButton.addEventListener("click", () => {
-      if (this.currentTimer) {
-        clearTimeout(this.currentTimer)
-        this.currentTimer = null
-      }
+      this.stopAdviceTyping()
       this.showAdviceList(category)
       this.showOwlProfileStatic()
     })
@@ -531,9 +616,11 @@ export default class extends Controller {
   }
 
   typeText(element, text, { speed = 50, withSound = false } = {}) {
-    if (this.currentTimer) {
-      clearTimeout(this.currentTimer)
-      this.currentTimer = null
+    this.stopAdviceTyping()
+
+    if (!this.isTypingEnabled()) {
+      element.textContent = text
+      return
     }
 
     let i = 0
@@ -543,21 +630,19 @@ export default class extends Controller {
       if (i < text.length) {
         element.textContent = text.slice(0, i + 1) + "|"
 
-        if (withSound && text[i] !== " " && text[i] !== "\n") {
+        if (withSound && this.shouldPlayTypingSfx() && text[i] !== " " && text[i] !== "\n") {
           this.createTypingSoundAdvice()
         }
 
         let delay = speed
         const c = text[i]
-        if (c === "。" || c === "、" || c === "！" || c === "？") {
-          delay = speed * 10
-        }
+        if (c === "。" || c === "、" || c === "！" || c === "？") delay = speed * 10
 
         i++
-        this.currentTimer = setTimeout(tick, delay)
+        this.adviceTimeoutId = setTimeout(tick, delay)
       } else {
         element.textContent = text
-        this.currentTimer = null
+        this.adviceTimeoutId = null
       }
     }
 
@@ -565,7 +650,7 @@ export default class extends Controller {
   }
 
   addFukuchanImage() {
-    const img = document.querySelector('.fukuchan-global')
+    const img = document.querySelector(".fukuchan-global")
     if (!img) return
 
     let showOriginal = true
@@ -573,7 +658,6 @@ export default class extends Controller {
 
     img.onclick = () => {
       if (!canClick) return
-
       if (showOriginal) {
         this.switchToNewMessage()
       } else {
@@ -582,129 +666,108 @@ export default class extends Controller {
       showOriginal = !showOriginal
     }
 
-    // ★ 表示アニメーション完了後（fukuchan-visibleをHTML/CSSと連携）
     setTimeout(() => {
-      img.classList.add('fukuchan-visible')
-
+      img.classList.add("fukuchan-visible")
       setTimeout(() => {
         canClick = true
-      }, 10000)//　10秒後クリック
+      }, 10000)
     }, 500)
   }
 
   switchToNewMessage() {
-    const messageLines = document.querySelectorAll('.message-line')
-    const fukuchanImg = document.querySelector('.fukuchan-global')
+    const messageLines = document.querySelectorAll(".message-line")
+    const fukuchanImg = document.querySelector(".fukuchan-global")
 
     if (messageLines.length >= 2) {
-      // 💬 セリフ切り替え
-      messageLines[0].textContent = '僕に何か聞きたいっホ～？'
-      messageLines[1].textContent = '頑張り屋さんっホウ〜🦉'
-
-      // 🖼️ 画像切り替え
-      if (fukuchanImg) {
-        fukuchanImg.src = fukuchanImg.dataset.happyImage
-      }
+      messageLines[0].textContent = "僕に何か聞きたいっホ～？"
+      messageLines[1].textContent = "頑張り屋さんっホウ〜🦉"
+      if (fukuchanImg) fukuchanImg.src = fukuchanImg.dataset.happyImage
     }
   }
 
   switchToOriginalMessage() {
-    const messageLines = document.querySelectorAll('.message-line')
-    const fukuchanImg = document.querySelector('.fukuchan-global')
+    const messageLines = document.querySelectorAll(".message-line")
+    const fukuchanImg = document.querySelector(".fukuchan-global")
 
     if (messageLines.length >= 2) {
-      // 💬 セリフを元に戻す
-      messageLines[0].textContent = 'こんにちは！僕は梟🦉のフクちゃん'
-      messageLines[1].textContent = '沢山の人を笑顔にするのが仕事だホウ〜☆彡'
-
-      // 🖼️ 画像を元に戻す
-      if (fukuchanImg) {
-        fukuchanImg.src = fukuchanImg.dataset.normalImage
-      }
+      messageLines[0].textContent = "こんにちは！僕は梟🦉のフクちゃん"
+      messageLines[1].textContent = "沢山の人を笑顔にするのが仕事だホウ〜☆彡"
+      if (fukuchanImg) fukuchanImg.src = fukuchanImg.dataset.normalImage
     }
   }
 
   showOwlProfile() {
-    const owlsContainer = document.querySelector('.owls-container')
-
-    if (owlsContainer) {
-      owlsContainer.style.display = 'block'
-      owlsContainer.classList.add('hidden-init')
-
-      setTimeout(() => {
-        owlsContainer.classList.add('showing')
-
-        setTimeout(() => {
-          const owlCards = owlsContainer.querySelectorAll('.owl-card')
-          owlCards.forEach(card => card.classList.add('show-floating'))
-
-          setTimeout(() => {
-            this.showAllOwlMessages()
-          }, 500)
-        }, 800)
-      }, 1000)
-    }
-  }
-
-  // ★ 静的にプロフィールを表示（戻り用）
-  showOwlProfileStatic() {
-    const owlsContainer = document.querySelector('.owls-container')
+    const owlsContainer = document.querySelector(".owls-container")
     if (!owlsContainer) return
 
-    owlsContainer.style.display = 'block'
-    owlsContainer.classList.remove('hidden-init')
-    owlsContainer.classList.remove('showing')
+    owlsContainer.style.display = "block"
+    owlsContainer.classList.add("hidden-init")
 
-    owlsContainer.querySelectorAll('.owl-card')
-      .forEach(card => card.classList.add('show-floating'))
+    setTimeout(() => {
+      owlsContainer.classList.add("showing")
 
-    // ✅ セリフが空なら dataset.message をそのまま出す（タイピングしない）
-    owlsContainer.querySelectorAll('.message-line').forEach(line => {
+      setTimeout(() => {
+        const owlCards = owlsContainer.querySelectorAll(".owl-card")
+        owlCards.forEach(card => card.classList.add("show-floating"))
+
+        setTimeout(() => {
+          this.showAllOwlMessages()
+        }, 500)
+      }, 800)
+    }, 1000)
+  }
+
+  showOwlProfileStatic() {
+    const owlsContainer = document.querySelector(".owls-container")
+    if (!owlsContainer) return
+
+    owlsContainer.style.display = "block"
+    owlsContainer.classList.remove("hidden-init")
+    owlsContainer.classList.remove("showing")
+
+    owlsContainer.querySelectorAll(".owl-card").forEach(card => card.classList.add("show-floating"))
+
+    owlsContainer.querySelectorAll(".message-line").forEach(line => {
       if (line.textContent.trim() === "") {
         line.textContent = line.dataset.message || ""
       }
     })
 
-    // ✅ フクちゃん画像が消えてたら強制表示（CSS次第で最低限これ）
-    const img = document.querySelector('.fukuchan-global')
+    const img = document.querySelector(".fukuchan-global")
     if (img) {
-      img.style.opacity = '1'
-      img.style.display = 'block'
-      img.classList.add('fukuchan-visible')
+      img.style.opacity = "1"
+      img.style.display = "block"
+      img.classList.add("fukuchan-visible")
     }
   }
 
-  // ★ 梟のメッセージを自動表示
   showAllOwlMessages() {
-    const owlCards = document.querySelectorAll('.owl-card')
+    // 既存の梟タイマー止める（多重起動対策）
+    this.stopOwlMessages()
+
+    const owlCards = document.querySelectorAll(".owl-card")
 
     owlCards.forEach((card, cardIndex) => {
       const id = setTimeout(() => {
-        const messageLines = card.querySelectorAll('.message-line')
+        const messageLines = card.querySelectorAll(".message-line")
         this.showOwlMessages(messageLines)
-      }, cardIndex * 500) // カードごとに0.5秒遅延
+      }, cardIndex * 500)
 
-      // タイマー追跡
-      if (!this.activeTimeouts) this.activeTimeouts = []
-      this.activeTimeouts.push(id)
+      this.owlTimeoutIds.push(id)
     })
   }
 
-  // 梟メッセージを順番に音付きで表示
   showOwlMessages(messageLines) {
     messageLines.forEach((line, index) => {
       const id = setTimeout(() => {
         const message = line.dataset.message
         this.typeOwlMessage(line, message)
-      }, index * 2500) // 2.5秒ずつ遅延
+      }, index * 2500)
 
-      // タイマー追跡
-      if (!this.activeTimeouts) this.activeTimeouts = []
-      this.activeTimeouts.push(id)
+      this.owlTimeoutIds.push(id)
     })
   }
 
-  // 音付きタイプライター効果
   typeOwlMessage(element, text) {
     let index = 0
     element.textContent = ""
@@ -713,32 +776,27 @@ export default class extends Controller {
       if (index < text.length) {
         element.textContent = text.substring(0, index + 1)
 
-        // 音を鳴らす（スペースは鳴らさない）
-        if (text[index] !== ' ') {
+        if (text[index] !== " " && this.shouldPlayTypingSfx()) {
           this.createTypingSoundOwl()
         }
 
-        // 🔹 句読点で少し間を入れる
-        let delay = 80 // 通常速度
+        let delay = 80
         const char = text[index]
-        if (char === '！' || char === '!' || char === '？' || char === '、' || char === '。') {
-          delay = 600 // 0.6秒くらい一時停止
+        if (char === "！" || char === "!" || char === "？" || char === "、" || char === "。") {
+          delay = 600
         }
 
         index++
         const id = setTimeout(typeWriter, delay)
-        if (!this.activeTimeouts) this.activeTimeouts = []
-        this.activeTimeouts.push(id)
+        this.owlTimeoutIds.push(id)
       }
     }
 
     typeWriter()
   }
 
-  // 🦉 フクロウのタイプ音
   createTypingSoundOwl() {
     try {
-      // 1️⃣ 共通AudioContextを再利用
       if (!this.sharedAudioCtx) {
         this.sharedAudioCtx = window._sharedAudioContext || new (window.AudioContext || window.webkitAudioContext)()
         window._sharedAudioContext = this.sharedAudioCtx
@@ -767,10 +825,8 @@ export default class extends Controller {
     }
   }
 
-  // ⚙️ アドバイス（黒板メッセージ）用のタイプ音
   createTypingSoundAdvice() {
     try {
-      // 同じ共有コンテキストを利用
       if (!this.sharedAudioCtx) {
         this.sharedAudioCtx = window._sharedAudioContext || new (window.AudioContext || window.webkitAudioContext)()
         window._sharedAudioContext = this.sharedAudioCtx
@@ -798,46 +854,25 @@ export default class extends Controller {
     }
   }
 
-  // === Turboなどでページ遷移時に確実に呼ぶ ===
   disconnect() {
-    console.log("🦉 Controller disconnected — cleaning up...");
+    console.log("🦉 Controller disconnected — cleaning up...")
 
-    // すべての setTimeout を停止（タイピング含む）
-    if (this.activeTimeouts && this.activeTimeouts.length > 0) {
-      this.activeTimeouts.forEach(id => clearTimeout(id));
-      this.activeTimeouts = [];
-    }
+    // 物語/本文/梟を全部止める
+    this.stopStory()
+    this.stopAdviceTyping()
+    this.stopOwlMessages()
 
-    // setInterval, animationFrame も停止
     if (this.typingInterval) {
-      clearInterval(this.typingInterval);
-      this.typingInterval = null;
-    }
-    if (this.animationFrame) {
-      cancelAnimationFrame(this.animationFrame);
-      this.animationFrame = null;
-    }
-
-    // AudioContext を閉じて音を止める
-    if (this.audioCtx && this.audioCtx.state !== "closed") {
-      try {
-        this.audioCtx.close();
-      } catch (_) { }
-      this.audioCtx = null;
-    }
-
-    if (this.audioCtxAdvice && this.audioCtxAdvice.state !== "closed") {
-      try {
-        this.audioCtxAdvice.close();
-      } catch (_) { }
-      this.audioCtxAdvice = null;
+      clearInterval(this.typingInterval)
+      this.typingInterval = null
     }
 
     if (this.sharedAudioCtx && this.sharedAudioCtx.state !== "closed") {
       try { this.sharedAudioCtx.close() } catch (_) { }
       this.sharedAudioCtx = null
+      window._sharedAudioContext = null
     }
 
-    console.log("🧹 Cleaned up all audio & timers.");
+    console.log("🧹 Cleaned up all audio & timers.")
   }
 }

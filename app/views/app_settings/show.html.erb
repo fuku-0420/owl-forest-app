@@ -1,26 +1,48 @@
-<div class="page-container app-settings-page">
+<div class="page-container app-settings-page" data-controller="app-settings">
   <div class="page-header">
     <h1>アプリ設定</h1>
   </div>
 
   <div class="page-body">
     <div class="settings-panel">
-      <button class="settings-row" type="button" data-action="click->settings#toggleBgmPopup">
-        BGM 再生前のポップアップ <span class="settings-value" data-settings-target="bgmPopup">ON</span>
+      <!-- 🔊 BGM 自動再生 -->
+      <button
+        class="settings-row"
+        type="button"
+        data-action="click->app-settings#toggleBgmPopup"
+      >
+        BGM再生前のポップアップ（OFFの場合はポップアップなし・BGMなしで進みます）
+        <span class="settings-value" data-app-settings-target="bgmPopup">ON</span>
       </button>
 
-      <button class="settings-row" type="button" data-action="click->settings#toggleSfx">
-        効果音（ピコピコ） <span class="settings-value" data-settings-target="sfx">ON</span>
+      <!-- 🔔 効果音 -->
+      <button
+        class="settings-row"
+        type="button"
+        data-action="click->app-settings#toggleSfx"
+      >
+        効果音（ピコピコ）
+        <span class="settings-value" data-app-settings-target="sfx">ON</span>
       </button>
 
-      <button class="settings-row" type="button" data-action="click->settings#toggleTyping">
-        アドバイステキスト演出 <span class="settings-value" data-settings-target="typing">ON</span>
+      <!-- ✍️ アドバイス演出 -->
+      <button
+        class="settings-row"
+        type="button"
+        data-action="click->app-settings#toggleTyping"
+      >
+        アドバイステキスト演出
+        <span class="settings-value" data-app-settings-target="typing">ON</span>
       </button>
 
+      <!-- 🌲 背景設定 -->
       <div class="settings-row select-row">
         背景設定
-        <select data-action="change->settings#changeBackground" data-settings-target="bgMode">
-          <option value="auto">自動（季節）</option>
+        <select
+          data-action="change->app-settings#changeBackground"
+          data-app-settings-target="bgMode"
+        >
+          <option value="auto">自動（時間帯）</option>
           <option value="summer">固定：夏</option>
           <option value="autumn">固定：秋</option>
         </select>
@@ -28,7 +50,8 @@
     </div>
 
     <p class="settings-note">
-      ※ 設定はこの端末に保存されます（sessionStorage）。ログイン連携は今後対応予定。
+      ※ 設定はこの端末に保存されます（sessionStorage）。<br>
+      ※ BGMは手動でもON / OFFできます。
     </p>
   </div>
 </div>
