@@ -27,7 +27,6 @@
 
 /* gentle浮遊アニメーション */
 @keyframes gentle-float {
-
   0%,
   100% {
     transform: translateY(0px);
@@ -57,7 +56,6 @@
 }
 
 @keyframes blink {
-
   0%,
   50% {
     opacity: 1;
@@ -233,7 +231,7 @@
   font-size: 1.4rem;
   font-weight: bold;
   color: #0d1a0d;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
 .owl-menu {
@@ -362,7 +360,8 @@
 /* 🌟 ホバーで光が強くなる＋少し浮く */
 .blackboard .board-button:hover {
   transform: scale(1.07);
-  box-shadow: 0 0 30px rgba(0, 255, 255, 0.9), 0 0 50px rgba(0, 255, 255, 0.6);
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.9),
+    0 0 50px rgba(0, 255, 255, 0.6);
   background-color: #28ffffc0;
   color: #ff4444;
 }
@@ -408,9 +407,8 @@
   font-size: 13px;
 
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
-
 
 /* =========================================================
   ✏️ 4. タイピング・物語・スキップ・アドバイス関連
@@ -560,7 +558,9 @@
   background: rgba(178, 252, 109, 0.75);
   color: #1b1b1b;
 }
-.favorite-button:hover { transform: scale(1.05); }
+.favorite-button:hover {
+  transform: scale(1.05);
+}
 
 .advice-text {
   position: absolute;
@@ -692,7 +692,7 @@
   - 未設定でも見た目が自然 / 文字のはみ出し防止
 ========================================================= */
 
-.user-mini-profile--link{
+.user-mini-profile--link {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -708,9 +708,9 @@
   color: inherit;
 
   border-radius: 14px;
-  background: rgba(255,255,255,0.18);
-  border: 1px solid rgba(255,255,255,0.22);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.10);
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.10);
 
   /* ガラス感ちょい足し（嫌なら消してOK） */
   backdrop-filter: blur(6px);
@@ -719,24 +719,24 @@
   transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
 }
 
-.user-mini-profile--link:hover{
+.user-mini-profile--link:hover {
   filter: brightness(1.05);
   transform: translateY(-1px);
-  box-shadow: 0 10px 22px rgba(0,0,0,0.14);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.14);
 }
 
-.user-mini-profile--link:active{
+.user-mini-profile--link:active {
   transform: translateY(0);
 }
 
 /* 右側テキスト */
-.user-mini-profile__text{
+.user-mini-profile__text {
   text-align: right;
   min-width: 0;
 }
 
 /* 名前（長い時に省略） */
-.user-mini-profile__name{
+.user-mini-profile__name {
   font-weight: 900;
   font-size: 14px;
   line-height: 1.2;
@@ -748,7 +748,7 @@
 }
 
 /* ひとこと（1行で省略して崩れ防止） */
-.user-mini-profile__bio{
+.user-mini-profile__bio {
   font-size: 12px;
   opacity: 0.9;
   line-height: 1.2;
@@ -760,7 +760,7 @@
 }
 
 /* アイコン枠 */
-.user-mini-profile__avatar{
+.user-mini-profile__avatar {
   width: 44px;
   height: 44px;
   border-radius: 9999px;
@@ -770,8 +770,8 @@
   place-items: center;
 
   background: rgba(255, 255, 255, 0.25);
-  border: 1px solid rgba(255,255,255,0.55);
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
 
   flex: 0 0 44px;
 
@@ -780,7 +780,7 @@
 }
 
 /* 画像 */
-.user-mini-profile__img{
+.user-mini-profile__img {
   width: 100%;
   height: 100%;
   display: block;
@@ -796,27 +796,27 @@
 }
 
 /* プレースホルダー（頭文字） */
-.user-mini-profile__placeholder{
+.user-mini-profile__placeholder {
   font-weight: 900;
   font-size: 18px;
-  color: rgba(0,0,0,0.78);
-  text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+  color: rgba(0, 0, 0, 0.78);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
 /* スマホ微調整 */
-@media (max-width: 768px){
+@media (max-width: 768px) {
   .user-mini-profile__name,
-  .user-mini-profile__bio{
+  .user-mini-profile__bio {
     max-width: 140px;
   }
 
-  .user-mini-profile__avatar{
+  .user-mini-profile__avatar {
     width: 40px;
     height: 40px;
     flex-basis: 40px;
   }
 
-  .user-mini-profile__placeholder{
+  .user-mini-profile__placeholder {
     font-size: 16px;
   }
 }
@@ -841,36 +841,31 @@
   font-weight: 900;
   letter-spacing: 0.02em;
   color: #1e2a1f;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.65);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.65);
 }
 
-/* 本体カード */
-.profile-card {
+/* 本体カード（※重複してたので1つに統合） */
+.profile-page .profile-card {
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.82);
-  border: 1px solid rgba(0,0,0,0.08);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
   overflow: hidden;
 }
 
 /* 上部ヘッダー */
-.profile-card::before{
-  content:"";
-  display:block;
+.profile-page .profile-card::before {
+  content: "";
+  display: block;
   height: 110px;
-  background: radial-gradient(circle at 30% 20%, rgba(120,255,170,0.35), transparent 55%),
-              linear-gradient(90deg, rgba(60,200,120,0.22), rgba(255,200,80,0.18));
+  background: radial-gradient(circle at 30% 20%, rgba(120, 255, 170, 0.35), transparent 55%),
+    linear-gradient(90deg, rgba(60, 200, 120, 0.22), rgba(255, 200, 80, 0.18));
 }
 
-/* 内側 */
-.profile-card {
-  padding: 0;
-}
-
-.profile-card .profile-avatar,
-.profile-card .profile-info,
-.profile-card .form-actions,
-.profile-card .settings-subnav {
+.profile-page .profile-card .profile-avatar,
+.profile-page .profile-card .profile-info,
+.profile-page .profile-card .form-actions,
+.profile-page .profile-card .settings-subnav {
   padding: 18px 24px;
 }
 
@@ -889,12 +884,12 @@
   border-radius: 9999px;
   overflow: hidden;
 
-  border: 3px solid rgba(255,255,255,0.9);
-  box-shadow: 0 10px 24px rgba(0,0,0,0.18);
-  background: rgba(255,255,255,0.35);
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  background: rgba(255, 255, 255, 0.35);
 }
 
-.profile-avatar .avatar-img{
+.profile-avatar .avatar-img {
   width: 120px;
   height: 120px;
   object-fit: cover;
@@ -902,35 +897,35 @@
   display: block;
 }
 
-.profile-avatar .avatar-placeholder{
+.profile-avatar .avatar-placeholder {
   display: grid;
   place-items: center;
   font-weight: 900;
   font-size: 34px;
-  color: rgba(20,40,25,0.75);
+  color: rgba(20, 40, 25, 0.75);
 }
 
 /* 情報：見出しっぽく整える */
-.profile-info p{
+.profile-info p {
   margin: 10px 0;
   line-height: 1.7;
   color: #172317;
 }
 
-.profile-info strong{
+.profile-info strong {
   display: inline-block;
   width: 70px;
-  color: rgba(20,40,25,0.75);
+  color: rgba(20, 40, 25, 0.75);
 }
 
 /* ボタン類 */
-.form-actions{
+.form-actions {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
 }
 
-.primary-btn{
+.primary-btn {
   display: inline-block;
   padding: 10px 14px;
   border-radius: 12px;
@@ -938,29 +933,29 @@
   font-weight: 800;
 
   background: rgba(255, 153, 0, 0.85);
-  border: 1px solid rgba(255,153,0,0.45);
+  border: 1px solid rgba(255, 153, 0, 0.45);
   color: #fff;
-  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
 
   transition: transform 0.15s ease, filter 0.15s ease;
 }
 
-.primary-btn:hover{
+.primary-btn:hover {
   filter: brightness(1.03);
   transform: translateY(-1px);
 }
 
-.settings-subnav{
-  border-top: 1px solid rgba(0,0,0,0.06);
+.settings-subnav {
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-.sub-link{
-  color: rgba(20,40,25,0.75);
+.sub-link {
+  color: rgba(20, 40, 25, 0.75);
   text-decoration: none;
   font-weight: 700;
 }
 
-.sub-link:hover{
+.sub-link:hover {
   text-decoration: underline;
 }
 
@@ -986,13 +981,14 @@ body.owl-show-page {
   min-height: 100%;
 }
 
-.owl-profile {
+/* ✅ showページ専用に限定（漏れ防止） */
+body.owl-show-page .owl-profile {
   max-width: 1300px;
   margin: 0 auto;
   padding: 20px;
 }
 
-.profile-card {
+body.owl-show-page .profile-card {
   border: 3px solid #b5dbff8b;
   border-radius: 15px;
   padding: 30px;
@@ -1000,11 +996,11 @@ body.owl-show-page {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.owl-messages {
+body.owl-show-page .owl-messages {
   margin: 30px 0;
 }
 
-.action-buttons {
+body.owl-show-page .action-buttons {
   text-align: center;
   margin-top: 30px;
 }
@@ -1014,8 +1010,7 @@ body.owl-show-page h1 {
   font-size: 2.2em;
   font-weight: bold;
   text-align: center;
-  text-shadow:
-    -1px -1px 0 rgba(0, 0, 0, 0.9),
+  text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.9),
     1px -1px 0 rgba(0, 0, 0, 0.9),
     -1px 1px 0 rgba(0, 0, 0, 0.9),
     1px 1px 0 rgba(0, 0, 0, 0.9);
@@ -1026,8 +1021,7 @@ body.owl-show-page .message-box {
   background-color: #b5dbff8b;
   border-radius: 10px;
   color: #000000;
-  text-shadow:
-    -1px -1px 0 rgba(255, 255, 255, 0.8),
+  text-shadow: -1px -1px 0 rgba(255, 255, 255, 0.8),
     1px -1px 0 rgba(255, 255, 255, 0.8),
     -1px 1px 0 rgba(255, 255, 255, 0.8),
     1px 1px 0 rgba(255, 255, 255, 0.8);
