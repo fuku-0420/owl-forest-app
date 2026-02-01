@@ -37,9 +37,9 @@ Rails.application.configure do
   # =========================================================
   # ActiveStorage（本番）
   # =========================================================
-  # 再デプロイ後も画像を保持したいので、S3互換ストレージ（:amazon）を使用する
-  # ※ storage.yml の amazon 設定 + Render 側の環境変数が必須
-  config.active_storage.service = :amazon
+  # 将来的に S3/R2 を使う場合は :amazon に切り替える
+  config.active_storage.service = :local
+  # config.active_storage.service = :amazon
 
   # =========================================================
   # SSL / ログ
