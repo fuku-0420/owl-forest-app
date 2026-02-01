@@ -11,13 +11,9 @@ local:
 # =========================
 amazon:
   service: S3
-  access_key_id: <%= ENV.fetch("AWS_ACCESS_KEY_ID") %>
-  secret_access_key: <%= ENV.fetch("AWS_SECRET_ACCESS_KEY") %>
+  access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>
+  secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>
   region: <%= ENV.fetch("AWS_REGION", "auto") %>
-  bucket: <%= ENV.fetch("AWS_BUCKET") %>
-
-  # Cloudflare R2 / Wasabi 等を使う場合に必要
+  bucket: <%= ENV["AWS_BUCKET"] %>
   endpoint: <%= ENV["AWS_ENDPOINT"] %>
-
-  # R2 では true 推奨（S3互換のパス形式）
   force_path_style: <%= ENV["AWS_FORCE_PATH_STYLE"] == "true" %>
