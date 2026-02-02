@@ -1,13 +1,30 @@
 ja:
   # =========================
-  # モデル・属性
+  # Rails標準エラーメッセージ形式
+  # =========================
+  # デフォルトは「属性名 + メッセージ」だが、
+  # セキュリティ・UXの観点で
+  # メッセージ単体表示にしたいため %{message} を使用
+  errors:
+    format: "%{message}"
+
+    messages:
+      # devise/shared/_error_messages.html.erb の見出し用
+      not_saved:
+        one: "エラーが発生しました"
+        other: "%{count}件のエラーがあります"
+
+  # =========================
+  # ActiveRecord
   # =========================
   activerecord:
+    # --- モデル名 ---
     models:
       advice_suggestion: "アドバイス"
       user: "ユーザー"
       profile: "プロフィール"
 
+    # --- 属性名 ---
     attributes:
       advice_suggestion:
         category: "カテゴリ"
@@ -26,26 +43,42 @@ ja:
         bio: "ひとこと"
         avatar: "アイコンURL"
 
+    # --- エラーメッセージ ---
     errors:
+      # ===== フォールバック用（英語に戻らないための保険）=====
+      messages:
+        taken: "この値は使用できません"
+        too_short: "%{count}文字以上で入力してください"
+        confirmation: "確認用の入力が一致しません"
+
+      # ===== モデル・属性ごとの最優先定義 =====
       models:
         advice_suggestion:
           attributes:
             category:
-              required: "を選択してください"
-              blank: "を選択してください"
+              required: "カテゴリを選択してください"
+              blank: "カテゴリを選択してください"
             body:
-              blank: "を入力してください"
+              blank: "本文を入力してください"
 
         user:
           attributes:
-            password:
-              too_short: "は%{count}文字以上で入力してください"
             email:
-              blank: "を入力してください"
-              taken: "はすでに使用されています"
+              blank: "メールアドレスを入力してください"
+              # 実在アドレスの有無を推測させない（セキュリティ配慮）
+              taken: "こちらのメールアドレスは登録できません"
+
+            password:
+              blank: "パスワードを入力してください"
+              too_short: "パスワードは%{count}文字以上で入力してください"
+
+            password_confirmation:
+              blank: "確認用パスワードを入力してください"
+              confirmation: "パスワード（確認）が一致しません"
+
             current_password:
-              blank: "を入力してください"
-              invalid: "が正しくありません"
+              blank: "現在のパスワードを入力してください"
+              invalid: "現在のパスワードが正しくありません"
 
   # =========================
   # enum 翻訳
@@ -63,6 +96,7 @@ ja:
   time:
     formats:
       default: "%Y/%m/%d %H:%M"
+
   date:
     formats:
       default: "%Y/%m/%d"
