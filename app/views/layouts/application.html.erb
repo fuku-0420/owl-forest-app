@@ -15,29 +15,28 @@
 
     <!-- OGP設定 -->
     <meta property="og:title" content="フクちゃんお悩み掲示板">
-    <meta property="og:description" content="RUNTEQ受講生の『あの時の経験』を後輩に届ける学習サポートアプリです。">
+    <meta property="og:description" content="学習の悩み・エラー・勉強法まで。後輩に届けるナレッジ共有アプリです。">
     <meta property="og:image" content="https://owl-forest-app.onrender.com/ogp.png">
     <meta property="og:url" content="https://owl-forest-app.onrender.com">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
 
-    <!-- 🦉 Favicon設定 -->
+    <!-- 🦉 Favicon -->
     <link rel="icon" href="<%= asset_path('favicon.png') %>" type="image/png">
     <link rel="apple-touch-icon" href="<%= asset_path('favicon.png') %>">
     <link rel="icon" href="<%= asset_path('favicon.svg') %>" type="image/svg+xml">
 
-    <!-- Rails 8 Propshaft対応の正しいアセット読み込み -->
+    <!-- Assets (Rails 8 / Propshaft) -->
     <%= stylesheet_link_tag "app", data: { turbo_track: "reload" } %>
     <%= stylesheet_link_tag "owls", data: { turbo_track: "reload" } %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <!-- Stimulusで横画面固定を制御 -->
   <body
     data-controller="orientation"
     class="<%= yield(:body_class) %> <%= 'no-scroll' if controller_name == 'owls' && action_name == 'index' %>">
 
-    <%#  auth_links は owls#index（/owls）だけ表示 %>
+    <%# auth_links は owls#index のみ表示 %>
     <% if controller_name == "owls" && action_name == "index" %>
       <%= render "shared/auth_links" %>
     <% end %>

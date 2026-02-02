@@ -20,22 +20,29 @@
             method: :patch,
             class: "settings-form" do |f| %>
 
+        <!-- 新しいパスワード -->
         <div class="form-group">
           <%= f.label :password, "新しいパスワード" %>
-          <%= f.password_field :password, autocomplete: "new-password" %>
+          <%= f.password_field :password,
+                autocomplete: "new-password" %>
+
           <% if @minimum_password_length %>
             <p class="form-note">※ <%= @minimum_password_length %>文字以上</p>
           <% end %>
         </div>
 
+        <!-- 新しいパスワード（確認） -->
         <div class="form-group">
           <%= f.label :password_confirmation, "新しいパスワード（確認）" %>
-          <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+          <%= f.password_field :password_confirmation,
+                autocomplete: "new-password" %>
         </div>
 
+        <!-- 現在のパスワード -->
         <div class="form-group">
           <%= f.label :current_password, "現在のパスワード（変更の保存に必要）" %>
-          <%= f.password_field :current_password, autocomplete: "current-password" %>
+          <%= f.password_field :current_password,
+                autocomplete: "current-password" %>
         </div>
 
         <div class="form-actions">

@@ -4,8 +4,6 @@
   </div>
 
   <div class="page-body">
-    <%= render "devise/shared/error_messages", resource: resource %>
-
     <section class="settings-section">
       <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "settings-form" }) do |f| %>
         <div class="form-group">
@@ -27,6 +25,9 @@
           </div>
         <% end %>
 
+        <%# ★ ログイン失敗などの alert をフォーム内（記憶するの下）に表示 %>
+        <%= render "shared/flash", only: [:alert] %>
+
         <div class="form-actions">
           <%= f.submit "ログイン", class: "primary-btn" %>
         </div>
@@ -38,4 +39,3 @@
     </section>
   </div>
 </div>
-
