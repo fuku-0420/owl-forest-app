@@ -626,6 +626,8 @@ export default class extends Controller {
 
     if (!this.isTypingEnabled()) {
       element.textContent = text
+      // タイピングOFFでも最後に下へ
+      requestAnimationFrame(() => this.scrollAdviceToBottom())
       return
     }
 
@@ -635,6 +637,9 @@ export default class extends Controller {
     const tick = () => {
       if (i < text.length) {
         element.textContent = text.slice(0, i + 1) + "|"
+
+        // 表示更新に合わせて追従スクロール
+        requestAnimationFrame(() => this.scrollAdviceToBottom())
 
         if (withSound && this.shouldPlayTypingSfx() && text[i] !== " " && text[i] !== "\n") {
           this.createTypingSoundAdvice()
@@ -649,6 +654,8 @@ export default class extends Controller {
       } else {
         element.textContent = text
         this.adviceTimeoutId = null
+
+        requestAnimationFrame(() => this.scrollAdviceToBottom())
       }
     }
 
@@ -901,6 +908,17 @@ export default class extends Controller {
     } catch (e) {
       console.log("音の再生ができませんでした(Advice):", e.message)
     }
+  }
+
+  scrollAdviceToBottom() {
+    const el = this.element.querySelector(".advice-text")
+    if (!el) return
+
+    // ユーザーが手で上にスクロールして読んでる時は邪魔しない
+    const nearBottom = (el.scrollHeight - el.scrollTop - el.clientHeight) < 40
+    if (!nearBottom) return
+
+    el.scrollTop = el.scrollHeight
   }
 
   disconnect() {
