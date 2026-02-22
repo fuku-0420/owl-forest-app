@@ -2,31 +2,36 @@ ja:
   # =========================
   # Rails標準エラーメッセージ形式
   # =========================
-  # デフォルトは「属性名 + メッセージ」だが、
-  # セキュリティ・UXの観点で
-  # メッセージ単体表示にしたいため %{message} を使用
   errors:
+    # 属性名を付けずメッセージ単体表示
     format: "%{message}"
 
     messages:
-      # devise/shared/_error_messages.html.erb の見出し用
       not_saved:
         one: "エラーが発生しました"
         other: "%{count}件のエラーがあります"
+
+      # フォールバック（英語に戻らないため）
+      blank: "入力してください"
+      taken: "この値は使用できません"
+      too_short: "%{count}文字以上で入力してください"
+      confirmation: "確認用の入力が一致しません"
 
   # =========================
   # ActiveRecord
   # =========================
   activerecord:
+
     # --- モデル名 ---
     models:
-      advice_suggestion: "アドバイス"
+      advice_suggestion: "お悩み投稿"
       user: "ユーザー"
       profile: "プロフィール"
 
     # --- 属性名 ---
     attributes:
       advice_suggestion:
+        title: "タイトル"
         category: "カテゴリ"
         body: "本文"
         status: "ステータス"
@@ -43,29 +48,26 @@ ja:
         bio: "ひとこと"
         avatar: "アイコンURL"
 
-    # --- エラーメッセージ ---
+    # --- エラーメッセージ（モデル別最優先） ---
     errors:
-      # ===== フォールバック用（英語に戻らないための保険）=====
-      messages:
-        taken: "この値は使用できません"
-        too_short: "%{count}文字以上で入力してください"
-        confirmation: "確認用の入力が一致しません"
-
-      # ===== モデル・属性ごとの最優先定義 =====
       models:
+
         advice_suggestion:
           attributes:
+            title:
+              blank: "タイトルを入力してください"
+
+            body:
+              blank: "本文を入力してください"
+
             category:
               required: "カテゴリを選択してください"
               blank: "カテゴリを選択してください"
-            body:
-              blank: "本文を入力してください"
 
         user:
           attributes:
             email:
               blank: "メールアドレスを入力してください"
-              # 実在アドレスの有無を推測させない（セキュリティ配慮）
               taken: "こちらのメールアドレスは登録できません"
 
             password:

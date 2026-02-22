@@ -1,7 +1,7 @@
 <div class="page-container advice-form">
 
   <div class="page-header">
-    <h1>アドバイス案募集フォーム</h1>
+    <h1>みんなのお悩み解決 投稿フォーム</h1>
   </div>
 
   <% if @advice_suggestion.errors.any? %>
@@ -17,35 +17,43 @@
   <div class="page-body">
     <%= form_with model: @advice_suggestion do |f| %>
 
+      <!-- タイトル（黒板のボタン名になる） -->
       <div class="form-group">
-        <%= f.label :category_id, "カテゴリ", class: "form-label" %>
-        <%= f.collection_select :category_id, Category.all, :id, :name,
-              { prompt: "選択してください" },
-              { class: "form-control" } %>
+        <%= f.label :title, "タイトル", class: "form-label" %>
+        <%= f.text_field :title,
+              class: "form-control",
+              placeholder: "例：Renderで500エラーが出た / NoMethodErrorが消えない" %>
       </div>
 
+      <!-- 本文 -->
       <div class="form-group">
-        <%= f.label :body, "本文", class: "form-label" %>
-        <%= f.text_area :body, rows: 10, class: "form-control form-textarea" %>
+        <%= f.label :body, "本文（状況・原因・解決方法など）", class: "form-label" %>
+        <%= f.text_area :body,
+              rows: 12,
+              class: "form-control form-textarea",
+              placeholder: "▼ 状況\n何をしようとしていたか\n\n▼ エラー内容\n出たエラーを簡潔に\n\n▼ 原因\n最終的に何が原因だったか\n\n▼ 解決方法\nどう直したか\n\n▼ 次に確認すべきこと\n同じ人が見るなら何を見るべきか" %>
       </div>
 
       <div class="form-note">
-        <p>投稿されたアドバイスは管理者が内容を確認・調整したうえで、承認された場合に掲示板へ掲載されます。</p>
+        <p>学習中に<strong>解決できたつまずき</strong>を共有する場所です。</p>
+        <p>投稿内容は管理者が確認・整理したうえで、承認された場合に掲示板へ掲載されます。</p>
+        <p>エラー文はそのまま貼ってOKです。環境（Railsバージョンなど）が分かると助かります。</p>
         <p>掲載までにお時間をいただく場合があります。承認状況は投稿一覧ページから確認できます。</p>
       </div>
 
       <div class="form-actions">
-        <%= f.submit "投稿", class: "btn-submit" %>
+        <%= f.submit "投稿する", class: "btn-submit" %>
       </div>
+
     <% end %>
 
-      <div class="footer-links">
-        <%= link_to "利用規約", terms_path, class: "footer-link" %>
-        <span class="footer-sep">|</span>
-        <%= link_to "プライバシーポリシー", privacy_path, class: "footer-link" %>
-        <span class="footer-sep">|</span>
-        <%= link_to "お問い合わせ", new_contact_path, class: "footer-link" %>
-      </div>
+    <div class="footer-links">
+      <%= link_to "利用規約", terms_path, class: "footer-link" %>
+      <span class="footer-sep">|</span>
+      <%= link_to "プライバシーポリシー", privacy_path, class: "footer-link" %>
+      <span class="footer-sep">|</span>
+      <%= link_to "お問い合わせ", new_contact_path, class: "footer-link" %>
+    </div>
 
   </div>
 </div>

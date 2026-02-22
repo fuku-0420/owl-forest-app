@@ -427,7 +427,7 @@ export default class extends Controller {
     const blackboard = this.blackboardTarget
 
     const title = document.createElement("h2")
-    title.textContent = "🦉 フクちゃんお悩み掲示板 🦉"
+    title.textContent = "🦉 フクちゃん学習掲示板 🦉"
     title.classList.add("board-title")
 
     const categories = this.categoriesValue || []
