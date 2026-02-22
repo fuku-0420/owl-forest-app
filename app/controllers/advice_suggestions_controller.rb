@@ -1,5 +1,6 @@
 class AdviceSuggestionsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_trouble_category, only: %i[new create]
 
   def index
     base = current_user.advice_suggestions.includes(:category).order(created_at: :desc)
@@ -19,6 +20,7 @@ class AdviceSuggestionsController < ApplicationController
 
   def create
     @advice_suggestion = current_user.advice_suggestions.new(advice_suggestion_params)
+    @advice_suggestion.category = @trouble_category
     @advice_suggestion.status = :pending
 
     if @advice_suggestion.save
@@ -31,6 +33,10 @@ class AdviceSuggestionsController < ApplicationController
   private
 
   def advice_suggestion_params
-    params.require(:advice_suggestion).permit(:category_id, :body)
+    params.require(:advice_suggestion).permit(:title, :body)
+  end
+
+  def set_trouble_category
+    @trouble_category = Category.find_by!(name: "みんなのお悩み解決")
   end
 end
