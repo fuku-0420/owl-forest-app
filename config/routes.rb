@@ -14,12 +14,19 @@ Rails.application.routes.draw do
 
   # 管理者
   namespace :admin do
-    resources :advice_suggestions, only: %i[index show] do
+    resources :advice_suggestions, only: %i[index show destroy] do
       member do
-        patch :approve
+        get  :new_advice
+        post :create_advice
+        patch :create_advice
         patch :reject
+        patch :restore
+        delete :delete_forever
+        # patch :approve --- APPROVEはcreate_adviceに統合 ---
       end
     end
+
+    resources :advices, only: %i[index show edit update destroy]
   end
 
   # ユーザー投稿

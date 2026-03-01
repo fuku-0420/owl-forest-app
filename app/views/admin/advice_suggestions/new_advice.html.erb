@@ -1,0 +1,88 @@
+<div class="page-container admin-advice-suggestions-page admin-advice-suggestion-new">
+  <div class="page-header">
+    <h1>編集して公開</h1>
+  </div>
+
+  <div class="page-body">
+
+    <% if flash[:alert].present? %>
+      <p class="alert"><%= flash[:alert] %></p>
+    <% end %>
+
+    <!-- 投稿メタ情報 -->
+    <div class="admin-show-meta">
+      <div class="admin-show-meta__row">
+        <span class="label">投稿者</span>
+        <span class="value"><%= @advice_suggestion.user.display_name_or_email %></span>
+      </div>
+
+      <div class="admin-show-meta__row">
+        <span class="label">タイトル</span>
+        <span class="value"><%= @advice_suggestion.title.presence || @advice_suggestion.body.to_s.truncate(30) %></span>
+      </div>
+
+      <div class="admin-show-meta__row">
+        <span class="label">投稿日時</span>
+        <span class="value"><%= l(@advice_suggestion.created_at) %></span>
+      </div>
+    </div>
+
+    <hr>
+
+    <h2 class="admin-show-title">元の投稿（原文）</h2>
+
+    <div class="admin-original-box" style="margin-bottom: 20px;">
+      <div class="admin-original-box__body">
+        <%= simple_format(h(@advice_suggestion.body)) %>
+      </div>
+      <div class="admin-original-box__note">
+        ※原文は確認用に随時保存。編集は下のフォームから実行。
+      </div>
+    </div>
+
+    <hr>
+
+    <h2 class="admin-show-title">公開用に編集</h2>
+
+    <% if @advice.errors.any? %>
+      <div class="admin-errors">
+        <p class="admin-errors__title">入力に不備があります</p>
+        <ul class="admin-errors__list">
+          <% @advice.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%= form_with model: @advice,
+          url: create_advice_admin_advice_suggestion_path(@advice_suggestion),
+          local: true do |f| %>
+
+      <div class="admin-form-group">
+        <%= f.label :title, "タイトル" %>
+        <%= f.text_field :title, class: "admin-input" %>
+        <p class="admin-form-hint">※一覧で見やすい短いタイトル推奨（10文字前後）</p>
+      </div>
+
+      <div class="admin-form-group">
+        <%= f.label :body, "本文" %>
+        <%= f.text_area :body, rows: 12, class: "admin-textarea" %>
+      </div>
+
+      <div class="admin-actions">
+        <%= f.submit "公開する", class: "admin-btn approve" %>
+
+        <%= link_to "詳細に戻る",
+              admin_advice_suggestion_path(@advice_suggestion),
+              class: "admin-btn detail" %>
+
+        <%= link_to "一覧に戻る",
+              admin_advice_suggestions_path,
+              class: "admin-btn detail" %>
+      </div>
+
+    <% end %>
+
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<div class="page-container admin-advices-page admin-advice-edit">
+  <div class="page-header">
+    <h1>公開済みアドバイスを編集</h1>
+  </div>
+
+  <div class="page-body">
+    <%= form_with model: @advice, url: admin_advice_path(@advice), local: true do |f| %>
+      <div class="admin-form-group">
+        <%= f.label :category_id, "カテゴリ" %>
+        <%= f.collection_select :category_id, Category.all, :id, :name, {}, class: "admin-input" %>
+      </div>
+
+      <div class="admin-form-group">
+        <%= f.label :title, "タイトル" %>
+        <%= f.text_field :title, class: "admin-input" %>
+      </div>
+
+      <div class="admin-form-group">
+        <%= f.label :body, "本文" %>
+        <%= f.text_area :body, rows: 12, class: "admin-textarea" %>
+      </div>
+
+      <div class="admin-actions">
+        <%= f.submit "更新する", class: "admin-btn approve" %>
+        <%= link_to "戻る", admin_advices_path, class: "admin-btn detail" %>
+      </div>
+    <% end %>
+  </div>
+</div>

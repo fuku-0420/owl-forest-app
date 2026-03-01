@@ -1,0 +1,49 @@
+<div class="page-container admin-advices-page">
+  <div class="page-header">
+    <h1>公開済みアドバイス一覧</h1>
+  </div>
+
+  <div class="page-body">
+    <% if notice.present? %>
+      <p class="notice"><%= notice %></p>
+    <% end %>
+
+    <% if @advices.any? %>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>カテゴリ</th>
+            <th>タイトル</th>
+            <th>更新日時</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @advices.each do |a| %>
+            <tr>
+              <td><%= a.category&.name %></td>
+              <td><%= link_to a.title, admin_advice_path(a) %></td>
+              <td><%= l(a.updated_at) %></td>
+              <td>
+                <div class="admin-actions">
+                  <%= link_to "編集", edit_admin_advice_path(a), class: "admin-btn detail" %>
+                  <%= button_to "削除",
+                        admin_advice_path(a),
+                        method: :delete,
+                        data: { turbo_confirm: "削除します。よろしいですか？" },
+                        class: "admin-btn danger" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="empty">公開済みアドバイスはありません。</p>
+    <% end %>
+
+    <div class="admin-show-links" style="margin-top: 16px;">
+      <%= link_to "承認待ち一覧へ戻る", admin_advice_suggestions_path, class: "admin-btn detail" %>
+    </div>
+  </div>
+</div>
