@@ -3,7 +3,7 @@ class AdviceSuggestionsController < ApplicationController
   before_action :set_trouble_category, only: %i[new create]
 
   def index
-    base = current_user.advice_suggestions.includes(:category).order(created_at: :desc)
+    base = current_user.advice_suggestions.includes(:category, :advice).order(created_at: :desc)
 
     @pending  = base.select(&:status_pending?)
     @approved = base.select(&:status_approved?)

@@ -17,7 +17,7 @@
           <thead>
             <tr>
               <th>投稿者</th>
-              <th>カテゴリ</th>
+              <th>タイトル</th>
               <th>内容</th>
               <th>操作</th>
             </tr>
@@ -26,21 +26,26 @@
             <% @pending.each do |s| %>
               <tr>
                 <td><%= s.user.display_name_or_email %></td>
-                <td><%= s.category.name %></td>
+
+                <!-- タイトル（リンク） -->
                 <td class="admin-body-preview">
                   <%= link_to admin_advice_suggestion_path(s) do %>
-                    <%= s.body.truncate(80) %>
+                    <%= s.title.presence || s.body.to_s.truncate(30) %>
                   <% end %>
                   <div class="admin-detail-link">
                     <%= link_to "詳細を見る", admin_advice_suggestion_path(s) %>
                   </div>
                 </td>
+
+                <!-- 本文プレビュー -->
+                <td>
+                  <%= s.body.to_s.truncate(80) %>
+                </td>
+
                 <td>
                   <div class="admin-actions">
-                    <%= button_to "承認",
-                          approve_admin_advice_suggestion_path(s),
-                          method: :patch,
-                          form: { class: "admin-actions__form" },
+                    <%= link_to "編集して公開",
+                          new_advice_admin_advice_suggestion_path(s),
                           class: "admin-btn approve" %>
 
                     <%= button_to "却下",
@@ -69,25 +74,48 @@
           <thead>
             <tr>
               <th>投稿者</th>
-              <th>カテゴリ</th>
+              <th>タイトル</th>
               <th>内容</th>
               <th>ステータス</th>
+              <th>操作</th>
             </tr>
           </thead>
           <tbody>
             <% @approved.each do |s| %>
+              <% published = s.advice %>
               <tr>
                 <td><%= s.user.display_name_or_email %></td>
-                <td><%= s.category.name %></td>
+
+                <!--  承認済みは「公開内容（Advice）」を優先表示 -->
                 <td class="admin-body-preview">
                   <%= link_to admin_advice_suggestion_path(s) do %>
-                    <%= s.body.truncate(80) %>
+                    <%= (published&.title.presence || s.title.presence || s.body.to_s.truncate(30)) %>
                   <% end %>
                   <div class="admin-detail-link">
                     <%= link_to "詳細を見る", admin_advice_suggestion_path(s) %>
                   </div>
                 </td>
+
+                <td>
+                  <%= (published&.body.presence || s.body.to_s).truncate(80) %>
+                </td>
+
                 <td>承認済み</td>
+
+                <td>
+                  <div class="admin-actions">
+                    <!--  承認後の修正（アップデート）導線 -->
+                    <%= link_to "公開内容を編集",
+                          new_advice_admin_advice_suggestion_path(s),
+                          class: "admin-btn detail" %>
+
+                    <%= button_to "ゴミ箱へ",
+                          admin_advice_suggestion_path(s),
+                          method: :delete,
+                          data: { turbo_confirm: "ゴミ箱に移動します。よろしいですか？" },
+                          class: "admin-btn danger" %>
+                  </div>
+                </td>
               </tr>
             <% end %>
           </tbody>
@@ -108,31 +136,107 @@
           <thead>
             <tr>
               <th>投稿者</th>
-              <th>カテゴリ</th>
+              <th>タイトル</th>
               <th>内容</th>
               <th>ステータス</th>
+              <th>操作</th>
             </tr>
           </thead>
           <tbody>
             <% @rejected.each do |s| %>
               <tr>
                 <td><%= s.user.display_name_or_email %></td>
-                <td><%= s.category.name %></td>
+
                 <td class="admin-body-preview">
                   <%= link_to admin_advice_suggestion_path(s) do %>
-                    <%= s.body.truncate(80) %>
+                    <%= s.title.presence || s.body.to_s.truncate(30) %>
                   <% end %>
                   <div class="admin-detail-link">
                     <%= link_to "詳細を見る", admin_advice_suggestion_path(s) %>
                   </div>
                 </td>
+
+                <td>
+                  <%= s.body.to_s.truncate(80) %>
+                </td>
+
                 <td>却下</td>
+
+                <td>
+                  <div class="admin-actions">
+                    <%= button_to "ゴミ箱へ",
+                          admin_advice_suggestion_path(s),
+                          method: :delete,
+                          data: { turbo_confirm: "ゴミ箱に移動します。よろしいですか？" },
+                          class: "admin-btn danger" %>
+                  </div>
+                </td>
               </tr>
             <% end %>
           </tbody>
         </table>
       <% else %>
         <p class="empty">却下はありません。</p>
+      <% end %>
+    </section>
+
+    <hr>
+
+    <!-- ゴミ箱 -->
+    <section class="admin-section">
+      <h2>ゴミ箱（<%= @deleted.size %>件）</h2>
+
+      <% if @deleted.any? %>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>投稿者</th>
+              <th>タイトル</th>
+              <th>内容</th>
+              <th>ステータス</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @deleted.each do |s| %>
+              <tr>
+                <td><%= s.user.display_name_or_email %></td>
+
+                <td class="admin-body-preview">
+                  <%= link_to admin_advice_suggestion_path(s) do %>
+                    <%= s.title.presence || s.body.to_s.truncate(30) %>
+                  <% end %>
+                  <div class="admin-detail-link">
+                    <%= link_to "詳細を見る", admin_advice_suggestion_path(s) %>
+                  </div>
+                </td>
+
+                <td>
+                  <%= s.body.to_s.truncate(80) %>
+                </td>
+
+                <td>削除済み</td>
+
+                <td>
+                  <div class="admin-actions">
+                    <%= button_to "復元",
+                          restore_admin_advice_suggestion_path(s),
+                          method: :patch,
+                          class: "admin-btn detail" %>
+
+                    <%= button_to "完全削除",
+                          delete_forever_admin_advice_suggestion_path(s),
+                          method: :delete,
+                          data: { turbo_confirm: "完全に削除します。元に戻せません。よろしいですか？" },
+                          class: "admin-btn danger" %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p class="empty">ゴミ箱は空です。</p>
       <% end %>
     </section>
   </div>

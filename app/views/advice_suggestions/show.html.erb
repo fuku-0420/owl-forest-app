@@ -4,9 +4,11 @@
   </div>
 
   <div class="page-body">
+    <% published = @advice_suggestion.advice %>
+
     <p>
-      <strong>カテゴリ：</strong>
-      <%= @advice_suggestion.category.name %>
+      <strong>タイトル：</strong>
+      <%= (published&.title.presence || @advice_suggestion.title.presence || "（タイトル未入力）") %>
     </p>
 
     <p>
@@ -21,9 +23,23 @@
 
     <hr>
 
-    <div class="submission-body">
-      <%= simple_format(@advice_suggestion.body) %>
-    </div>
+    <% if published.present? %>
+      <h2 class="submission-section-title">あなたの原文</h2>
+      <div class="submission-body">
+        <%= simple_format(h(@advice_suggestion.body)) %>
+      </div>
+
+      <hr>
+
+      <h2 class="submission-section-title">掲載された内容</h2>
+      <div class="submission-body">
+        <%= simple_format(h(published.body)) %>
+      </div>
+    <% else %>
+      <div class="submission-body">
+        <%= simple_format(h(@advice_suggestion.body)) %>
+      </div>
+    <% end %>
 
     <div class="submissions-actions">
       <%= link_to "一覧に戻る", advice_suggestions_path, class: "primary-btn" %>

@@ -25,7 +25,8 @@
                   <span class="author"><%= s.user.display_name_or_email %></span>
                 </div>
 
-                <p class="submission-body"><%= s.body.truncate(80) %></p>
+                <!-- タイトルっぽく見せたいなら title/body を短く -->
+                <p class="submission-body"><%= (s.title.presence || s.body).truncate(80) %></p>
               <% end %>
             <% end %>
           </div>
@@ -41,6 +42,7 @@
         <% if @approved.any? %>
           <div class="submissions-list">
             <% @approved.each do |s| %>
+              <% published = s.advice %>
               <%= link_to advice_suggestion_path(s), class: "submission-card approved" do %>
                 <div class="submission-meta">
                   <div class="submission-meta-left">
@@ -50,7 +52,16 @@
                   <span class="author"><%= s.user.display_name_or_email %></span>
                 </div>
 
-                <p class="submission-body"><%= s.body.truncate(80) %></p>
+                <!--  掲載された内容があるならそれを表示 -->
+                <p class="submission-body">
+                  <%= (published&.title.presence || s.title.presence || s.body).truncate(80) %>
+                </p>
+
+                <% if published.present? %>
+                  <p class="submission-body is-sub">
+                    <%= published.body.to_s.truncate(80) %>
+                  </p>
+                <% end %>
               <% end %>
             <% end %>
           </div>
@@ -75,7 +86,7 @@
                   <span class="author"><%= s.user.display_name_or_email %></span>
                 </div>
 
-                <p class="submission-body"><%= s.body.truncate(80) %></p>
+                <p class="submission-body"><%= (s.title.presence || s.body).truncate(80) %></p>
               <% end %>
             <% end %>
           </div>

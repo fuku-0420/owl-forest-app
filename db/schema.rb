@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_22_124634) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_01_073401) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -61,6 +61,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_22_124634) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "seed_key"
+    t.bigint "advice_suggestion_id"
+    t.index ["advice_suggestion_id"], name: "index_advices_on_advice_suggestion_id"
     t.index ["category_id"], name: "index_advices_on_category_id"
   end
 
@@ -128,6 +130,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_22_124634) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "advice_suggestions", "categories"
   add_foreign_key "advice_suggestions", "users"
+  add_foreign_key "advices", "advice_suggestions"
   add_foreign_key "advices", "categories"
   add_foreign_key "favorites", "advices"
   add_foreign_key "favorites", "users"
