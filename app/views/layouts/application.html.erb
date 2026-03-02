@@ -13,6 +13,15 @@
     <%= csp_meta_tag %>
     <%= yield :head %>
 
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C7Q4HETPZ0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-C7Q4HETPZ0');
+    </script>
+
     <!-- OGP設定 -->
     <meta property="og:title" content="フクちゃん学習掲示板">
     <meta property="og:description" content="学習の悩み・エラー・勉強法まで。後輩に届けるナレッジ共有アプリです。">
@@ -36,7 +45,6 @@
     data-controller="orientation"
     class="<%= yield(:body_class) %> <%= 'no-scroll' if controller_name == 'owls' && action_name == 'index' %>">
 
-    <%# auth_links は owls#index のみ表示 %>
     <% if controller_name == "owls" && action_name == "index" %>
       <%= render "shared/auth_links" %>
     <% end %>
