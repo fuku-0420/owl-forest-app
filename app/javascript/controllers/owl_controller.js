@@ -27,6 +27,7 @@ export default class extends Controller {
   typingInterval = null
 
   isHappyMode = false
+  canClickFukuchan = false
 
   saveBoardState(state) {
     try {
@@ -527,6 +528,9 @@ export default class extends Controller {
   }
 
   showAdviceDetail(advice, category) {
+    // アドバイス詳細を開いたら笑顔にする
+    this.setHappyMode()
+
     // 連打で多重にタイピングが走らないように止める
     this.stopAdviceTyping()
 
@@ -586,6 +590,7 @@ export default class extends Controller {
 
     backButton.addEventListener("click", () => {
       this.stopAdviceTyping()
+      this.setOriginalMode()
       this.showAdviceList(category)
       this.showOwlProfileStatic()
     })
@@ -666,25 +671,20 @@ export default class extends Controller {
     const img = document.querySelector(".fukuchan-global")
     if (!img) return
 
-    let canClick = false
+    this.canClickFukuchan = false
 
     img.onclick = () => {
-      if (!canClick) return
+      if (!this.canClickFukuchan) return
 
       if (this.isHappyMode) {
-        this.switchToOriginalMessage()
+        this.setOriginalMode()
       } else {
-        this.switchToNewMessage()
+        this.setHappyMode()
       }
-
-      this.isHappyMode = !this.isHappyMode
     }
 
     setTimeout(() => {
       img.classList.add("fukuchan-visible")
-      setTimeout(() => {
-        canClick = true
-      }, 10000)
     }, 500)
   }
 
@@ -708,18 +708,23 @@ export default class extends Controller {
 
   getDailyOwlMessage() {
     const dailySets = [
-      ["こんにちは！僕は梟🦉のフクちゃん", "知識の森へようこそだホウ〜☆彡"],
-      ["今日も来てくれて嬉しいホウ〜🦉", "気軽にカテゴリを選んでみてホウ！"],
-      ["この掲示板はヒントが集まる場所だホウ。", "困ったら一緒に整理するホウ〜！"],
-      ["まずは好きなカテゴリから見ていくホウ。", "ゆっくりで大丈夫だホウ〜🦉"],
+      ["こんにちは！僕は梟🦉のフクちゃん", "知識の森へようこそだホウ〜"],
+      ["ようこそ知識の森へ🦉", "今日はどんなヒントを探すホウ〜？"],
+      ["こんにちは！また来てくれて嬉しいよ🦉", "ゆっくり森を歩いていくホウ〜"],
+      ["困っていることはあるかな？🦉", "この森でヒントを見つけるホウ〜"],
+      ["この掲示板には学びのヒントが集まっているよ🦉", "気になるカテゴリを見ていくホウ〜"],
+      ["迷ったときはこの森に来るといいよ🦉", "一緒に整理していくホウ〜"],
+      ["今日も来てくれてありがとう🦉", "焦らずゆっくり探していくホウ〜"],
+      ["まずは好きなカテゴリから見てみよう🦉", "きっとヒントが見つかるホウ〜"],
+      ["この森にはいろんなヒントが眠っているよ🦉", "気になるものを探していくホウ〜"],
+      ["今日も一歩ずつ進んでいこう🦉", "小さなヒントが役に立つホウ〜"],
+      ["気軽に見ていってね🦉", "この森はいつでも歓迎するホウ〜"],
+      ["困ったときはまた来るといいよ🦉", "この森でヒントを探すホウ〜"],
+      ["今日も頑張ってるね🦉", "少し休みながら進むホウ〜"],
     ]
 
-    const now = new Date()
-    const start = new Date(now.getFullYear(), 0, 0)
-    const oneDay = 1000 * 60 * 60 * 24
-    const yday = Math.floor((now - start) / oneDay) // 1..366
-
-    return dailySets[yday % dailySets.length]
+    const index = Math.floor(Math.random() * dailySets.length)
+    return dailySets[index]
   }
 
   applyDailyMessageToFukuchanLines() {
@@ -747,6 +752,18 @@ export default class extends Controller {
 
       if (fukuchanImg) fukuchanImg.src = fukuchanImg.dataset.normalImage
     }
+  }
+
+  setHappyMode() {
+    if (this.isHappyMode) return
+    this.switchToNewMessage()
+    this.isHappyMode = true
+  }
+
+  setOriginalMode() {
+    if (!this.isHappyMode) return
+    this.switchToOriginalMessage()
+    this.isHappyMode = false
   }
 
   showOwlProfile() {
@@ -791,11 +808,13 @@ export default class extends Controller {
       img.style.opacity = "1"
       img.style.display = "block"
       img.classList.add("fukuchan-visible")
+      img.src = img.dataset.normalImage
     }
   }
 
   showAllOwlMessages() {
     this.stopOwlMessages()
+    this.canClickFukuchan = false
 
     document.querySelectorAll(".message-line").forEach(line => {
       line.textContent = ""
@@ -806,25 +825,28 @@ export default class extends Controller {
     owlCards.forEach((card, cardIndex) => {
       const id = setTimeout(() => {
         const messageLines = card.querySelectorAll(".message-line")
-        this.showOwlMessages(messageLines)
+        const isLastCard = cardIndex === owlCards.length - 1
+        this.showOwlMessages(messageLines, isLastCard)
       }, cardIndex * 500)
 
       this.owlTimeoutIds.push(id)
     })
   }
 
-  showOwlMessages(messageLines) {
+  showOwlMessages(messageLines, isLastCard = false) {
     messageLines.forEach((line, index) => {
+      const isLastLine = isLastCard && index === messageLines.length - 1
+
       const id = setTimeout(() => {
         const message = line.dataset.message
-        this.typeOwlMessage(line, message)
+        this.typeOwlMessage(line, message, isLastLine)
       }, index * 2500)
 
       this.owlTimeoutIds.push(id)
     })
   }
 
-  typeOwlMessage(element, text) {
+  typeOwlMessage(element, text, enableClickWhenDone = false) {
     let index = 0
     element.textContent = ""
 
@@ -845,6 +867,10 @@ export default class extends Controller {
         index++
         const id = setTimeout(typeWriter, delay)
         this.owlTimeoutIds.push(id)
+      } else {
+        if (enableClickWhenDone) {
+          this.canClickFukuchan = true
+        }
       }
     }
 

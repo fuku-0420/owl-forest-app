@@ -43,6 +43,13 @@
       <div class="form-footer-links">
         <%= link_to "ログインはこちら", new_session_path(resource_name), class: "footer-link" %>
       </div>
+
+      <div class="policy-links">
+        <%= link_to "利用規約", terms_path, class: "footer-link" %>
+        <span>｜</span>
+        <%= link_to "プライバシーポリシー", privacy_path, class: "footer-link" %>
+      </div>
+
     </section>
   </div>
 </div>
