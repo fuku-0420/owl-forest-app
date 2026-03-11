@@ -1,3 +1,5 @@
+<% content_for :body_class, "app-settings-page-bg" %>
+
 <div class="page-container app-settings-page" data-controller="app-settings">
   <div class="page-header">
     <h1>アプリ設定</h1>
@@ -43,8 +45,11 @@
           data-app-settings-target="bgMode"
         >
           <option value="auto">自動（時間帯）</option>
+          <option value="spring">固定：春</option>
           <option value="summer">固定：夏</option>
           <option value="autumn">固定：秋</option>
+          <option value="winter">固定：冬</option>
+          <option value="yoru">固定：シークレットモード</option>
         </select>
       </div>
     </div>
