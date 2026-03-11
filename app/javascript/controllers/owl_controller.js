@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["blackboard", "owlCard", "typingText"]
+  static targets = ["blackboard", "owlCard", "typingText", "forest"]
   static values = {
     categories: Array,
     signedIn: Boolean,
@@ -144,8 +144,9 @@ export default class extends Controller {
   }
 
   applyBackgroundSetting() {
-    const el = document.querySelector(".forest-bg")
-    if (!el) return
+    if (!this.hasForestTarget) return
+
+    const el = this.forestTarget
 
     let settings = {}
     try {
@@ -155,17 +156,38 @@ export default class extends Controller {
     const mode = settings.bgMode || "auto"
     let resolved = mode
 
-    // ⏰ 自動：時間帯で切り替え
+    // 自動設定：時間帯で切り替え
+    // 5:00〜10:59  → 春（朝）
+    // 11:00〜15:59 → 夏（昼）
+    // 16:00〜18:59 → 秋（夕方）
+    // 19:00〜4:59  → 冬（夜）
     if (mode === "auto") {
       const hour = new Date().getHours()
-      // 7:00〜18:59 → 夏、それ以外 → 秋
-      resolved = hour >= 7 && hour < 19 ? "summer" : "autumn"
+
+      if (hour >= 5 && hour < 11) {
+        resolved = "spring"
+      } else if (hour >= 11 && hour < 16) {
+        resolved = "summer"
+      } else if (hour >= 16 && hour < 19) {
+        resolved = "autumn"
+      } else {
+        resolved = "winter"
+      }
     }
 
-    const nextSrc =
-      resolved === "autumn"
-        ? el.dataset.autumnImage
-        : el.dataset.summerImage
+    let nextSrc = el.dataset.summerImage
+
+    if (resolved === "spring") {
+      nextSrc = el.dataset.springImage
+    } else if (resolved === "summer") {
+      nextSrc = el.dataset.summerImage
+    } else if (resolved === "autumn") {
+      nextSrc = el.dataset.autumnImage
+    } else if (resolved === "winter") {
+      nextSrc = el.dataset.winterImage
+    } else if (resolved === "yoru") {
+      nextSrc = el.dataset.yoruImage
+    }
 
     if (!nextSrc) return
     el.src = nextSrc
