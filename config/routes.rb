@@ -22,7 +22,6 @@ Rails.application.routes.draw do
         patch :reject
         patch :restore
         delete :delete_forever
-        # patch :approve --- APPROVEはcreate_adviceに統合 ---
       end
     end
 

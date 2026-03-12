@@ -48,7 +48,7 @@ ActiveRecord::Base.transaction do
   trouble      = Category.find_by!(name: "みんなのお悩み解決")
 
   # =========================================================
-  # Advice 定義（seed管理：seed_key を固定で持つ）
+  # アドバイス定義（seed管理：seed_key を固定で持つ）
   # =========================================================
   advices = [
 
@@ -937,7 +937,7 @@ ActiveRecord::Base.transaction do
   ]
 
   # =========================================================
-  # Advice 反映（seed管理分だけ同期）
+  # アドバイス反映（seed管理分だけ同期）
   # =========================================================
   current_seed_keys = advices.map { |a| a[:seed_key] }
 

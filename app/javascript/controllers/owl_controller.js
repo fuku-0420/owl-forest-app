@@ -4,6 +4,7 @@ export default class extends Controller {
   static targets = ["blackboard", "owlCard", "typingText", "forest"]
   static values = {
     categories: Array,
+    popularAdvices: Array,
     signedIn: Boolean,
     favoriteIds: Array
   }
@@ -432,6 +433,75 @@ export default class extends Controller {
     this.blackboardTarget.replaceChildren()
   }
 
+  showRankingList() {
+    this.stopAdviceTyping()
+    this.resetBlackboard()
+
+    const blackboard = this.blackboardTarget
+    const popularAdvices = this.popularAdvicesValue || []
+
+    const title = document.createElement("h2")
+    title.textContent = "👑 アドバイスランキング 👑"
+    title.classList.add("board-title", "ranking-board-title")
+    blackboard.appendChild(title)
+
+    if (popularAdvices.length === 0) {
+      const empty = document.createElement("div")
+      empty.classList.add("advice-text")
+      empty.textContent = "まだランキングデータがありません。"
+      blackboard.appendChild(empty)
+    } else {
+      const rankingContainer = document.createElement("div")
+      rankingContainer.classList.add("ranking-list-container")
+
+      popularAdvices.forEach((advice, index) => {
+        const btn = document.createElement("button")
+
+        let medal = ""
+        if (index === 0) medal = "🥇"
+        if (index === 1) medal = "🥈"
+        if (index === 2) medal = "🥉"
+
+        const categoryName = advice.category?.name || "未分類"
+        btn.textContent = `${index + 1}位 ${medal} ${advice.title}（${categoryName}）`
+        btn.classList.add("ranking-item-button")
+
+        if (index === 0) btn.classList.add("ranking-item-button--gold")
+        if (index === 1) btn.classList.add("ranking-item-button--silver")
+        if (index === 2) btn.classList.add("ranking-item-button--bronze")
+
+        btn.addEventListener("click", () => {
+          const allCategories = this.categoriesValue || []
+          const foundCategory = allCategories.find(category =>
+            (category.advices || []).some(a => Number(a.id) === Number(advice.id))
+          )
+
+          if (!foundCategory) return
+
+          const foundAdvice = (foundCategory.advices || []).find(a => Number(a.id) === Number(advice.id))
+          if (!foundAdvice) return
+
+          this.showAdviceDetail(foundAdvice, foundCategory, {
+            onBack: () => this.showRankingList()
+          })
+        })
+
+        rankingContainer.appendChild(btn)
+      })
+
+      blackboard.appendChild(rankingContainer)
+    }
+
+    const backButton = document.createElement("button")
+    backButton.textContent = "戻る"
+    backButton.classList.add("back-button", "visible")
+    backButton.addEventListener("click", () => {
+      this.showConsultationRoom({ fromReturn: true })
+    })
+
+    blackboard.appendChild(backButton)
+  }
+
   showConsultationRoom({ fromReturn = false } = {}) {
     document.querySelectorAll(".story-skip-button").forEach(el => el.remove())
 
@@ -467,6 +537,13 @@ export default class extends Controller {
 
     blackboard.appendChild(title)
     blackboard.appendChild(buttonContainer)
+
+    const rankingButton = document.createElement("button")
+    rankingButton.textContent = "よく読まれたアドバイスランキング"
+    rankingButton.classList.add("ranking-entry-button")
+    rankingButton.addEventListener("click", () => this.showRankingList())
+
+    blackboard.appendChild(rankingButton)
 
     if (!fromReturn) {
       title.style.opacity = "0"
@@ -549,13 +626,11 @@ export default class extends Controller {
     })
   }
 
-  showAdviceDetail(advice, category) {
+  showAdviceDetail(advice, category, { onBack = null } = {}) {
     // アドバイス詳細を開いたら笑顔にする
     this.setHappyMode()
 
-    // 連打で多重にタイピングが走らないように止める
     this.stopAdviceTyping()
-
     this.resetBlackboard()
     const blackboard = this.blackboardTarget
 
@@ -613,7 +688,13 @@ export default class extends Controller {
     backButton.addEventListener("click", () => {
       this.stopAdviceTyping()
       this.setOriginalMode()
-      this.showAdviceList(category)
+
+      if (onBack) {
+        onBack()
+      } else {
+        this.showAdviceList(category)
+      }
+
       this.showOwlProfileStatic()
     })
   }
@@ -653,7 +734,6 @@ export default class extends Controller {
 
     if (!this.isTypingEnabled()) {
       element.textContent = text
-      // タイピングOFFでも最後に下へ
       requestAnimationFrame(() => this.scrollAdviceToBottom())
       return
     }
@@ -663,9 +743,8 @@ export default class extends Controller {
 
     const tick = () => {
       if (i < text.length) {
-        element.textContent = text.slice(0, i + 1) + "|"
+        element.textContent = text.slice(0, i + 1)
 
-        // 表示更新に合わせて追従スクロール
         requestAnimationFrame(() => this.scrollAdviceToBottom())
 
         if (withSound && this.shouldPlayTypingSfx() && text[i] !== " " && text[i] !== "\n") {
@@ -681,7 +760,6 @@ export default class extends Controller {
       } else {
         element.textContent = text
         this.adviceTimeoutId = null
-
         requestAnimationFrame(() => this.scrollAdviceToBottom())
       }
     }

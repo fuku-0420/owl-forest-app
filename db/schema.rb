@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_01_073401) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_12_160006) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -62,8 +62,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_01_073401) do
     t.datetime "updated_at", null: false
     t.string "seed_key"
     t.bigint "advice_suggestion_id"
+    t.integer "views_count", default: 0, null: false
     t.index ["advice_suggestion_id"], name: "index_advices_on_advice_suggestion_id"
     t.index ["category_id"], name: "index_advices_on_category_id"
+    t.index ["views_count"], name: "index_advices_on_views_count"
   end
 
   create_table "categories", force: :cascade do |t|
