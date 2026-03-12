@@ -3,5 +3,6 @@ class AdvicesController < ApplicationController
 
   def show
     @advice = Advice.includes(:category).find(params[:id])
+    @advice.increment!(:views_count)
   end
 end

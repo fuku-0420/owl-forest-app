@@ -1,0 +1,14 @@
+<h1>閲覧数ランキング</h1>
+
+<% if @ranked_advices.any? %>
+  <ol>
+    <% @ranked_advices.each do |advice| %>
+      <li>
+        <%= link_to advice.title, advice_path(advice) %>
+        （<%= advice.views_count %> views）
+      </li>
+    <% end %>
+  </ol>
+<% else %>
+  <p>まだランキングデータがありません。</p>
+<% end %>

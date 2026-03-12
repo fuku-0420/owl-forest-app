@@ -2,9 +2,11 @@
   class="classroom-container"
   data-controller="owl coming-soon bgm"
   data-owl-categories-value="<%= json_escape(@categories_json.to_json) %>"
+  data-owl-popular-advices-value="<%= json_escape(@popular_advices_json.to_json) %>"
   data-owl-signed-in-value="<%= user_signed_in? %>"
   data-owl-favorite-ids-value="<%= json_escape(@favorite_ids.to_json) %>"
 >
+
   <!-- 🌳 森の背景 -->
   <img
     src="<%= asset_path('tisikinomori.png') %>"

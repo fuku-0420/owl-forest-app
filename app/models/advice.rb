@@ -4,5 +4,8 @@ class Advice < ApplicationRecord
 
   validates :title, presence: true
   validates :body, presence: true
+
   has_many :favorites, dependent: :destroy
+
+  scope :popular_by_views, -> { order(views_count: :desc, created_at: :desc) }
 end

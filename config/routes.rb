@@ -22,7 +22,6 @@ Rails.application.routes.draw do
         patch :reject
         patch :restore
         delete :delete_forever
-        # patch :approve --- APPROVEはcreate_adviceに統合 ---
       end
     end
 
@@ -33,6 +32,7 @@ Rails.application.routes.draw do
   resources :advice_suggestions, only: [ :index, :new, :create, :show ]
   resources :advices, only: [ :show ]
   resources :favorites, only: [ :index, :create, :destroy ]
+  resources :rankings, only: [ :index ]
 
   # 🔧 ユーザー設定（ハブ）
   get "settings", to: "settings#index"
