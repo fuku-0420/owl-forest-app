@@ -77,16 +77,4 @@ export default class extends Controller {
         sessionStorage.setItem(this.settingsKey(), JSON.stringify(next))
         return next
     }
-  /*
-   * 将来拡張メモ：
-   *
-   * bgMode の候補
-   * - "auto"    : 時間帯 or 季節で自動切替
-   * - "summer"  : 常に夏
-   * - "autumn"  : 常に秋
-   * - "winter"  : 常に冬（予定）
-   * - "spring"  : 常に春（予定）
-   *
-   * ※ 実際の判定・画像切替は owl_controller 側で行う
-   */
 }

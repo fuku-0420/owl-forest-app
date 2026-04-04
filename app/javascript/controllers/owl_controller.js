@@ -186,8 +186,12 @@ export default class extends Controller {
       nextSrc = el.dataset.autumnImage
     } else if (resolved === "winter") {
       nextSrc = el.dataset.winterImage
-    } else if (resolved === "yoru") {
-      nextSrc = el.dataset.yoruImage
+    } else if (resolved === "rain") {
+      nextSrc = el.dataset.rainImage
+    } else if (resolved === "rain2") {
+      nextSrc = el.dataset.rain2Image
+    } else if (resolved === "secret") {
+      nextSrc = el.dataset.secretImage
     }
 
     if (!nextSrc) return
