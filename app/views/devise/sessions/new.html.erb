@@ -6,6 +6,7 @@
   <div class="page-body">
     <section class="settings-section">
       <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "settings-form" }) do |f| %>
+        
         <div class="form-group">
           <%= f.label :email, "メールアドレス" %>
           <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
@@ -17,20 +18,21 @@
         </div>
 
         <% if devise_mapping.rememberable? %>
-          <div class="form-group">
-            <label>
+          <div class="form-group remember-me-group">
+            <label class="remember-me-label">
               <%= f.check_box :remember_me %>
-              記憶する
+              ログイン状態を保持する
             </label>
           </div>
         <% end %>
 
-        <%# ★ ログイン失敗などの alert をフォーム内（記憶するの下）に表示 %>
+        <%# ★ ログイン失敗などの alert をフォーム内（remember_meの下）に表示 %>
         <%= render "shared/flash", only: [:alert] %>
 
         <div class="form-actions">
           <%= f.submit "ログイン", class: "primary-btn" %>
         </div>
+
       <% end %>
 
       <div class="settings-subnav">
