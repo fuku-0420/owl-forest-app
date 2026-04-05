@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-ruby "3.2.3"
+ruby "3.3.9"
 
 gem "rails", "~> 8.0.3"
 gem "propshaft"
