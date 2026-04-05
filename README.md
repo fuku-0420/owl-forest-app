@@ -200,7 +200,7 @@ https://www.figma.com/design/6qQWPIpktLOdYNcgOsizaL/%E7%94%BB%E9%9D%A2%E9%81%B7%
 ---
 
 ## 🖼️ OGP画像
-![フクちゃんお悩み掲示板](https://github.com/fuku-0420/owl-forest-app/blob/main/public/ogp.png?raw=true)
+![フクちゃん学習掲示板](https://github.com/fuku-0420/owl-forest-app/blob/main/public/ogp_v2.png?raw=true)
 
 ---
 
