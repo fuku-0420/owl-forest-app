@@ -1458,3 +1458,105 @@ body.app-settings-page-bg {
   gap: 10px;
   flex-wrap: wrap;
 }
+
+/* =========================================================
+  🦉 ローディングオーバーレイ
+========================================================= */
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+
+  opacity: 0;
+  animation: loading-fade-in 0.2s ease forwards;
+}
+
+.loading-box {
+  text-align: center;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+/* フクちゃん + リングのラップ */
+.loading-fukuchan-wrap {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
+}
+
+/* フクちゃん本体 */
+.loading-fukuchan-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: auto;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  animation: loading-float 2s ease-in-out infinite;
+}
+
+/* 回転リング */
+.loading-ring {
+  position: absolute;
+  inset: 0;
+  border: 5px solid rgba(255, 255, 255, 0.12);
+  border-top: 5px solid rgba(255, 196, 0, 0.95);
+  border-radius: 50%;
+  animation: loading-spin 1s linear infinite;
+  z-index: 1;
+  box-shadow: 0 0 14px rgba(255, 196, 0, 0.18);
+}
+
+/* テキスト */
+.loading-text {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #fff9d6;
+  text-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.45),
+    0 0 8px rgba(255, 196, 0, 0.25);
+}
+
+/* =========================
+  アニメーション
+========================= */
+
+/* フェードイン */
+@keyframes loading-fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+/* 回転 */
+@keyframes loading-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* フクちゃん浮遊 */
+@keyframes loading-float {
+  0%,
+  100% {
+    transform: translate(-50%, -50%);
+  }
+  50% {
+    transform: translate(-50%, -55%);
+  }
+}

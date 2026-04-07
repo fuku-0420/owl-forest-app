@@ -42,7 +42,7 @@
   </head>
 
   <body
-    data-controller="orientation"
+    data-controller="orientation loading"
     class="<%= yield(:body_class) %> <%= 'no-scroll' if controller_name == 'owls' && action_name == 'index' %>">
 
     <% if controller_name == "owls" && action_name == "index" %>
@@ -50,5 +50,17 @@
     <% end %>
 
     <%= yield %>
+
+    <!-- 🦉 ローディングUI -->
+    <div id="loading" class="loading-overlay hidden">
+      <div class="loading-box">
+        <div class="loading-fukuchan-wrap">
+          <div class="loading-ring"></div>
+          <%= image_tag "fukuchan-loading.png", alt: "ローディング中のフクちゃん", class: "loading-fukuchan-image" %>
+        </div>
+        <p class="loading-text">次の場所へ案内するホウ…</p>
+      </div>
+    </div>
+
   </body>
 </html>

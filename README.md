@@ -244,3 +244,4 @@ bin/rails server
 
 # ブラウザでアクセス
 http://localhost:3000
+```
