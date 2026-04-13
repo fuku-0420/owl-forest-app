@@ -27,7 +27,6 @@ export default class extends Controller {
   // Enter画面のタイピング
   typingInterval = null
 
-  isHappyMode = false
   canClickFukuchan = false
 
   saveBoardState(state) {
@@ -632,7 +631,7 @@ export default class extends Controller {
 
   showAdviceDetail(advice, category, { onBack = null } = {}) {
     // アドバイス詳細を開いたら笑顔にする
-    this.setHappyMode()
+    this.setHappyMode(category)
 
     this.stopAdviceTyping()
     this.resetBlackboard()
@@ -771,6 +770,39 @@ export default class extends Controller {
     tick()
   }
 
+  currentExpression = "normal"
+  defaultExpression = "normal"
+  currentMessageSet = null
+
+  owlExpressions = {
+    normal: {
+      imageKey: "normalImage",
+      useDailyMessage: true
+    },
+    happy: {
+      imageKey: "happyImage",
+      messages: ["僕に何か聞きたいっホ～？", "頑張り屋さんっホウ〜🦉"]
+    },
+    surprised: {
+      imageKey: "surprisedImage",
+      messages: ["ふぇっ！？急に触られてびっくりしたホウ！", "でも気になってくれて嬉しいホ〜🦉"]
+    },
+    thinking: {
+      imageKey: "thinkingImage",
+      messages: ["うーん、ここは整理して考えるホウ", "ひとつずつ見ていけば大丈夫だホ〜🦉"]
+    },
+    cheer: {
+      imageKey: "cheerImage",
+      messages: ["いい調子だホウ〜！", "そのまま一歩ずつ進もうっホ〜🦉"]
+    }
+  }
+
+  initializeDailyMessage() {
+    if (!this.currentMessageSet) {
+      this.currentMessageSet = this.getDailyOwlMessage()
+    }
+  }
+
   addFukuchanImage() {
     const img = document.querySelector(".fukuchan-global")
     if (!img) return
@@ -780,10 +812,10 @@ export default class extends Controller {
     img.onclick = () => {
       if (!this.canClickFukuchan) return
 
-      if (this.isHappyMode) {
-        this.setOriginalMode()
+      if (this.currentExpression === "surprised") {
+        this.restoreDefaultExpression()
       } else {
-        this.setHappyMode()
+        this.setExpression("surprised", { temporary: true })
       }
     }
 
@@ -792,22 +824,59 @@ export default class extends Controller {
     }, 500)
   }
 
-  switchToNewMessage() {
+  setExpression(name, { temporary = false } = {}) {
+    const expression = this.owlExpressions[name]
+    if (!expression) return
+
     const messageLines = document.querySelectorAll(".message-line")
     const fukuchanImg = document.querySelector(".fukuchan-global")
 
-    if (messageLines.length >= 2) {
-      const line1 = "僕に何か聞きたいっホ～？"
-      const line2 = "頑張り屋さんっホウ〜🦉"
+    this.currentExpression = name
 
-      messageLines[0].textContent = line1
-      messageLines[1].textContent = line2
-
-      messageLines[0].dataset.message = line1
-      messageLines[1].dataset.message = line2
-
-      if (fukuchanImg) fukuchanImg.src = fukuchanImg.dataset.happyImage
+    if (!temporary) {
+      this.defaultExpression = name
     }
+
+    let lines = null
+
+    if (expression.useDailyMessage) {
+      this.initializeDailyMessage()
+      lines = this.currentMessageSet
+    } else if (expression.messages) {
+      lines = expression.messages
+    }
+
+    if (lines && messageLines.length >= 2) {
+      messageLines[0].textContent = lines[0]
+      messageLines[1].textContent = lines[1]
+
+      messageLines[0].dataset.message = lines[0]
+      messageLines[1].dataset.message = lines[1]
+    }
+
+    if (fukuchanImg) {
+      const nextSrc = fukuchanImg.dataset[expression.imageKey]
+      if (nextSrc) {
+        fukuchanImg.src = nextSrc
+      }
+    }
+  }
+
+  restoreDefaultExpression() {
+    this.setExpression(this.defaultExpression, { temporary: true })
+  }
+
+  getRandomAdviceExpression(category = null) {
+    const name = category?.name || ""
+
+    // エラーだけ悩む
+    if (name.includes("エラー")) {
+      return "thinking"
+    }
+
+    // それ以外は明るく
+    const candidates = ["happy", "cheer"]
+    return candidates[Math.floor(Math.random() * candidates.length)]
   }
 
   getDailyOwlMessage() {
@@ -832,7 +901,8 @@ export default class extends Controller {
   }
 
   applyDailyMessageToFukuchanLines() {
-    const [line1, line2] = this.getDailyOwlMessage()
+    this.initializeDailyMessage()
+    const [line1, line2] = this.currentMessageSet
     const lines = document.querySelectorAll(".message-line")
 
     if (lines.length >= 2) {
@@ -841,33 +911,13 @@ export default class extends Controller {
     }
   }
 
-  switchToOriginalMessage() {
-    const messageLines = document.querySelectorAll(".message-line")
-    const fukuchanImg = document.querySelector(".fukuchan-global")
-
-    const [line1, line2] = this.getDailyOwlMessage()
-
-    if (messageLines.length >= 2) {
-      messageLines[0].textContent = line1
-      messageLines[1].textContent = line2
-
-      messageLines[0].dataset.message = line1
-      messageLines[1].dataset.message = line2
-
-      if (fukuchanImg) fukuchanImg.src = fukuchanImg.dataset.normalImage
-    }
-  }
-
-  setHappyMode() {
-    if (this.isHappyMode) return
-    this.switchToNewMessage()
-    this.isHappyMode = true
+  setHappyMode(category = null) {
+    const expression = this.getRandomAdviceExpression(category)
+    this.setExpression(expression, { temporary: true })
   }
 
   setOriginalMode() {
-    if (!this.isHappyMode) return
-    this.switchToOriginalMessage()
-    this.isHappyMode = false
+    this.restoreDefaultExpression()
   }
 
   showOwlProfile() {
@@ -912,8 +962,9 @@ export default class extends Controller {
       img.style.opacity = "1"
       img.style.display = "block"
       img.classList.add("fukuchan-visible")
-      img.src = img.dataset.normalImage
     }
+
+    this.restoreDefaultExpression()
   }
 
   showAllOwlMessages() {
@@ -1044,7 +1095,6 @@ export default class extends Controller {
     const el = this.element.querySelector(".advice-text")
     if (!el) return
 
-    // ユーザーが手で上にスクロールして読んでる時は邪魔しない
     const nearBottom = (el.scrollHeight - el.scrollTop - el.clientHeight) < 40
     if (!nearBottom) return
 
@@ -1054,7 +1104,6 @@ export default class extends Controller {
   disconnect() {
     console.log("🦉 Controller disconnected — cleaning up...")
 
-    // 物語/本文/梟を全部止める
     this.stopStory()
     this.stopAdviceTyping()
     this.stopOwlMessages()

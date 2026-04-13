@@ -20,7 +20,6 @@
     data-rain-image="<%= asset_path('tisikinomori_rain.png') %>"
     data-rain2-image="<%= asset_path('tisikinomori_rain2.png') %>"
     data-secret-image="<%= asset_path('tisikinomori_secret.png') %>"
-
   >
 
   <!-- 🚧 β版バナー -->
@@ -45,8 +44,11 @@
     alt="フクちゃん"
     class="fukuchan-global"
     data-owl-target="fukuchan"
-    data-happy-image="<%= asset_path('fukuchan-happy.png') %>"
     data-normal-image="<%= asset_path('fukuchan.png') %>"
+    data-happy-image="<%= asset_path('fukuchan-happy.png') %>"
+    data-surprised-image="<%= asset_path('fukuchan-surprised.png') %>"
+    data-thinking-image="<%= asset_path('fukuchan-thinking.png') %>"
+    data-cheer-image="<%= asset_path('fukuchan-cheer.png') %>"
   >
 
   <!-- ⏰ リアルタイム時計 -->
@@ -124,7 +126,7 @@
 
         <!-- 📋 メニュー（通常：リンク運用） -->
         <div class="owl-menu">
-          <%= link_to "ユーザー設定", settings_path, class: "owl-menu-btn",data: { action: "click->loading#start" } %>
+          <%= link_to "ユーザー設定", settings_path, class: "owl-menu-btn", data: { action: "click->loading#start" } %>
           <%= link_to "お気に入り", favorites_path, class: "owl-menu-btn", data: { action: "click->loading#start" } %>
           <%= link_to "お悩み募集", new_advice_suggestion_path, class: "owl-menu-btn", data: { action: "click->loading#start" } %>
           <%= link_to "投稿一覧", advice_suggestions_path, class: "owl-menu-btn", data: { action: "click->loading#start" } %>
