@@ -302,7 +302,7 @@
 .owl-menu-btn.primary {
   background: rgba(255, 153, 0, 0.7);
   border-color: rgba(255, 153, 0, 0.4);
-  color: #fff;
+  color: #ffffffcf;
 }
 
 .owl-menu-btn.danger {
@@ -1199,7 +1199,7 @@
   🕊️ 5. SHOWページ
    ========================================================= */
 body.owl-show-page {
-  background-image: url('tisikinomori_winter.png');
+  background-image: url('tisikinomori_house.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -1217,7 +1217,7 @@ body.owl-show-page {
   min-height: 100%;
 }
 
-/*  showページ専用に限定（漏れ防止） */
+/* showページ専用に限定（漏れ防止） */
 body.owl-show-page .owl-profile {
   max-width: 1300px;
   margin: 0 auto;
@@ -1233,7 +1233,7 @@ body.owl-show-page .profile-card {
 }
 
 body.owl-show-page .owl-messages {
-  margin: 30px 0;
+  margin: 40px 0;
 }
 
 body.owl-show-page .action-buttons {
@@ -1246,27 +1246,39 @@ body.owl-show-page h1 {
   font-size: 2.2em;
   font-weight: bold;
   text-align: center;
-  text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.9),
+  text-shadow:
+    -1px -1px 0 rgba(0, 0, 0, 0.9),
     1px -1px 0 rgba(0, 0, 0, 0.9),
     -1px 1px 0 rgba(0, 0, 0, 0.9),
     1px 1px 0 rgba(0, 0, 0, 0.9);
 }
 
+/* 左上の「フクちゃん」 */
+body.owl-show-page h2 {
+  display: inline-block;
+  margin: 0 0 16px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 174, 0, 0.664);
+  color: #000000;
+  font-size: 1.5em;
+  font-weight: 700;
+  text-shadow: none;
+}
+
 body.owl-show-page .profile-details,
 body.owl-show-page .message-box {
-  background-color: #b5dbff8b;
+  background-color: #ffffff8b;
   border-radius: 10px;
   color: #000000;
-  text-shadow: -1px -1px 0 rgba(255, 255, 255, 0.8),
-    1px -1px 0 rgba(255, 255, 255, 0.8),
-    -1px 1px 0 rgba(255, 255, 255, 0.8),
-    1px 1px 0 rgba(255, 255, 255, 0.8);
+  font-weight: 500;
 }
 
 body.owl-show-page .profile-details {
   margin: 20px 0;
   padding: 20px;
   font-size: 1.1em;
+  line-height: 1.8;
 }
 
 body.owl-show-page .message-box {
@@ -1274,6 +1286,105 @@ body.owl-show-page .message-box {
   margin: 10px 0;
   font-size: 1.2em;
   line-height: 1.6;
+}
+
+/* =========================================================
+  📌 セクション見出し（お知らせ / 開発者メッセージ）
+   ========================================================= */
+body.owl-show-page .owl-messages > h3 {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 208, 0, 0.664);
+  color: #000000;
+  font-size: 1.2em;
+  font-weight: 700;
+  text-shadow: none;
+}
+
+/* お知らせだけ少し色を分けたいとき用 */
+body.owl-show-page .owl-messages > h3.notice-title {
+  background: rgba(40, 80, 130, 0.88);
+}
+
+/* 開発者メッセージだけ少し色を分けたいとき用 */
+body.owl-show-page .owl-messages > h3.dev-title {
+  background: rgba(90, 55, 120, 0.88);
+}
+
+/* =========================================================
+  📝 ボックス内見出し
+   ========================================================= */
+body.owl-show-page .message-box h4,
+body.owl-show-page .message-box .devlog-title {
+  margin: 0 0 12px;
+  font-size: 1.1em;
+  font-weight: 700;
+  color: #111111;
+}
+
+/* =========================================================
+  ▶ details / summary の見やすさ改善
+   ========================================================= */
+body.owl-show-page .dev-message {
+  margin: 10px 0;
+}
+
+body.owl-show-page .dev-message summary {
+  color: #111111;
+  font-size: 1.1em;
+  font-weight: 700;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.28);
+  cursor: pointer;
+  text-shadow: none;
+}
+
+body.owl-show-page .dev-message .message-box {
+  margin-top: 10px;
+}
+
+/* =========================================================
+  📱 スマホ調整
+   ========================================================= */
+@media (max-width: 768px) {
+  body.owl-show-page .owl-profile {
+    padding: 14px;
+  }
+
+  body.owl-show-page .profile-card {
+    padding: 20px;
+  }
+
+  body.owl-show-page h1 {
+    font-size: 1.8em;
+  }
+
+  body.owl-show-page h2 {
+    font-size: 1.2em;
+    padding: 7px 12px;
+  }
+
+  body.owl-show-page .profile-details {
+    font-size: 1em;
+    line-height: 1.7;
+  }
+
+  body.owl-show-page .message-box {
+    font-size: 1em;
+    line-height: 1.7;
+  }
+
+  body.owl-show-page .owl-messages > h3 {
+    font-size: 1.05em;
+    padding: 7px 12px;
+  }
+
+  body.owl-show-page .dev-message summary {
+    font-size: 1em;
+  }
 }
 
 /* =========================================================
@@ -1295,7 +1406,7 @@ body.owl-show-page .message-box {
 /* 🟢 詳しく見るボタン */
 .owls-container .btn-primary {
   background-color: #ff9900b4;
-  color: #fff;
+  color: #ffffff;
   border: none;
   border-radius: 8px;
   padding: 10px 20px;
