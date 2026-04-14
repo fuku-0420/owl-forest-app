@@ -21,6 +21,7 @@ gem "kamal", require: false
 gem "thruster", require: false
 
 gem "cloudinary"
+gem "activestorage-cloudinary-service"
 
 group :development, :test do
   gem "debug", platforms: %i[mri windows], require: "debug/prelude"
