@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
     connect() {
-        this.minimumDuration = 1000 // 最低表示時間（ミリ秒）
+        this.minimumDuration = 550 // 最低表示時間（ミリ秒）
         this.hide = this.stop.bind(this)
 
         const loader = document.getElementById("loading")

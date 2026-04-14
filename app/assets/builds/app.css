@@ -1512,7 +1512,7 @@ body.app-settings-page-bg {
   border: 5px solid rgba(255, 255, 255, 0.12);
   border-top: 5px solid rgba(255, 196, 0, 0.95);
   border-radius: 50%;
-  animation: loading-spin 1s linear infinite;
+  animation: loading-spin 0.55s linear infinite;
   z-index: 1;
   box-shadow: 0 0 14px rgba(255, 196, 0, 0.18);
 }

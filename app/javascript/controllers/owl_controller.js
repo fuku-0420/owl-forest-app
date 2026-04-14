@@ -116,6 +116,10 @@ export default class extends Controller {
 
   connect() {
     this.applyBackgroundSetting()
+    this.currentPage = 1
+    // 1ページあたりのアドバイスボタンを調整するなら下記修正。現在9件で固定。
+    this.advicesPerPage = 9
+
     const params = new URLSearchParams(window.location.search)
     this.fromBoardReturn = params.get("board") === "1"
 
@@ -576,8 +580,10 @@ export default class extends Controller {
     }
   }
 
-  showAdviceList(category, { fromRestore = false } = {}) {
+  showAdviceList(category, { fromRestore = false, resetPage = true } = {}) {
     // 画面切り替え時に本文タイピング止める（連打対策）
+    if (resetPage) this.currentPage = 1
+
     this.stopAdviceTyping()
 
     this.resetBlackboard()
@@ -597,6 +603,10 @@ export default class extends Controller {
 
     const advices = category.advices || []
 
+    const totalPages = Math.ceil(advices.length / this.advicesPerPage)
+    const startIndex = (this.currentPage - 1) * this.advicesPerPage
+    const paginatedAdvices = advices.slice(startIndex, startIndex + this.advicesPerPage)
+
     if (advices.length === 0) {
       const empty = document.createElement("div")
       empty.classList.add("advice-text")
@@ -604,7 +614,7 @@ export default class extends Controller {
       blackboard.appendChild(title)
       blackboard.appendChild(empty)
     } else {
-      advices.forEach(advice => {
+      paginatedAdvices.forEach(advice => {
         const btn = document.createElement("button")
         btn.textContent = advice.title
         btn.classList.add("board-button")
@@ -616,6 +626,29 @@ export default class extends Controller {
 
       blackboard.appendChild(title)
       blackboard.appendChild(buttonContainer)
+      if (totalPages > 1) {
+        const pagination = document.createElement("div")
+        pagination.classList.add("pagination-container")
+
+        for (let page = 1; page <= totalPages; page++) {
+          const pageButton = document.createElement("button")
+          pageButton.textContent = page
+          pageButton.classList.add("page-button")
+
+          if (page === this.currentPage) {
+            pageButton.classList.add("active")
+          }
+
+          pageButton.addEventListener("click", () => {
+            this.currentPage = page
+            this.showAdviceList(category, { resetPage: false })
+          })
+
+          pagination.appendChild(pageButton)
+        }
+
+        blackboard.appendChild(pagination)
+      }
     }
 
     const backButton = document.createElement("button")
@@ -630,7 +663,7 @@ export default class extends Controller {
   }
 
   showAdviceDetail(advice, category, { onBack = null } = {}) {
-    // アドバイス詳細を開いたら笑顔にする
+    // アドバイス詳細を開いたらフクちゃん表情変化
     this.setHappyMode(category)
 
     this.stopAdviceTyping()
@@ -642,6 +675,23 @@ export default class extends Controller {
     blackboard.appendChild(textArea)
 
     this.typeText(textArea, advice.body || "", { speed: 50, withSound: true })
+
+    // タイピング演出がONのときだけ「全文表示」ボタンを出す
+    if (this.isTypingEnabled()) {
+      const skipButton = document.createElement("button")
+      skipButton.textContent = "全文表示"
+      skipButton.classList.add("skip-typing-button")
+      blackboard.appendChild(skipButton)
+
+      skipButton.addEventListener("click", () => {
+        this.stopAdviceTyping()
+        textArea.textContent = advice.body || ""
+
+        requestAnimationFrame(() => this.scrollAdviceToBottom())
+
+        skipButton.remove()
+      })
+    }
 
     if (this.signedInValue) {
       const favBtn = document.createElement("button")
