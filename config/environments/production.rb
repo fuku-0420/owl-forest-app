@@ -37,8 +37,9 @@ Rails.application.configure do
   # =========================================================
   # ActiveStorage（本番）
   # =========================================================
+  # Cloudinary を使用
+  config.active_storage.service = :cloudinary
   # 将来的に S3/R2 を使う場合は :amazon に切り替える
-  config.active_storage.service = :local
   # config.active_storage.service = :amazon
 
   # =========================================================

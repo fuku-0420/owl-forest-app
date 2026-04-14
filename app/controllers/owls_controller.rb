@@ -3,26 +3,35 @@ class OwlsController < ApplicationController
     "入門" => 0,
     "Rails" => 1,
     "SQL" => 2,
-    "設計" => 3,
-    "開発" => 4,
-    "エラー" => 5,
-    "学習" => 6,
-    "モチベ" => 7,
-    "みんなのお悩み解決" => 8
+    "Git" => 3,
+    "設計" => 4,
+    "開発" => 5,
+    "エラー" => 6,
+    "学習" => 7,
+    "モチベ" => 8,
+    "みんなのお悩み解決" => 9
   }.freeze
 
   def index
     @owls = Owl.all
+
     @categories = Category.includes(:advices)
                           .to_a
                           .sort_by { |category| CATEGORY_ORDER.fetch(category.name, 999) }
 
-    @categories_json = @categories.as_json(
-      only: [ :id, :name ],
-      include: {
-        advices: { only: [ :id, :title, :body ] }
+    @categories_json = @categories.map do |category|
+      {
+        id: category.id,
+        name: category.name,
+        advices: category.advices.sort_by { |advice| [ advice.position || 999, advice.id ] }.map do |advice|
+          {
+            id: advice.id,
+            title: advice.title,
+            body: advice.body
+          }
+        end
       }
-    )
+    end
 
     @popular_advices = Advice.includes(:category).popular_by_views.limit(10)
 

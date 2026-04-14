@@ -754,11 +754,44 @@
   transform: scale(1.05);
 }
 
+.skip-typing-button {
+  position: absolute;
+  top: 88px;
+  right: 18px;
+  z-index: 31;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 208, 0, 0.22);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  background: rgba(72, 96, 74, 0.88);
+  color: rgb(24, 205, 36);
+  white-space: nowrap;
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition: all 0.2s ease;
+}
+
+.skip-typing-button:hover {
+  transform: translateY(-1px) scale(1.03);
+  background: rgba(92, 120, 94, 0.95);
+  color: rgba(255, 230, 0, 0.86);
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.25),
+    0 0 10px rgba(255, 208, 0, 0.12);
+}
+
+.skip-typing-button:active {
+  transform: scale(0.97);
+}
+
 .advice-text {
   position: absolute;
   top: 17%;
   left: 6%;
-  width: 80%;
+  width: 76%;
   bottom: 12%;
   overflow-y: auto;
   color: #ffd000;
@@ -792,6 +825,66 @@
   background: rgba(255, 208, 0, 0.42);
 }
 
+/* =========================================================
+  🔢 ページネーション
+========================================================= */
+
+.pagination-container {
+  position: absolute;
+  bottom: 8.8%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 8px;
+}
+
+.page-button {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid rgba(255, 208, 0, 0.22);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(72, 96, 74, 0.82);
+  color: rgba(180, 255, 104, 0.658);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition: all 0.2s ease;
+}
+
+.page-button:hover {
+  transform: translateY(-1px) scale(1.04);
+  background: rgba(92, 120, 94, 0.9);
+  color: rgba(255, 230, 140, 1);
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.25),
+    0 0 10px rgba(255, 208, 0, 0.15);
+}
+
+.page-button.active {
+  background: rgba(255, 230, 0, 0.699);
+  color: #2b2416;
+  border-color: rgba(255, 208, 0, 0.55);
+  box-shadow:
+    0 0 10px rgba(255, 208, 0, 0.28),
+    0 2px 8px rgba(0, 0, 0, 0.24);
+}
+
+/* =========================================================
+  ↩ 戻るボタン
+========================================================= */
+
 .back-button,
 .back-to-categories-button {
   position: absolute;
@@ -824,15 +917,34 @@
   transform: scale(1.05);
 }
 
+/* =========================================================
+  💻 〜1300px
+========================================================= */
+
 @media (max-width: 1300px) {
   .advice-text {
     top: 18%;
     font-size: clamp(14px, 1.6vw, 16px);
     line-height: 1.7;
   }
+
+  .pagination-container {
+    bottom: 8.3%;
+  }
+
+  .page-button {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
 }
 
+/* =========================================================
+  📱 横長スマホ
+========================================================= */
+
 @media (max-width: 932px) and (max-height: 430px) {
+
   .advice-text {
     top: 15%;
     left: 5%;
@@ -850,16 +962,21 @@
     padding: 5px 8px;
   }
 
-  .back-button,
-  .back-to-categories-button {
-    right: 10px;
-    bottom: 10px;
+  .skip-typing-button {
+    top: 62px;
+    right: 12px;
     font-size: 10px;
-    padding: 5px 10px;
+    padding: 5px 8px;
   }
+
 }
 
+/* =========================================================
+  📱 小型スマホ
+========================================================= */
+
 @media (max-width: 768px) {
+
   .advice-text {
     top: 15%;
     left: 4%;
@@ -877,13 +994,13 @@
     padding: 4px 7px;
   }
 
-  .back-button,
-  .back-to-categories-button {
-    right: 8px;
-    bottom: 8px;
+  .skip-typing-button {
+    top: 58px;
+    right: 10px;
     font-size: 9px;
-    padding: 4px 8px;
+    padding: 4px 7px;
   }
+
 }
 
 @keyframes fadeInAdvice {
@@ -891,7 +1008,6 @@
     opacity: 0;
     transform: translateX(-50%) translateY(20px);
   }
-
   to {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
@@ -903,7 +1019,6 @@
     opacity: 0;
     transform: translateX(-50%) translateY(10px);
   }
-
   to {
     opacity: 1;
     transform: translateX(-50%) translateY(0);

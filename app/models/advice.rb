@@ -8,4 +8,5 @@ class Advice < ApplicationRecord
   has_many :favorites, dependent: :destroy
 
   scope :popular_by_views, -> { order(views_count: :desc, created_at: :desc) }
+  scope :ordered, -> { order(:position, :id) }
 end
