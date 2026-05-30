@@ -77,6 +77,8 @@
           <%= button_to "却下",
                 reject_admin_advice_suggestion_path(@advice_suggestion),
                 method: :patch,
+                form: { data: { turbo: false } },
+                data: { turbo_confirm: "却下します。よろしいですか？" },
                 class: "admin-btn reject" %>
         <% end %>
 
@@ -92,6 +94,7 @@
           <%= button_to "ゴミ箱へ",
                 admin_advice_suggestion_path(@advice_suggestion),
                 method: :delete,
+                form: { data: { turbo: false } },
                 data: { turbo_confirm: "ゴミ箱に移動します。よろしいですか？" },
                 class: "admin-btn danger" %>
         <% end %>

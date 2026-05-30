@@ -51,6 +51,7 @@
                     <%= button_to "却下",
                           reject_admin_advice_suggestion_path(s),
                           method: :patch,
+                          form: { data: { turbo: false } },
                           class: "admin-btn reject" %>
                   </div>
                 </td>
@@ -112,6 +113,7 @@
                     <%= button_to "ゴミ箱へ",
                           admin_advice_suggestion_path(s),
                           method: :delete,
+                          form: { data: { turbo: false } },
                           data: { turbo_confirm: "ゴミ箱に移動します。よろしいですか？" },
                           class: "admin-btn danger" %>
                   </div>
@@ -167,6 +169,7 @@
                     <%= button_to "ゴミ箱へ",
                           admin_advice_suggestion_path(s),
                           method: :delete,
+                          form: { data: { turbo: false } },
                           data: { turbo_confirm: "ゴミ箱に移動します。よろしいですか？" },
                           class: "admin-btn danger" %>
                   </div>
@@ -222,11 +225,14 @@
                     <%= button_to "復元",
                           restore_admin_advice_suggestion_path(s),
                           method: :patch,
+                          form: { data: { turbo: false } },
+                          data: { turbo_confirm: "ゴミ箱から復元します。よろしいですか？" },
                           class: "admin-btn detail" %>
 
                     <%= button_to "完全削除",
                           delete_forever_admin_advice_suggestion_path(s),
                           method: :delete,
+                          form: { data: { turbo: false } },
                           data: { turbo_confirm: "完全に削除します。元に戻せません。よろしいですか？" },
                           class: "admin-btn danger" %>
                   </div>
