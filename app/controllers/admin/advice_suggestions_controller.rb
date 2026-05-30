@@ -23,7 +23,7 @@ class Admin::AdviceSuggestionsController < ApplicationController
     @advice = Advice.find_or_initialize_by(advice_suggestion_id: @advice_suggestion.id)
     @advice.category ||= @advice_suggestion.category
 
-    # ✅ 初回（まだ公開Adviceが無い時）だけ下書きを入れる
+    # 初回（まだ公開Adviceが無い時）だけ下書きを入れる
     if @advice.new_record?
       @advice.title = @advice_suggestion.title.presence || @advice_suggestion.body.to_s.truncate(30)
       @advice.body  = @advice_suggestion.body.to_s
@@ -54,24 +54,35 @@ class Admin::AdviceSuggestionsController < ApplicationController
   end
 
   def reject
-    @advice_suggestion.update!(status: :rejected)
+    @advice_suggestion.update_columns(
+      status: AdviceSuggestion.statuses[:rejected],
+      updated_at: Time.current
+    )
+
     redirect_to admin_advice_suggestions_path, notice: "却下しました"
   end
 
-  # ゴミ箱へ（物理削除ではない）
   def destroy
     @advice_suggestion.advice&.destroy!
-    @advice_suggestion.update!(status: :deleted)
+
+    @advice_suggestion.update_columns(
+      status: AdviceSuggestion.statuses[:deleted],
+      updated_at: Time.current
+    )
+
     redirect_to admin_advice_suggestions_path, notice: "ゴミ箱に移動しました"
   end
 
-  # ゴミ箱から復元（承認待ちへ戻す）
   def restore
-    @advice_suggestion.update!(status: :pending)
+    @advice_suggestion.update_columns(
+      status: AdviceSuggestion.statuses[:pending],
+      updated_at: Time.current
+    )
+
     redirect_to admin_advice_suggestions_path, notice: "承認待ちに戻しました"
   end
 
-  # 完全削除（戻せない）
+  # 完全削除（ゴミ箱からも消す）
   def delete_forever
     @advice_suggestion.destroy!
     redirect_to admin_advice_suggestions_path, notice: "完全に削除しました"
